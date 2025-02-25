@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { computed, ref, watch, watchEffect } from 'vue'
-
 export interface CardProp {
   name: string
   conDomRect?: DOMRect | undefined
