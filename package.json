@@ -20,7 +20,16 @@
     "@unocss/nuxt": "^66.0.0",
     "eslint": "^9.21.0",
     "less": "^4.2.2",
+    "lint-staged": "^15.4.3",
     "typescript": "^5.7.3",
     "unocss": "^66.0.0"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "npx lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx,vue,md}": [
+      "eslint --cache --fix"
+    ]
   }
 }
