@@ -5,5 +5,8 @@ export default defineNuxtConfig({
   modules: [
     '@unocss/nuxt',
   ],
-  css: ['normalize.css', '~/assets/css/global.css']
+  app: {
+    pageTransition: { name: 'page', mode: 'out-in' },
+  },
+  css: ['normalize.css', '~/assets/css/global.css'],
 })

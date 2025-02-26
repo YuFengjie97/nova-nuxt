@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 withDefaults(
   defineProps<{
-    baseColor: string
-    lightColor: string
-    lightNum: number
+    baseColor?: string
+    lightColor?: string
+    lightNum?: number
   }>(),
   {
     baseColor: '#fee433',

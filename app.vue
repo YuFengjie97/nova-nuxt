@@ -1,5 +1,17 @@
 <template>
-  <div>
-    <NuxtPage/>
-  </div>
+  <NuxtPage />
 </template>
+
+<style>
+.page-enter-active,
+.page-leave-active {
+  transform-style: preserve-3d;
+  transform-origin: center center;
+  transition: all 0.4s;
+}
+.page-enter-from,
+.page-leave-to {
+  opacity: 0;
+  filter: blur(1rem);
+}
+</style>
