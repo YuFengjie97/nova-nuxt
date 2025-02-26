@@ -10,6 +10,9 @@
     <NuxtLink to="css/sun">
       css animate sun
     </NuxtLink>
+    <NuxtLink to="css/deathloading">
+      css deathloading
+    </NuxtLink>
   </div>
 </template>
 
