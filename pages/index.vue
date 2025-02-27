@@ -13,6 +13,9 @@
     <NuxtLink to="css/deathloading">
       css deathloading
     </NuxtLink>
+    <NuxtLink to="css/hscard">
+      css 炉石卡片
+    </NuxtLink>
   </div>
 </template>
 
