@@ -16,6 +16,9 @@
     <NuxtLink to="css/hscard">
       css 炉石卡片
     </NuxtLink>
+    <NuxtLink to="css/crushpic">
+      css 破碎图片
+    </NuxtLink>
   </div>
 </template>
 
