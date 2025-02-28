@@ -19,6 +19,12 @@
     <NuxtLink to="css/crushpic">
       css 破碎图片
     </NuxtLink>
+    <NuxtLink to="css/jigsaw">
+      css grid 拼图
+    </NuxtLink>
+    <NuxtLink to="canvas/imgpoint">
+      canvas 图片点阵
+    </NuxtLink>
   </div>
 </template>
 
