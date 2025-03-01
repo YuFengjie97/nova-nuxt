@@ -47,3 +47,7 @@ export function vec3ToRgb(v: Vec3) {
   const b = map(v[2], 0, 1, 0, 255)
   return `rgb(${r},${g},${b})`
 }
+
+export function lerp(s: number, e: number, t: number) {
+  return (e - s) * t + s
+}

@@ -25,6 +25,9 @@
     <NuxtLink to="canvas/imgpoint">
       canvas 图片点阵
     </NuxtLink>
+    <NuxtLink to="css/typing">
+      css 暗黑地牢打字
+    </NuxtLink>
   </div>
 </template>
 
