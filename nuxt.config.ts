@@ -1,7 +1,5 @@
 import process from 'node:process'
 
-console.log(11111, process.env.BASE_URL)
-
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',

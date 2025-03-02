@@ -1,5 +1,8 @@
 <script lang="ts" setup>
+const runtimeConfig = useRuntimeConfig()
 
+// eslint-disable-next-line no-console
+console.log(runtimeConfig)
 </script>
 
 <template>
