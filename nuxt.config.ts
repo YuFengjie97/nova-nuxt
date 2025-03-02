@@ -8,8 +8,12 @@ export default defineNuxtConfig({
     '@unocss/nuxt',
   ],
   app: {
-    baseURL: process.env.BASE_URL,
     pageTransition: { name: 'page', mode: 'out-in' },
   },
   css: ['normalize.css', '~/assets/css/global.css'],
+  runtimeConfig: {
+    public: {
+      apiBase: process.env.BASE_URL || '/nova-nuxt/',
+    },
+  },
 })

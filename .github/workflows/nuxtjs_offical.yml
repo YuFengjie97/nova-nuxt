@@ -1,7 +1,5 @@
 # https://github.com/actions/deploy-pages#usage
 name: Deploy to GitHub Pages
-env:
-  BASE_URL: /nova-nuxt/
 on:
   workflow_dispatch:
   push:
