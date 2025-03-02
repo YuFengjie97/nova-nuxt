@@ -1,5 +1,7 @@
 import process from 'node:process'
 
+console.log(11111, process.env.BASE_URL)
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
@@ -13,7 +15,7 @@ export default defineNuxtConfig({
   css: ['normalize.css', '~/assets/css/global.css'],
   runtimeConfig: {
     public: {
-      apiBase: process.env.BASE_URL || '/nova-nuxt/',
+      baseURL: process.env.BASE_URL || '/nova-nuxt/',
     },
   },
 })
