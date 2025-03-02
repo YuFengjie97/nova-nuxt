@@ -50,6 +50,7 @@ const bgStyle = computed(() => {
   }
 })
 </script>
+
 <template>
   <div
     ref="card"

@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { createNoise3D } from 'simplex-noise'
-
-const pic = '/img/disco_kim.jpg'
+import pic from '/img/disco_kim.jpg'
 
 const con = ref<HTMLElement>()
 const canvas = ref<HTMLCanvasElement>()

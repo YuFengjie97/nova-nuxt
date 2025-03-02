@@ -2,8 +2,9 @@
 import Delaunator from 'delaunator'
 import { gsap } from 'gsap'
 import { Vector2 } from 'three'
+import image from '/img/disco_communism.jpg'
 
-const pic = ref('/img/disco_communism.jpg')
+const pic = ref(image)
 
 const { random, sqrt, floor, ceil } = Math
 

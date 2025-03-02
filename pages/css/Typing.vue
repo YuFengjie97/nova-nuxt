@@ -1,18 +1,25 @@
 <script lang="ts" setup>
+import sound1 from '/sound/typing/typing_1.mp3'
+import sound2 from '/sound/typing/typing_2.mp3'
+import sound3 from '/sound/typing/typing_3.mp3'
+import sound4 from '/sound/typing/typing_4.mp3'
+import sound5 from '/sound/typing/typing_5.mp3'
+import soundWrap from '/sound/typing/typing_wrap.mp3'
+
 interface Sound {
   path: string
   ms: number
 }
 
 const typingSounds: Sound[] = [
-  { path: '/sound/typing/typing_1.mp3', ms: 171 },
-  { path: '/sound/typing/typing_2.mp3', ms: 216 },
-  { path: '/sound/typing/typing_3.mp3', ms: 210 },
-  { path: '/sound/typing/typing_4.mp3', ms: 167 },
+  { path: sound1, ms: 171 },
+  { path: sound2, ms: 216 },
+  { path: sound3, ms: 210 },
+  { path: sound4, ms: 167 },
 ]
 
-const typingSoundSpace: Sound = { path: '/sound/typing/typing_5.mp3', ms: 216 + 180 }
-const typingSoundWrap: Sound = { path: '/sound/typing/typing_wrap.mp3', ms: 2052 }
+const typingSoundSpace: Sound = { path: sound5, ms: 216 + 180 }
+const typingSoundWrap: Sound = { path: soundWrap, ms: 2052 }
 
 function getTypingSound(char: string) {
   const ind = char.toString().charCodeAt(0)
