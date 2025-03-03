@@ -1,5 +1,11 @@
-import { defineConfig } from 'unocss'
+import { defineConfig, presetAttributify, presetIcons, presetWind3 } from 'unocss'
 
 export default defineConfig({
-  // ...UnoCSS options
+  presets: [
+    presetAttributify({
+      /* preset 选项 */
+    }),
+    presetWind3(),
+    presetIcons(),
+  ],
 })
