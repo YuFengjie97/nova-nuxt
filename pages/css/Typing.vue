@@ -106,7 +106,7 @@ onUnmounted(() => {
 <style lang="less" scoped>
 @font-face {
   font-family: 'DwarvenAxe';
-  src: url('/fonts/DwarvenAxe BB W00 Regular.ttf');
+  src: url('/fonts/DwarvenAxe BB W00 Regular.ttf') format('woff');
 }
 
 .char-wrap {
