@@ -27,6 +27,9 @@
     <NuxtLink to="css/typing">
       css 暗黑地牢打字
     </NuxtLink>
+    <NuxtLink to="tween/dancedoge">
+      狗子
+    </NuxtLink>
   </div>
 </template>
 

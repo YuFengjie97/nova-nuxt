@@ -51,3 +51,13 @@ export function vec3ToRgb(v: Vec3) {
 export function lerp(s: number, e: number, t: number) {
   return (e - s) * t + s
 }
+
+export function constrain(min: number, max: number, val: number) {
+  if (val < min) {
+    return min
+  }
+  if (val > max) {
+    return max
+  }
+  return val
+}
