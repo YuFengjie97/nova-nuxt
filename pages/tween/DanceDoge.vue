@@ -28,20 +28,22 @@ function throttle(cb: (...args: any[]) => void, ms: number) {
 }
 
 const slowUpdateFPS = throttle(updateFPS, 300)
-const fastUpdateFPS = throttle(updateFPS, 100)
+// const fastUpdateFPS = throttle(updateFPS, 100)
 
 function initMeyda(audioEl: HTMLAudioElement) {
   context = new AudioContext()
   source = context.createMediaElementSource(audioEl)
   source.connect(context.destination)
 
+  let zcrOld = 0
+
   analyzer = Meyda.createMeydaAnalyzer({
     audioContext: context,
     source,
     bufferSize: 512, // or 1024/2048
-    featureExtractors: ['zcr'],
+    featureExtractors: ['rms', 'zcr'],
     callback: (features: any) => {
-      const zcr = features.zcr
+      const { zcr } = features
       if (zcr !== 0) {
         if (zcrMap.has(zcr)) {
           zcrMap.set(zcr, zcrMap.get(zcr) + 1)
@@ -50,16 +52,16 @@ function initMeyda(audioEl: HTMLAudioElement) {
           zcrMap.set(zcr, 1)
         }
       }
-
       zcrLine.push(zcr)
-      const nor = 1.6 - constrain(0, 1.5, zcr / 20)
 
-      if (nor < 1) {
-        slowUpdateFPS(nor)
-      }
-      else {
-        fastUpdateFPS(nor)
-      }
+      const zcrK = zcr - zcrOld
+
+      let nor = constrain(-1, 1, zcrK / 30)
+      nor = map(nor, -1, 1, 0, 2)
+
+      slowUpdateFPS(nor)
+
+      zcrOld = zcr
     },
   })
 
@@ -67,13 +69,13 @@ function initMeyda(audioEl: HTMLAudioElement) {
 }
 
 function handleSpriteFrame() {
-  const fpsBase = 18
+  const fpsBase = 12
   let fps = fpsBase
   let frameInterval = 1000 / fps
   let lastFrameUpdateTime = performance.now()
 
   function updateFPS(normal: number) {
-    fps = Math.ceil(fpsBase * normal)
+    fps = Math.ceil(normal * fpsBase)
     frameInterval = 1000 / fps
   }
 
@@ -162,7 +164,7 @@ function logzcrmap() {
 </script>
 
 <template>
-  <div class="h-100vh bg-#000 relative">
+  <div class="h-100vh bg-#000 relative overflow-hidden">
     <button @click="logzcrmap">
       log zcr
     </button>
@@ -187,15 +189,15 @@ function logzcrmap() {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  -webkit-box-reflect: below 5px
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.266), transparent);
+  -webkit-box-reflect: below 5px linear-gradient(to bottom, rgba(255, 255, 255, 0.266), transparent);
 }
-.sprite-left{
+
+.sprite-left {
   top: 40%;
   left: 20%;
 }
 
-.sprite-right{
+.sprite-right {
   top: 40%;
   left: 80%;
 }
