@@ -27,8 +27,11 @@
     <NuxtLink to="css/typing">
       css 暗黑地牢打字
     </NuxtLink>
-    <NuxtLink to="tween/dancedoge">
+    <NuxtLink to="music/dancedoge">
       狗子
+    </NuxtLink>
+    <NuxtLink to="pixi/begin">
+      pixi
     </NuxtLink>
   </div>
 </template>

@@ -1,6 +1,10 @@
-import process from 'node:process'
+import { env } from 'node:process'
+// 需要本地env文件,但是nuxt3因为安全,env文件不会选择推送
+// const baseURL = process.env.BASE_URL || '/nova-nuxt/'
 
-const baseURL = process.env.BASE_URL || '/nova-nuxt/'
+// import.meta.dev在构建时是undefined
+const isDev = env.NODE_ENV === 'development'
+const baseURL = isDev ? '/' : '/nova-nuxt/'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { MeydaAnalyzer } from 'meyda/dist/esm/meyda-wa'
 import Meyda from 'meyda'
-import spriteDoge from '/img/sprite_dance_doge.png'
+import spriteDoge from '/img/spriteSheet/danceDoge/texture.png'
 import music from '/sound/savageLove.aac'
 
 const spriteIndex = ref(0)
