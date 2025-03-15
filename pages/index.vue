@@ -33,6 +33,9 @@
     <NuxtLink to="pixi/begin">
       pixi
     </NuxtLink>
+    <NuxtLink to="pixi/music">
+      music
+    </NuxtLink>
   </div>
 </template>
 
