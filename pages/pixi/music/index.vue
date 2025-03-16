@@ -37,13 +37,17 @@ onMounted(async () => {
   const timeDomainChart = new LineChart(app, { w: 800, h: 200 }, dataSize)
   timeDomainChart.setPos(80, 400)
 
-  const c1 = cirle(app).setPos(40, 240).setStyle (20, frequencyColors[0])
-  const c2 = cirle(app).setPos(80, 240).setStyle(20, frequencyColors[1])
-  const c3 = cirle(app).setPos(120, 240).setStyle(20, frequencyColors[2])
-  const c4 = cirle(app).setPos(160, 240).setStyle(20, frequencyColors[3])
-  const c5 = cirle(app).setPos(200, 240).setStyle(20, frequencyColors[4])
-  const c6 = cirle(app).setPos(240, 240).setStyle(20, frequencyColors[5])
-  const c7 = cirle(app).setPos(280, 240).setStyle(20, frequencyColors[6])
+  const cy = 440
+  const cx = 80
+  const xGap = 30
+  const cr = 20
+  const c1 = (await cirle(app)).setPos(0 * (cr * 2 + xGap) + cx, cy).setStyle(cr, frequencyColors[0])
+  const c2 = (await cirle(app)).setPos(1 * (cr * 2 + xGap) + cx, cy).setStyle(cr, frequencyColors[1])
+  const c3 = (await cirle(app)).setPos(2 * (cr * 2 + xGap) + cx, cy).setStyle(cr, frequencyColors[2])
+  const c4 = (await cirle(app)).setPos(3 * (cr * 2 + xGap) + cx, cy).setStyle(cr, frequencyColors[3])
+  const c5 = (await cirle(app)).setPos(4 * (cr * 2 + xGap) + cx, cy).setStyle(cr, frequencyColors[4])
+  const c6 = (await cirle(app)).setPos(5 * (cr * 2 + xGap) + cx, cy).setStyle(cr, frequencyColors[5])
+  const c7 = (await cirle(app)).setPos(6 * (cr * 2 + xGap) + cx, cy).setStyle(cr, frequencyColors[6])
 
   app.ticker.add(() => {
     if (!audio.paused) {
