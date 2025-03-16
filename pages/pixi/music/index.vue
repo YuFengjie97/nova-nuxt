@@ -75,7 +75,7 @@ onUnmounted(() => {
 
 <template>
   <div class="w-full h-100vh">
-    <div ref="pixiCon" class="w-full h-full" />
+    <div ref="pixiCon" class="w-full h-650px" />
   </div>
 </template>
 
