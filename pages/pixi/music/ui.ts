@@ -162,3 +162,34 @@ export class LineChart {
     this.line.stroke({ pixelLine: true, width: 2, color: '#ffeaa7' })
   }
 }
+
+export function cirle(app: Application) {
+  const grap = new Graphics()
+  app.stage.addChild(grap)
+
+  let _x = 0
+  let _y = 0
+  let _r = 0
+  let _color = 'red'
+
+  function update(nor: number) {
+    grap.clear()
+      .circle(_x, _y, nor * _r)
+      .fill({ color: _color })
+  }
+
+  return {
+    setPos(x: number, y: number) {
+      grap.position.set(x, y)
+      _x = x
+      _y = y
+      return this
+    },
+    setStyle(r: number, color: string) {
+      _r = r
+      _color = color
+      return this
+    },
+    update,
+  }
+}

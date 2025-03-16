@@ -1,4 +1,6 @@
-export function audioParse(url: string, fftSize = 1024) {
+import { avgNormal, smooth } from '~/utils/noiseReduction'
+
+export function audioParse(url: string, fftSize = 1024, targetSize = 100) {
   const audio = new Audio(url)
   const audioCtx = new window.AudioContext()
   const source = audioCtx.createMediaElementSource(audio)
@@ -6,48 +8,59 @@ export function audioParse(url: string, fftSize = 1024) {
   source.connect(analyser)
   analyser.connect(audioCtx.destination)
 
-  // const sampleRate = audioCtx.sampleRate
-  // const bin = sampleRate / fftSize
+  // analyser.smoothingTimeConstant = 0
+
+  const sampleRate = audioCtx.sampleRate
+  const bin = sampleRate / fftSize
 
   analyser.fftSize = fftSize
   const bufferLength = analyser.frequencyBinCount
   const dataArrayFrequency = new Uint8Array(bufferLength)
   const dataArrayTimeDomain = new Uint8Array(bufferLength)
-  const floatDataArray = new Float32Array(bufferLength)
 
-  function getByteTimeDomainData(size: number) {
-    analyser.getByteTimeDomainData(dataArrayTimeDomain)
-
-    const res = []
-    const step = Math.floor(bufferLength / size)
-    for (let i = 0; i < bufferLength; i += step) {
-      const avg = dataArrayTimeDomain.slice(i, i + step).reduce((acc, cur) => acc + cur / 255, 0) / step
-      res.push(avg)
-    }
-
-    return res
-  }
-  function getFloatTimeDomainData() {
-    analyser.getFloatTimeDomainData(floatDataArray)
-    return floatDataArray
-  }
-
-  function getByteFrequencyData(size: number) {
+  function getByteFrequencyData() {
     analyser.getByteFrequencyData(dataArrayFrequency)
-
-    const res = []
-    const step = Math.floor(bufferLength / size)
-    for (let i = 0; i < bufferLength; i += step) {
-      const avg = dataArrayFrequency.slice(i, i + step).reduce((acc, cur) => acc + cur / 255, 0) / step
-      res.push(avg)
-    }
-
+    const res = smooth(avgNormal(Array.from(dataArrayFrequency), targetSize))
     return res
   }
 
-  function getFloatFrequencyData() {
-    analyser.getFloatFrequencyData(floatDataArray)
-    return floatDataArray
+  function getByteTimeDomainData() {
+    analyser.getByteTimeDomainData(dataArrayTimeDomain)
+    const res = smooth(avgNormal(Array.from(dataArrayTimeDomain), targetSize))
+    return res
+  }
+
+  function getFrequencyRange(range: [number, number]) {
+    const res = []
+    for (let i = 0; i < bufferLength; i++) {
+      const binMid = (i + 0.5) * bin
+      if (binMid >= range[0] && binMid <= range[1]) {
+        res.push(dataArrayFrequency[i])
+      }
+    }
+    return res
+  }
+
+  function getSubBass() {
+    return avgNormal(getFrequencyRange([20, 60]), 1)[0]
+  }
+  function getBass() {
+    return avgNormal(getFrequencyRange([61, 250]), 1)[0]
+  }
+  function getLowMid() {
+    return avgNormal(getFrequencyRange([251, 500]), 1)[0]
+  }
+  function getMid() {
+    return avgNormal(getFrequencyRange([501, 2000]), 1)[0]
+  }
+  function getHighMid() {
+    return avgNormal(getFrequencyRange([2001, 4000]), 1)[0]
+  }
+  function getPresence() {
+    return avgNormal(getFrequencyRange([4001, 6000]), 1)[0]
+  }
+  function Brilliance() {
+    return avgNormal(getFrequencyRange([6001, 20000]), 1)[0]
   }
 
   function play() {
@@ -76,7 +89,12 @@ export function audioParse(url: string, fftSize = 1024) {
     analyser,
     getByteFrequencyData,
     getByteTimeDomainData,
-    getFloatFrequencyData,
-    getFloatTimeDomainData,
+    getSubBass,
+    getBass,
+    getLowMid,
+    getMid,
+    getHighMid,
+    getPresence,
+    Brilliance,
   }
 }
