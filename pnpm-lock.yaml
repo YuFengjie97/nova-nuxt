@@ -23,6 +23,9 @@ importers:
       animejs:
         specifier: ^3.2.2
         version: 3.2.2
+      chroma-js:
+        specifier: ^3.1.2
+        version: 3.1.2
       delaunator:
         specifier: ^5.0.1
         version: 5.0.1
@@ -60,6 +63,9 @@ importers:
       '@iconify-json/solar':
         specifier: ^1.2.2
         version: 1.2.2
+      '@types/chroma-js':
+        specifier: ^3.1.1
+        version: 3.1.1
       '@unocss/nuxt':
         specifier: ^66.0.0
         version: 66.0.0(magicast@0.3.5)(postcss@8.5.3)(vite@6.1.1(@types/node@22.13.5)(jiti@2.4.2)(less@4.2.2)(terser@5.39.0)(yaml@2.7.0))(vue@3.5.13(typescript@5.7.3))(webpack@5.98.0)
@@ -970,6 +976,9 @@ packages:
   '@types/animejs@3.1.13':
     resolution: {integrity: sha512-yWg9l1z7CAv/TKpty4/vupEh24jDGUZXv4r26StRkpUPQm04ztJaftgpto8vwdFs8SiTq6XfaPKCSI+wjzNMvQ==}
 
+  '@types/chroma-js@3.1.1':
+    resolution: {integrity: sha512-SFCr4edNkZ1bGaLzGz7rgR1bRzVX4MmMxwsIa3/Bh6ose8v+hRpneoizHv0KChdjxaXyjRtaMq7sCuZSzPomQA==}
+
   '@types/css-font-loading-module@0.0.12':
     resolution: {integrity: sha512-x2tZZYkSxXqWvTDgveSynfjq/T2HyiZHXb00j/+gy19yp70PHCizM48XFdjBCWH7eHBD0R5i/pw9yMBP/BH5uA==}
 
@@ -1602,6 +1611,9 @@ packages:
   chownr@3.0.0:
     resolution: {integrity: sha512-+IxzY9BZOQd/XuYPRmrvEVjF/nqj5kgT4kEq7VofrDoM1MxoRjEWkrCC3EtLi59TVawxTAn+orJwFQcrqEN1+g==}
     engines: {node: '>=18'}
+
+  chroma-js@3.1.2:
+    resolution: {integrity: sha512-IJnETTalXbsLx1eKEgx19d5L6SRM7cH4vINw/99p/M11HCuXGRWL+6YmCm7FWFGIo6dtWuQoQi1dc5yQ7ESIHg==}
 
   chrome-trace-event@1.0.4:
     resolution: {integrity: sha512-rNjApaLzuwaOTjCiT8lSDdGN1APCiqkChLMJxJPWLunPAt5fy8xgU9/jNOchV84wfIxrA0lRQB7oCT8jrn/wrQ==}
@@ -5524,6 +5536,8 @@ snapshots:
 
   '@types/animejs@3.1.13': {}
 
+  '@types/chroma-js@3.1.1': {}
+
   '@types/css-font-loading-module@0.0.12': {}
 
   '@types/debug@4.1.12':
@@ -6392,6 +6406,8 @@ snapshots:
   chownr@2.0.0: {}
 
   chownr@3.0.0: {}
+
+  chroma-js@3.1.2: {}
 
   chrome-trace-event@1.0.4: {}
 
