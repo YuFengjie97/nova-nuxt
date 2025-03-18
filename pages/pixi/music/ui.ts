@@ -1,5 +1,5 @@
-import type { Application, Texture } from 'pixi.js'
-import { AnimatedSprite, Assets, Container, Graphics, Spritesheet, Text } from 'pixi.js'
+import type { Application } from 'pixi.js'
+import { Container, Graphics, Text } from 'pixi.js'
 
 interface Button {
   group: Container
@@ -68,6 +68,7 @@ export class BarChart {
 
   setPos(x: number, y: number) {
     this.group.position.set(x, y)
+    return this
   }
 
   update(data: number[]) {
@@ -126,6 +127,7 @@ export class LineChart {
 
   setPos(x: number, y: number) {
     this.group.position.set(x, y)
+    return this
   }
 
   update(data: number[]) {
@@ -166,11 +168,9 @@ export class LineChart {
 export async function cirle(app: Application) {
   const group = new Container()
   const grap = new Graphics()
-  const { animSprite, updateSpeed } = await createDogeSprite()
 
   app.stage.addChild(group)
   group.addChild(grap)
-  group.addChild(animSprite)
 
   let _r = 0
   let _color = 'red'
@@ -179,8 +179,6 @@ export async function cirle(app: Application) {
     grap.clear()
       .circle(0, 0, nor * _r)
       .fill({ color: _color })
-
-    updateSpeed(nor)
   }
 
   return {
@@ -194,29 +192,5 @@ export async function cirle(app: Application) {
       return this
     },
     update,
-  }
-}
-
-export async function createDogeSprite() {
-  const baseSpeed = 0.1666
-
-  const texture = await Assets.load<Texture>(runtimePath(`img/spriteSheet/danceDoge/texture.png`))
-  const { data } = await Assets.load(runtimePath(`img/spriteSheet/danceDoge/texture.json`))
-  const spritesheet = new Spritesheet(texture, data)
-
-  await spritesheet.parse()
-  const animSprite = new AnimatedSprite(spritesheet.animations.anime1)
-  animSprite.animationSpeed = baseSpeed
-  animSprite.anchor.set(0.5)
-  animSprite.position.set(0, 80)
-  animSprite.play()
-
-  function updateSpeed(nor: number) {
-    animSprite.animationSpeed = baseSpeed * nor
-  }
-
-  return {
-    animSprite,
-    updateSpeed,
   }
 }

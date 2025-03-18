@@ -22,7 +22,7 @@ let _reset: () => void
 onMounted(async () => {
   await initApp(app, pixiCon.value!)
 
-  const { audio, play, pause, reset, getByteFrequencyData, getByteTimeDomainData, getSubBass, getBass, getLowMid, getMid, getHighMid, getPresence, Brilliance } = audioParse(music, fftSize, dataLength)
+  const { audio, play, pause, reset, getByteFrequencyData, getByteTimeDomainData, getFloatFrequencyData, getSubBass, getBass, getLowMid, getMid, getHighMid, getPresence, Brilliance } = audioParse(music, fftSize, dataLength)
   _reset = reset
 
   button(app, 'play').onClick(play)
@@ -31,11 +31,10 @@ onMounted(async () => {
 
   const dataSize = 100
 
-  const frequencyChart = new BarChart(app, { w: 800, h: 200 }, dataSize)
-  frequencyChart.setPos(80, 200)
+  const frequencyChart = new BarChart(app, { w: 500, h: 200 }, dataSize).setPos(80, 200)
+  const timeDomainChart = new LineChart(app, { w: 500, h: 200 }, dataSize).setPos(80, 420)
 
-  const timeDomainChart = new LineChart(app, { w: 800, h: 200 }, dataSize)
-  timeDomainChart.setPos(80, 400)
+  const frequencyChart2 = new BarChart(app, { w: 500, h: 200 }, dataSize).setPos(600, 200)
 
   const cy = 440
   const cx = 80
@@ -56,6 +55,10 @@ onMounted(async () => {
 
       const data2 = getByteTimeDomainData()
       timeDomainChart.update(data2)
+
+      const data3 = decorateAudioFrequency(getFloatFrequencyData(), { baseBarCount: dataLength })
+      console.log(data3)
+      frequencyChart2.update(data3)
 
       c1.update(getSubBass())
       c2.update(getBass())

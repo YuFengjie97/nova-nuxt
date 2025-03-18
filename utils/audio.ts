@@ -18,6 +18,9 @@ export function audioParse(url: string, fftSize = 1024, targetSize = 100) {
   const dataArrayFrequency = new Uint8Array(bufferLength)
   const dataArrayTimeDomain = new Uint8Array(bufferLength)
 
+  const floatArrayFrequency = new Float32Array(bufferLength)
+  const floatArrayTimeDomain = new Float32Array(bufferLength)
+
   function getByteFrequencyData() {
     analyser.getByteFrequencyData(dataArrayFrequency)
     const res = smooth(avgNormal(Array.from(dataArrayFrequency), targetSize))
@@ -28,6 +31,16 @@ export function audioParse(url: string, fftSize = 1024, targetSize = 100) {
     analyser.getByteTimeDomainData(dataArrayTimeDomain)
     const res = smooth(avgNormal(Array.from(dataArrayTimeDomain), targetSize))
     return res
+  }
+
+  function getFloatFrequencyData() {
+    analyser.getFloatFrequencyData(floatArrayFrequency)
+    return floatArrayFrequency
+  }
+
+  function getFloatTimeDomainData() {
+    analyser.getFloatTimeDomainData(floatArrayTimeDomain)
+    return floatArrayTimeDomain
   }
 
   function getFrequencyRange(range: [number, number]) {
@@ -89,6 +102,8 @@ export function audioParse(url: string, fftSize = 1024, targetSize = 100) {
     analyser,
     getByteFrequencyData,
     getByteTimeDomainData,
+    getFloatFrequencyData,
+    getFloatTimeDomainData,
     getSubBass,
     getBass,
     getLowMid,
