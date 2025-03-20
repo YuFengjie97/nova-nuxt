@@ -5,6 +5,7 @@ import { Pane } from 'tweakpane'
 import { BarChart, cirle, LineChart } from './ui'
 import music from '/sound/savageLove.aac'
 
+const inputFile = ref<HTMLInputElement>()
 const pixiCon = ref<HTMLElement>()
 const app = new Application()
 const fftSize = 1024
@@ -19,6 +20,19 @@ async function initApp(app: Application, container: HTMLElement) {
 }
 
 let ap: AudioParse
+
+async function handelMusicChange(event: Event) {
+  const target = event.target as HTMLInputElement
+  if (!target.files) {
+    return
+  }
+  const file = target.files[0]
+  const onProgress = (val: number) => {
+    console.log(val)
+  }
+  const arrayBuffer = await getArrayBufferByFile(file, onProgress)
+  console.log(arrayBuffer)
+}
 
 onMounted(async () => {
   await initApp(app, pixiCon.value!)
@@ -36,6 +50,9 @@ onMounted(async () => {
     pane.addButton({ title: 'reset' }).on('click', () => ap.reset())
     pane.addBinding(settings, 'smoothingTimeConstant', { min: 0, max: 1, step: 0.1 }).on('change', (ev) => {
       ap.setSmoothingTimeConstant(ev.value)
+    })
+    pane.addButton({ title: 'upload' }).on('click', () => {
+      inputFile.value?.click()
     })
   }
   initPane()
@@ -58,7 +75,7 @@ onMounted(async () => {
   const c7 = (await cirle(app)).setPos(6 * (cr * 2 + xGap) + cx, cy).setStyle(cr, frequencyColors[6])
 
   app.ticker.add(() => {
-    if (!ap.audio.paused) {
+    if (ap.audio && !ap.audio.paused) {
       const res = dataProcessor(Array.from(ap.getByteFrequencyData()))
         .avgNormalChian(targetSize)
         .smoothChian()
@@ -84,11 +101,13 @@ onMounted(async () => {
 
 onUnmounted(() => {
   ap.destroy()
+  app.destroy(true, { children: true, texture: true })
 })
 </script>
 
 <template>
   <div class="w-full h-100vh">
+    <input ref="inputFile" type="file" class="hidden" accept="audio/*" @change="handelMusicChange">
     <div ref="pixiCon" class="w-full h-650px" />
   </div>
 </template>
