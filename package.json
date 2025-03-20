@@ -25,12 +25,14 @@
     "pixi.js": "^8.8.1",
     "simplex-noise": "^4.0.3",
     "three": "^0.174.0",
+    "tweakpane": "^4.0.5",
     "vue": "latest",
     "vue-router": "latest"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.3.0",
     "@iconify-json/solar": "^1.2.2",
+    "@tweakpane/core": "^2.0.5",
     "@types/chroma-js": "^3.1.1",
     "@unocss/nuxt": "^66.0.0",
     "@unocss/preset-icons": "66.1.0-beta.3",

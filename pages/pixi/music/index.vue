@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import chroma from 'chroma-js'
 import { Application } from 'pixi.js'
-import { BarChart, button, cirle, LineChart } from './ui'
+import { Pane } from 'tweakpane'
+import { BarChart, cirle, LineChart } from './ui'
 import music from '/sound/savageLove.aac'
 
 const pixiCon = ref<HTMLElement>()
@@ -25,16 +26,20 @@ onMounted(async () => {
   const { audio, play, pause, reset, getByteFrequencyData, getByteTimeDomainData, getFloatFrequencyData, getSubBass, getBass, getLowMid, getMid, getHighMid, getPresence, Brilliance } = audioParse(music, fftSize, dataLength)
   _reset = reset
 
-  button(app, 'play').onClick(play)
-  button(app, 'puase').setPos(0, 28).onClick(pause)
-  button(app, 'reset').setPos(0, 56).onClick(reset)
+  function initPane() {
+    const pane = new Pane()
+    pane.addButton({ title: 'play' }).on('click', play)
+    pane.addButton({ title: 'pause' }).on('click', pause)
+    pane.addButton({ title: 'reset' }).on('click', reset)
+  }
+  initPane()
 
   const dataSize = 100
 
-  const frequencyChart = new BarChart(app, { w: 500, h: 200 }, dataSize).setPos(80, 200)
-  const timeDomainChart = new LineChart(app, { w: 500, h: 200 }, dataSize).setPos(80, 420)
+  const frequencyChart = new BarChart(app, { w: 500, h: 200 }, dataSize).setPos(0, 200)
+  const timeDomainChart = new LineChart(app, { w: 500, h: 200 }, dataSize).setPos(500, 200)
 
-  const frequencyChart2 = new BarChart(app, { w: 500, h: 200 }, dataSize).setPos(600, 200)
+  const frequencyChart2 = new BarChart(app, { w: 500, h: 200 }, dataSize).setPos(0, 400)
 
   const cy = 440
   const cx = 80
@@ -57,7 +62,6 @@ onMounted(async () => {
       timeDomainChart.update(data2)
 
       const data3 = decorateAudioFrequency(getFloatFrequencyData(), { baseBarCount: dataLength })
-      console.log(data3)
       frequencyChart2.update(data3)
 
       c1.update(getSubBass())
