@@ -54,12 +54,10 @@ export class BarChart {
   group: Container = new Container()
   barList: Graphics[] = []
   size
-  dataLength: number
 
-  constructor(app: Application, size: { w: number, h: number }, dataLength: number) {
+  constructor(app: Application, size: { w: number, h: number }) {
     this.app = app
     this.size = size
-    this.dataLength = dataLength
     this.app.stage.addChild(this.group)
     this.group.scale.y = -1
 
@@ -91,8 +89,8 @@ export class BarChart {
 
   drawBar(data: number[]) {
     const gap = 2
-    const barWidth = Math.max(2, this.size.w / (this.dataLength) - gap)
-    for (let i = 0; i < this.dataLength; i++) {
+    const barWidth = Math.max(2, this.size.w / (data.length) - gap)
+    for (let i = 0; i < data.length; i++) {
       const bar = this.barList[i] ? this.barList[i] : new Graphics()
       bar.clear()
       bar.rect(i * (barWidth + gap), 0, barWidth, data ? data[i] * this.size.h : 100)
@@ -111,12 +109,10 @@ export class LineChart {
   group: Container = new Container()
   line: Graphics = new Graphics()
   size
-  dataLength: number
 
-  constructor(app: Application, size: { w: number, h: number }, dataLength: number) {
+  constructor(app: Application, size: { w: number, h: number }) {
     this.app = app
     this.size = size
-    this.dataLength = dataLength
     this.app.stage.addChild(this.group)
     this.group.scale.y = -1
 
@@ -149,9 +145,9 @@ export class LineChart {
   }
 
   drawLine(data: number[]) {
-    const gap = this.size.w / (this.dataLength)
+    const gap = this.size.w / data.length
     this.line.clear()
-    for (let i = 0; i < this.dataLength; i++) {
+    for (let i = 0; i < data.length; i++) {
       const x = i * gap
       const y = data[i] * this.size.h
       if (i === 0) {

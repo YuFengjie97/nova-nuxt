@@ -8,7 +8,7 @@ import music from '/sound/savageLove.aac'
 const pixiCon = ref<HTMLElement>()
 const app = new Application()
 const fftSize = 1024
-const dataLength = 100
+const targetSize = 100
 const frequencyColors = chroma.scale(['#fdcb6e', '#6c5ce7'])
   .mode('lch')
   .colors(7)
@@ -18,28 +18,32 @@ async function initApp(app: Application, container: HTMLElement) {
   container.appendChild(app.canvas)
 }
 
-let _reset: () => void
+let ap: AudioParse
 
 onMounted(async () => {
   await initApp(app, pixiCon.value!)
 
-  const { audio, play, pause, reset, getByteFrequencyData, getByteTimeDomainData, getFloatFrequencyData, getSubBass, getBass, getLowMid, getMid, getHighMid, getPresence, Brilliance } = audioParse(music, fftSize, dataLength)
-  _reset = reset
+  const settings = {
+    smoothingTimeConstant: 0.8,
+  }
+
+  ap = new AudioParse(music, fftSize)
 
   function initPane() {
     const pane = new Pane()
-    pane.addButton({ title: 'play' }).on('click', play)
-    pane.addButton({ title: 'pause' }).on('click', pause)
-    pane.addButton({ title: 'reset' }).on('click', reset)
+    pane.addButton({ title: 'play' }).on('click', () => ap.play())
+    pane.addButton({ title: 'pause' }).on('click', () => ap.pause())
+    pane.addButton({ title: 'reset' }).on('click', () => ap.reset())
+    pane.addBinding(settings, 'smoothingTimeConstant', { min: 0, max: 1, step: 0.1 }).on('change', (ev) => {
+      ap.setSmoothingTimeConstant(ev.value)
+    })
   }
   initPane()
 
-  const dataSize = 100
+  const frequencyChart = new BarChart(app, { w: 500, h: 200 }).setPos(0, 200)
+  const timeDomainChart = new LineChart(app, { w: 500, h: 200 }).setPos(500, 200)
 
-  const frequencyChart = new BarChart(app, { w: 500, h: 200 }, dataSize).setPos(0, 200)
-  const timeDomainChart = new LineChart(app, { w: 500, h: 200 }, dataSize).setPos(500, 200)
-
-  const frequencyChart2 = new BarChart(app, { w: 500, h: 200 }, dataSize).setPos(0, 400)
+  // const frequencyChart2 = new BarChart(app, { w: 500, h: 200 }).setPos(0, 400)
 
   const cy = 440
   const cx = 80
@@ -54,29 +58,32 @@ onMounted(async () => {
   const c7 = (await cirle(app)).setPos(6 * (cr * 2 + xGap) + cx, cy).setStyle(cr, frequencyColors[6])
 
   app.ticker.add(() => {
-    if (!audio.paused) {
-      const data = getByteFrequencyData()
-      frequencyChart.update(data)
+    if (!ap.audio.paused) {
+      const res = dataProcessor(Array.from(ap.getByteFrequencyData()))
+        .avgNormalChian(targetSize)
+        .smoothChian()
+        .normalizeChain()
+      frequencyChart.update(res.data)
 
-      const data2 = getByteTimeDomainData()
-      timeDomainChart.update(data2)
+      const res2 = dataProcessor(Array.from(ap.getByteTimeDomainData()))
+        .avgNormalChian(targetSize)
+        .smoothChian()
+        .normalizeChain()
+      timeDomainChart.update(res2.data)
 
-      const data3 = decorateAudioFrequency(getFloatFrequencyData(), { baseBarCount: dataLength })
-      frequencyChart2.update(data3)
-
-      c1.update(getSubBass())
-      c2.update(getBass())
-      c3.update(getLowMid())
-      c4.update(getMid())
-      c5.update(getHighMid())
-      c6.update(getPresence())
-      c7.update(Brilliance())
+      c1.update(dataProcessor(ap.getSubBass()).avgNormalChian(1).normalizeChain(255).data[0])
+      c2.update(dataProcessor(ap.getBass()).avgNormalChian(1).normalizeChain(255).data[0])
+      c3.update(dataProcessor(ap.getLowMid()).avgNormalChian(1).normalizeChain(255).data[0])
+      c4.update(dataProcessor(ap.getMid()).avgNormalChian(1).normalizeChain(255).data[0])
+      c5.update(dataProcessor(ap.getHighMid()).avgNormalChian(1).normalizeChain(255).data[0])
+      c6.update(dataProcessor(ap.getPresence()).avgNormalChian(1).normalizeChain(255).data[0])
+      c7.update(dataProcessor(ap.Brilliance()).avgNormalChian(1).normalizeChain(255).data[0])
     }
   })
 })
 
 onUnmounted(() => {
-  _reset()
+  ap.destroy()
 })
 </script>
 

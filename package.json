@@ -11,10 +11,6 @@
     "prepare": "simple-git-hooks"
   },
   "dependencies": {
-    "@tweenjs/tween.js": "^25.0.0",
-    "@types/animejs": "^3.1.13",
-    "@types/delaunator": "^5.0.3",
-    "@types/three": "^0.174.0",
     "animejs": "^3.2.2",
     "chroma-js": "^3.1.2",
     "delaunator": "^5.0.1",
@@ -33,7 +29,11 @@
     "@antfu/eslint-config": "^4.3.0",
     "@iconify-json/solar": "^1.2.2",
     "@tweakpane/core": "^2.0.5",
+    "@tweenjs/tween.js": "^25.0.0",
+    "@types/animejs": "^3.1.13",
     "@types/chroma-js": "^3.1.1",
+    "@types/delaunator": "^5.0.3",
+    "@types/three": "^0.174.0",
     "@unocss/nuxt": "^66.0.0",
     "@unocss/preset-icons": "66.1.0-beta.3",
     "cross-env": "^7.0.3",
