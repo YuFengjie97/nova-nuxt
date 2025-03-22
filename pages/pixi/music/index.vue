@@ -1,8 +1,7 @@
 <script lang="ts" setup>
-import chroma from 'chroma-js'
 import { Application } from 'pixi.js'
 import { Pane } from 'tweakpane'
-import { BarChart, cirle, LineChart } from './ui'
+import { BarChart, LineChart } from './ui'
 import music from '/sound/savageLove.aac'
 
 const inputFile = ref<HTMLInputElement>()
@@ -10,9 +9,9 @@ const pixiCon = ref<HTMLElement>()
 const app = new Application()
 const fftSize = 1024
 const targetSize = 100
-const frequencyColors = chroma.scale(['#fdcb6e', '#6c5ce7'])
-  .mode('lch')
-  .colors(7)
+// const frequencyColors = chroma.scale(['#fdcb6e', '#6c5ce7'])
+//   .mode('lch')
+//   .colors(7)
 
 async function initApp(app: Application, container: HTMLElement) {
   await app.init({ antialias: true, background: '#1099bb', resizeTo: container })
@@ -20,6 +19,8 @@ async function initApp(app: Application, container: HTMLElement) {
 }
 
 let ap: AudioParse
+let bassMaxMaginatude = 0
+let wideMaxMaginatude = 0
 
 async function handelMusicChange(event: Event) {
   const target = event.target as HTMLInputElement
@@ -27,11 +28,21 @@ async function handelMusicChange(event: Event) {
     return
   }
   const file = target.files[0]
-  const onProgress = (val: number) => {
-    console.log(val)
-  }
-  const arrayBuffer = await getArrayBufferByFile(file, onProgress)
-  console.log(arrayBuffer)
+  const arrayBuffer = await getArrayBufferByFile(file)
+  const audioBuffer = await getAudioBufferByArrayBuffer(arrayBuffer)
+  const sampleRage = audioBuffer.sampleRate
+  console.log('audioBuffer', audioBuffer, 'sampleRage', sampleRage)
+
+  const mixedTimeDomainData = mixedTimeDomain(audioBuffer)
+  console.log('mixedTimeDomainData', mixedTimeDomainData)
+
+  const frequencyFrames = getFrequencyFrames(mixedTimeDomainData, fftSize)
+  console.log('frequencyFrames', frequencyFrames)
+
+  const maxMaginatude = getMaxBassAndWideMagnitude(frequencyFrames, sampleRage, fftSize)
+  bassMaxMaginatude = maxMaginatude.bassMaxMaginatude
+  wideMaxMaginatude = maxMaginatude.wideMaxMaginatude
+  console.log({ bassMaxMaginatude, wideMaxMaginatude })
 }
 
 onMounted(async () => {
@@ -59,42 +70,43 @@ onMounted(async () => {
 
   const frequencyChart = new BarChart(app, { w: 500, h: 200 }).setPos(0, 200)
   const timeDomainChart = new LineChart(app, { w: 500, h: 200 }).setPos(500, 200)
+  const frequencyChart2 = new BarChart(app, { w: 500, h: 200 }).setPos(0, 400)
 
-  // const frequencyChart2 = new BarChart(app, { w: 500, h: 200 }).setPos(0, 400)
+  function update1() {
+    const dp = new DataProcessor(Array.from(ap.getByteFrequencyData()))
+    const data = dp
+      .avgBucket(targetSize)
+      .smooth()
+      .normalize()
+      .data
+    frequencyChart.update(data)
+  }
+  function update2() {
+    const dp = new DataProcessor(Array.from(ap.getByteTimeDomainData()))
+    const data = dp
+      .avgBucket(targetSize)
+      .smooth()
+      .normalize()
+      .data
+    timeDomainChart.update(data)
+  }
 
-  const cy = 440
-  const cx = 80
-  const xGap = 30
-  const cr = 20
-  const c1 = (await cirle(app)).setPos(0 * (cr * 2 + xGap) + cx, cy).setStyle(cr, frequencyColors[0])
-  const c2 = (await cirle(app)).setPos(1 * (cr * 2 + xGap) + cx, cy).setStyle(cr, frequencyColors[1])
-  const c3 = (await cirle(app)).setPos(2 * (cr * 2 + xGap) + cx, cy).setStyle(cr, frequencyColors[2])
-  const c4 = (await cirle(app)).setPos(3 * (cr * 2 + xGap) + cx, cy).setStyle(cr, frequencyColors[3])
-  const c5 = (await cirle(app)).setPos(4 * (cr * 2 + xGap) + cx, cy).setStyle(cr, frequencyColors[4])
-  const c6 = (await cirle(app)).setPos(5 * (cr * 2 + xGap) + cx, cy).setStyle(cr, frequencyColors[5])
-  const c7 = (await cirle(app)).setPos(6 * (cr * 2 + xGap) + cx, cy).setStyle(cr, frequencyColors[6])
+  function update3() {
+    const timeDomainData = ap.getFloatTimeDomainData()
+    const frequencyData = getFrequency(timeDomainData, fftSize)
+    const dp = new DataProcessor(Array.from(frequencyData))
+    const data = dp
+      .avgBucket(targetSize)
+      .normalize(bassMaxMaginatude)
+      .data
+    frequencyChart2.update(data)
+  }
 
   app.ticker.add(() => {
     if (ap.audio && !ap.audio.paused) {
-      const res = dataProcessor(Array.from(ap.getByteFrequencyData()))
-        .avgNormalChian(targetSize)
-        .smoothChian()
-        .normalizeChain()
-      frequencyChart.update(res.data)
-
-      const res2 = dataProcessor(Array.from(ap.getByteTimeDomainData()))
-        .avgNormalChian(targetSize)
-        .smoothChian()
-        .normalizeChain()
-      timeDomainChart.update(res2.data)
-
-      c1.update(dataProcessor(ap.getSubBass()).avgNormalChian(1).normalizeChain(255).data[0])
-      c2.update(dataProcessor(ap.getBass()).avgNormalChian(1).normalizeChain(255).data[0])
-      c3.update(dataProcessor(ap.getLowMid()).avgNormalChian(1).normalizeChain(255).data[0])
-      c4.update(dataProcessor(ap.getMid()).avgNormalChian(1).normalizeChain(255).data[0])
-      c5.update(dataProcessor(ap.getHighMid()).avgNormalChian(1).normalizeChain(255).data[0])
-      c6.update(dataProcessor(ap.getPresence()).avgNormalChian(1).normalizeChain(255).data[0])
-      c7.update(dataProcessor(ap.Brilliance()).avgNormalChian(1).normalizeChain(255).data[0])
+      update1()
+      update2()
+      update3()
     }
   })
 })

@@ -1,31 +1,32 @@
-export function dataProcessor(_data: number[]) {
-  let data = _data
+export class DataProcessor {
+  data: number[]
+  constructor(data: number[]) {
+    this.data = data
+  }
 
-  return {
-    avgNormalChian(size: number) {
-      data = avgNormal(data, size)
-      return this
-    },
-    smoothChian(windowSize = 3) {
-      data = smooth(data, windowSize)
-      return this
-    },
-    powerChian(expont = 1.7) {
-      data = power(data, expont)
-      return this
-    },
-    normalizeChain(max?: number) {
-      data = normalize(data, max)
-      return this
-    },
-    get data() {
-      return data
-    },
+  avgBucket(targetSize: number) {
+    this.data = avgBucket(this.data, targetSize)
+    return this
+  }
+
+  smooth(windowSize = 3) {
+    this.data = smooth(this.data, windowSize)
+    return this
+  }
+
+  power(expont: number) {
+    this.data = power(this.data, expont)
+    return this
+  }
+
+  normalize(max?: number) {
+    this.data = normalize(this.data, max)
+    return this
   }
 }
 
 // 将一组数据转换为指定size的平均数据
-export function avgNormal(data: number[], targetSize: number) {
+export function avgBucket(data: number[], targetSize: number) {
   const res = []
   const step = Math.floor(data.length / targetSize)
   for (let i = 0; i < data.length; i += step) {

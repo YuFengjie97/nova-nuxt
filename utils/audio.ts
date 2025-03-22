@@ -69,10 +69,6 @@ export class AudioParse {
     }
   }
 
-  getAudioBufferByArrayBuffer(arrayBuffer: ArrayBuffer) {
-    return this.audioCtx.decodeAudioData(arrayBuffer)
-  }
-
   setSmoothingTimeConstant(val: number) {
     this.analyser.smoothingTimeConstant = val
   }
@@ -135,20 +131,4 @@ export class AudioParse {
   Brilliance() {
     return this.getFrequencyRange([6001, 20000])
   }
-}
-
-export function getArrayBufferByFile(file: File, onProgress?: (progress: number) => void) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = () => resolve(reader.result)
-    reader.onerror = reject
-    reader.onprogress = (event) => {
-      onProgress && onProgress(event.loaded / event.total)
-    }
-    reader.readAsArrayBuffer(file)
-  })
-}
-
-export function getArrayBufferByUrl(url: string) {
-  console.log(url)
 }

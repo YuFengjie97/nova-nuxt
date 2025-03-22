@@ -8,18 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@tweenjs/tween.js':
-        specifier: ^25.0.0
-        version: 25.0.0
-      '@types/animejs':
-        specifier: ^3.1.13
-        version: 3.1.13
-      '@types/delaunator':
-        specifier: ^5.0.3
-        version: 5.0.3
-      '@types/three':
-        specifier: ^0.174.0
-        version: 0.174.0
       animejs:
         specifier: ^3.2.2
         version: 3.2.2
@@ -29,6 +17,9 @@ importers:
       delaunator:
         specifier: ^5.0.1
         version: 5.0.1
+      fft.js:
+        specifier: ^4.0.4
+        version: 4.0.4
       gsap:
         specifier: ^3.12.7
         version: 3.12.7
@@ -69,9 +60,21 @@ importers:
       '@tweakpane/core':
         specifier: ^2.0.5
         version: 2.0.5
+      '@tweenjs/tween.js':
+        specifier: ^25.0.0
+        version: 25.0.0
+      '@types/animejs':
+        specifier: ^3.1.13
+        version: 3.1.13
       '@types/chroma-js':
         specifier: ^3.1.1
         version: 3.1.1
+      '@types/delaunator':
+        specifier: ^5.0.3
+        version: 5.0.3
+      '@types/three':
+        specifier: ^0.174.0
+        version: 0.174.0
       '@unocss/nuxt':
         specifier: ^66.0.0
         version: 66.0.0(magicast@0.3.5)(postcss@8.5.3)(vite@6.1.1(@types/node@22.13.5)(jiti@2.4.2)(less@4.2.2)(terser@5.39.0)(yaml@2.7.0))(vue@3.5.13(typescript@5.7.3))(webpack@5.98.0)
@@ -2304,6 +2307,9 @@ packages:
 
   fflate@0.8.2:
     resolution: {integrity: sha512-cPJU47OaAoCbg0pBvzsgpTPhmhqI5eJjh/JIu8tPj5q+T7iLvW/JAYUqmE7KOB4R1ZyEhzBaIQpQpardBF5z8A==}
+
+  fft.js@4.0.4:
+    resolution: {integrity: sha512-f9c00hphOgeQTlDyavwTtu6RiK8AIFjD6+jvXkNkpeQ7rirK3uFWVpalkoS4LAwbdX7mfZ8aoBfFVQX1Re/8aw==}
 
   fftjs@0.0.4:
     resolution: {integrity: sha512-nIWxQyth1LVD6NH8a+YZUv+McjzbOY6dMe4wv6Pq5cGfP+c8Rd1T8Dsd50DCWlNgzSqA3y9lOkpD6dZD3qHa1A==}
@@ -7158,6 +7164,8 @@ snapshots:
       picomatch: 4.0.2
 
   fflate@0.8.2: {}
+
+  fft.js@4.0.4: {}
 
   fftjs@0.0.4:
     dependencies:
