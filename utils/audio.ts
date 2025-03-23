@@ -29,6 +29,10 @@ export class AudioParse {
     this.floatArrayTimeDomain = new Float32Array(this.bufferLength)
   }
 
+  setUrl(url: string) {
+    this.audio.src = url
+  }
+
   play() {
     if (this.audio.paused) {
       this.audio.play()
@@ -39,6 +43,15 @@ export class AudioParse {
     if (!this.audio.paused) {
       this.audio.pause()
     }
+  }
+
+  get progress() {
+    return this.audio.currentTime / this.audio.duration
+  }
+
+  setCurrentTimeByPercentile(percentile: number) {
+    const currentTime = percentile * this.audio.duration
+    this.audio.currentTime = currentTime
   }
 
   reset() {
@@ -104,31 +117,11 @@ export class AudioParse {
     return res
   }
 
-  getSubBass() {
-    return this.getFrequencyRange([20, 60])
-  }
-
   getBass() {
-    return this.getFrequencyRange([61, 250])
+    return this.getFrequencyRange([20, 250])
   }
 
-  getLowMid() {
-    return this.getFrequencyRange([251, 500])
-  }
-
-  getMid() {
-    return this.getFrequencyRange([501, 2000])
-  }
-
-  getHighMid() {
-    return this.getFrequencyRange([2001, 4000])
-  }
-
-  getPresence() {
-    return this.getFrequencyRange([4001, 6000])
-  }
-
-  Brilliance() {
-    return this.getFrequencyRange([6001, 20000])
+  getWide() {
+    return this.getFrequencyRange([251, 2000])
   }
 }

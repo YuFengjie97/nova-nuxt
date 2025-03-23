@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { Application } from 'pixi.js'
 import { Pane } from 'tweakpane'
-import { BarChart, LineChart } from './ui'
+import { BarChart, LineChart, ProgressBar } from './ui'
 import music from '/sound/savageLove.aac'
 
 const inputFile = ref<HTMLInputElement>()
 const pixiCon = ref<HTMLElement>()
 const app = new Application()
-const fftSize = 1024
-const targetSize = 100
+const fftSize = 128
+// const targetSize = 100
 // const frequencyColors = chroma.scale(['#fdcb6e', '#6c5ce7'])
 //   .mode('lch')
 //   .colors(7)
@@ -30,8 +30,8 @@ async function handelMusicChange(event: Event) {
   const file = target.files[0]
   const arrayBuffer = await getArrayBufferByFile(file)
   const audioBuffer = await getAudioBufferByArrayBuffer(arrayBuffer)
-  const sampleRage = audioBuffer.sampleRate
-  console.log('audioBuffer', audioBuffer, 'sampleRage', sampleRage)
+  const sampleRate = audioBuffer.sampleRate
+  console.log('audioBuffer', audioBuffer, 'sampleRage', sampleRate)
 
   const mixedTimeDomainData = mixedTimeDomain(audioBuffer)
   console.log('mixedTimeDomainData', mixedTimeDomainData)
@@ -39,10 +39,13 @@ async function handelMusicChange(event: Event) {
   const frequencyFrames = getFrequencyFrames(mixedTimeDomainData, fftSize)
   console.log('frequencyFrames', frequencyFrames)
 
-  const maxMaginatude = getMaxBassAndWideMagnitude(frequencyFrames, sampleRage, fftSize)
+  const maxMaginatude = getMaxBassAndWideMagnitude(frequencyFrames, sampleRate, fftSize)
   bassMaxMaginatude = maxMaginatude.bassMaxMaginatude
   wideMaxMaginatude = maxMaginatude.wideMaxMaginatude
   console.log({ bassMaxMaginatude, wideMaxMaginatude })
+
+  const url = URL.createObjectURL(file)
+  ap.setUrl(url)
 }
 
 onMounted(async () => {
@@ -68,45 +71,33 @@ onMounted(async () => {
   }
   initPane()
 
-  const frequencyChart = new BarChart(app, { w: 500, h: 200 }).setPos(0, 200)
-  const timeDomainChart = new LineChart(app, { w: 500, h: 200 }).setPos(500, 200)
-  const frequencyChart2 = new BarChart(app, { w: 500, h: 200 }).setPos(0, 400)
+  const frequencyChart = new BarChart(app, { w: 800, h: 200 }).setPos(0, 250)
+  const timeDomainChart = new LineChart(app, { w: 800, h: 200 }).setPos(0, 450)
+  const progress = new ProgressBar(app, { w: 500, h: 20 }).onClick((percentile: number) => {
+    ap.setCurrentTimeByPercentile(percentile)
+  })
 
   function update1() {
-    const dp = new DataProcessor(Array.from(ap.getByteFrequencyData()))
-    const data = dp
-      .avgBucket(targetSize)
+    const data = new DataProcessor(Array.from(ap.getByteFrequencyData()))
       .smooth()
-      .normalize()
+      .normalize(255)
       .data
     frequencyChart.update(data)
   }
   function update2() {
-    const dp = new DataProcessor(Array.from(ap.getByteTimeDomainData()))
-    const data = dp
-      .avgBucket(targetSize)
+    const data = new DataProcessor(Array.from(ap.getByteTimeDomainData()))
       .smooth()
       .normalize()
       .data
     timeDomainChart.update(data)
   }
 
-  function update3() {
-    const timeDomainData = ap.getFloatTimeDomainData()
-    const frequencyData = getFrequency(timeDomainData, fftSize)
-    const dp = new DataProcessor(Array.from(frequencyData))
-    const data = dp
-      .avgBucket(targetSize)
-      .normalize(bassMaxMaginatude)
-      .data
-    frequencyChart2.update(data)
-  }
-
   app.ticker.add(() => {
     if (ap.audio && !ap.audio.paused) {
       update1()
       update2()
-      update3()
+
+      progress.update(ap.progress)
     }
   })
 })

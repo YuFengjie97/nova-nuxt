@@ -88,12 +88,11 @@ export class BarChart {
   }
 
   drawBar(data: number[]) {
-    const gap = 2
-    const barWidth = Math.max(2, this.size.w / (data.length) - gap)
+    const barWidth = Math.max(-Infinity, this.size.w / (data.length))
     for (let i = 0; i < data.length; i++) {
       const bar = this.barList[i] ? this.barList[i] : new Graphics()
       bar.clear()
-      bar.rect(i * (barWidth + gap), 0, barWidth, data ? data[i] * this.size.h : 100)
+      bar.rect(i * (barWidth), 0, barWidth, data ? data[i] * this.size.h : 100)
         .fill('#6c5ce7')
 
       if (!this.barList[i]) {
@@ -188,5 +187,51 @@ export async function cirle(app: Application) {
       return this
     },
     update,
+  }
+}
+
+export class ProgressBar {
+  app: Application
+  size: { w: number, h: number }
+  group = new Container()
+  progressBottom = new Graphics()
+  progress = new Graphics()
+  constructor(app: Application, size: { w: number, h: number }) {
+    this.app = app
+    this.size = size
+    const { w, h } = size
+
+    app.stage.addChild(this.group)
+
+    this.progressBottom.rect(0, 0, w, h)
+      .fill({ color: '#00b894' })
+
+    this.progressBottom.eventMode = 'static'
+    this.progressBottom.cursor = 'pointer'
+
+    this.group.addChild(this.progressBottom)
+    this.group.addChild(this.progress)
+  }
+
+  draw(val: number) {
+    this.progress.clear()
+    this.progress
+      .rect(0, 0, this.size.w * val, this.size.h)
+      .fill({ color: '#81ecec' })
+  }
+
+  onClick(cb: (percentile: number) => void) {
+    this.progressBottom.on('pointerdown', (event) => {
+      const { x } = event.getLocalPosition(this.group)
+      const percentile = x / this.size.w
+      cb(percentile)
+      this.draw(percentile)
+    })
+
+    return this
+  }
+
+  update(val: number) {
+    this.draw(val)
   }
 }
