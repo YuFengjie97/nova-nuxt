@@ -7,7 +7,7 @@ import music from '/sound/savageLove.aac'
 const inputFile = ref<HTMLInputElement>()
 const pixiCon = ref<HTMLElement>()
 const app = new Application()
-const fftSize = 128
+const fftSize = 1024
 // const targetSize = 100
 // const frequencyColors = chroma.scale(['#fdcb6e', '#6c5ce7'])
 //   .mode('lch')
@@ -73,13 +73,13 @@ onMounted(async () => {
 
   const frequencyChart = new BarChart(app, { w: 800, h: 200 }).setPos(0, 250)
   const timeDomainChart = new LineChart(app, { w: 800, h: 200 }).setPos(0, 450)
-  const progress = new ProgressBar(app, { w: 500, h: 20 }).onClick((percentile: number) => {
+  const progress = new ProgressBar(app, { w: 800, h: 20 }).onClick((percentile: number) => {
     ap.setCurrentTimeByPercentile(percentile)
   })
 
   function update1() {
     const data = new DataProcessor(Array.from(ap.getByteFrequencyData()))
-      .smooth()
+      .smooth(20)
       .normalize(255)
       .data
     frequencyChart.update(data)

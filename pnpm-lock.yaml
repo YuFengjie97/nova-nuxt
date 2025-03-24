@@ -32,6 +32,9 @@ importers:
       nuxt:
         specifier: ^3.15.4
         version: 3.15.4(@parcel/watcher@2.5.1)(@types/node@22.13.5)(db0@0.2.4)(eslint@9.21.0(jiti@2.4.2))(ioredis@5.5.0)(less@4.2.2)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.34.8)(terser@5.39.0)(typescript@5.7.3)(vite@6.1.1(@types/node@22.13.5)(jiti@2.4.2)(less@4.2.2)(terser@5.39.0)(yaml@2.7.0))(yaml@2.7.0)
+      pixi-filters:
+        specifier: ^6.1.2
+        version: 6.1.2(pixi.js@8.8.1)
       pixi.js:
         specifier: ^8.8.1
         version: 8.8.1
@@ -1014,6 +1017,9 @@ packages:
 
   '@types/estree@1.0.6':
     resolution: {integrity: sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw==}
+
+  '@types/gradient-parser@0.1.5':
+    resolution: {integrity: sha512-r7K3NkJz3A95WkVVmjs0NcchhHstC2C/VIYNX4JC6tieviUNo774FFeOHjThr3Vw/WCeMP9kAT77MKbIRlO/4w==}
 
   '@types/http-proxy@1.17.16':
     resolution: {integrity: sha512-sdWoUajOB1cd0A8cRRQ1cfyWNbmFKLAqBB89Y8x5iYyG/mkJHc0YUH8pdWBy2omi9qtCpiIgGjuwO0dQST2l5w==}
@@ -3389,6 +3395,11 @@ packages:
     resolution: {integrity: sha512-uB80kBFb/tfd68bVleG9T5GGsGPjJrLAUpR5PZIrhBnIaRTQRjqdJSsIKkOP6OAIFbj7GOrcudc5pNjZ+geV2g==}
     engines: {node: '>=6'}
 
+  pixi-filters@6.1.2:
+    resolution: {integrity: sha512-zGyrMTcfapSIS8We+8RPzxIYkrUhn0KamRFA9qWwxggOk/guJcW05djg8xNvmNsCxn6LzxK5sODeEFIf9SF5Xg==}
+    peerDependencies:
+      pixi.js: '>=8.0.0-0'
+
   pixi.js@8.8.1:
     resolution: {integrity: sha512-Zmox3Vy52Kl6X/uxknKlxJWPVEFiP63nsX8soqB4butTkIOK3y7c9C204wcDfAgkwO1OlwYxscWtHv+ef4gqgA==}
 
@@ -5581,6 +5592,8 @@ snapshots:
       '@types/json-schema': 7.0.15
 
   '@types/estree@1.0.6': {}
+
+  '@types/gradient-parser@0.1.5': {}
 
   '@types/http-proxy@1.17.16':
     dependencies:
@@ -8565,6 +8578,11 @@ snapshots:
 
   pify@4.0.1:
     optional: true
+
+  pixi-filters@6.1.2(pixi.js@8.8.1):
+    dependencies:
+      '@types/gradient-parser': 0.1.5
+      pixi.js: 8.8.1
 
   pixi.js@8.8.1:
     dependencies:
