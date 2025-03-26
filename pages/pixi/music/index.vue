@@ -55,7 +55,7 @@ onMounted(async () => {
     smoothingTimeConstant: 0.8,
   }
 
-  ap = new AudioParse(music, fftSize)
+  ap = new AudioParse(fftSize, music)
 
   function initPane() {
     const pane = new Pane()
@@ -74,7 +74,7 @@ onMounted(async () => {
   const frequencyChart = new BarChart(app, { w: 800, h: 200 }).setPos(0, 250)
   const timeDomainChart = new LineChart(app, { w: 800, h: 200 }).setPos(0, 450)
   const progress = new ProgressBar(app, { w: 800, h: 20 }).onClick((percentile: number) => {
-    ap.setCurrentTimeByPercentile(percentile)
+    ap.currentTimePercentile = percentile
   })
 
   function update1() {
@@ -97,7 +97,7 @@ onMounted(async () => {
       update1()
       update2()
 
-      progress.update(ap.progress)
+      progress.update(ap.currentTimePercentile)
     }
   })
 })

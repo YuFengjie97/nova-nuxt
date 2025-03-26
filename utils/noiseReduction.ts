@@ -27,6 +27,13 @@ export class DataProcessor {
 
 // 将一组数据转换为指定size的平均数据
 export function avgBucket(data: number[], targetSize: number) {
+  if (targetSize <= 0)
+    throw new Error('targetSize 必须大于 0')
+  if (targetSize < data.length)
+    throw new Error('targetSize 需要大于data.length')
+  if (data.length === 0)
+    return []
+
   const res = []
   const step = Math.floor(data.length / targetSize)
   for (let i = 0; i < data.length; i += step) {

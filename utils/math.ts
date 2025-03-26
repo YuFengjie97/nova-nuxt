@@ -56,3 +56,24 @@ export function map(value: number, start1: number, stop1: number, start2: number
   const nor = (value - start1) / (stop1 - start1)
   return nor * (stop2 - start2)
 }
+
+export function lerpArrBySize(arr: number[], targetSize: number, byMax?: boolean) {
+  const multiplier = arr.length / targetSize
+  const res: number[] = []
+  for (let i = 0; i < targetSize; i++) {
+    const point = i * multiplier
+    const valueLeft = arr[Math.max(0, Math.floor(point))]
+    const valueRight = arr[Math.min(arr.length - 1, Math.ceil(point))]
+
+    let value
+    if (byMax) {
+      value = Math.max(valueLeft, valueRight)
+    }
+    else {
+      const t = point % 1
+      value = valueLeft * (1 - t) + valueRight * t
+    }
+    res.push(value)
+  }
+  return res
+}

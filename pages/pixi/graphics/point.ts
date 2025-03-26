@@ -1,8 +1,6 @@
-import type { Application } from 'pixi.js'
 import { Graphics } from 'pixi.js'
 
 export class Point {
-  app: Application
   color: string
   radius: number
   graphics = new Graphics()
@@ -11,12 +9,18 @@ export class Point {
   vel: Vector2 = new Vector2(0, 0)
   velBase = new Vector2(0, 0)
   negAccLen = 0.1
+  width = 0
+  height = 0
 
-  constructor(app: Application, color: string, radius: number) {
-    this.app = app
-    app.stage.addChild(this.graphics)
+  constructor(color: string, radius: number) {
     this.color = color
     this.radius = radius
+  }
+
+  setEdge(width: number, height: number) {
+    this.width = width
+    this.height = height
+    return this
   }
 
   setStartPos(...args: [number, number] | [Vector2]) {
@@ -66,7 +70,7 @@ export class Point {
   }
 
   edge() {
-    const { width, height } = this.app.canvas
+    const { width, height } = this
     const { x, y } = this.pos
     const gap = 20
     if (x <= -gap) {

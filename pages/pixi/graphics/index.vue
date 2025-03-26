@@ -1,19 +1,18 @@
 <script lang="ts" setup>
-import type { Coord } from './line'
 import chroma from 'chroma-js'
 import { AdvancedBloomFilter } from 'pixi-filters'
-import { Application } from 'pixi.js'
+import { Application, Container } from 'pixi.js'
 import { Pane } from 'tweakpane'
 import { Vector2 } from '~/utils/vector'
-import { BezierLine } from './line'
+import { ProgressBar } from '../music/ui'
 import { Point } from './point'
+import music from '/sound/savageLove.aac'
 
 const pixiCon = ref<HTMLElement>()
 const app = new Application()
-const points: Point[] = []
-
+const inputAudio = ref<HTMLInputElement>()
+let pane: Pane
 const colors = chroma.scale(['#ff6b6b', '#feca57']).mode('hsl').colors(6)
-
 const glowSettings = {
   show: true,
   bloomScale: 1.4,
@@ -23,7 +22,11 @@ const glowSettings = {
   quality: 9,
   pixelSize: { x: 1, y: 1 },
 }
-const glowFilter = new AdvancedBloomFilter(glowSettings)
+const { show, ...filterSettins } = glowSettings
+const glowFilter = new AdvancedBloomFilter(filterSettins)
+const fftSize = 1024
+let audioParse: AudioParse
+const pointNum = 20
 
 function glowPane(pane: Pane) {
   const folder = pane.addFolder({ title: 'glow' })
@@ -55,75 +58,107 @@ function glowPane(pane: Pane) {
   })
 }
 
-let pane: Pane
-onMounted(async () => {
-  await app.init({ background: '#121212', antialias: true, resizeTo: pixiCon.value })
-  pixiCon.value?.appendChild(app.canvas)
+function musicPane(pane: Pane) {
+  const floder = pane.addFolder({ title: 'music' })
+  floder.addButton({ title: 'upload' }).on('click', () => {
+    inputAudio.value?.click()
+  })
+  floder.addButton({ title: 'play' }).on('click', () => {
+    audioParse.play()
+  })
+  floder.addButton({ title: 'pause' }).on('click', () => {
+    audioParse.pause()
+  })
+}
 
-  pane = new Pane()
-  glowPane(pane)
-  app.stage.filters = [glowFilter]
+function handleMusicUpload(e: Event) {
+  const target = e.target as HTMLInputElement
+  if (!target.files) {
+    return
+  }
+  const file = target.files[0]
+  const url = getFileUrl(file)
 
+  audioParse.setUrl(url)
+}
+
+function initPoints(num: number) {
   const { width, height } = app.canvas
-
-  for (let i = 0; i < 20; i++) {
+  const points: Point[] = []
+  const group = new Container()
+  for (let i = 0; i < num; i++) {
     const x = Math.random() * width
     const y = Math.random() * height
-    const point = new Point(app, colors[i % 6], 4 + Math.random() * 10).setStartPos(x, y).setVelBase(new Vector2(4, 0))
+    const point = new Point(colors[i % 6], 4 + Math.random() * 10)
+      .setEdge(width, height)
+      .setStartPos(x, y)
+      .setVelBase(new Vector2(1, 0))
+    group.addChild(point.graphics)
     points.push(point)
   }
 
-  setInterval(() => {
-    points.forEach((point) => {
-      const flag = Math.random() < 0.5
-      if (flag) {
-        point.updateAcc(new Vector2(4, 0))
+  group.filters = [glowFilter]
+
+  return {
+    group,
+    points,
+  }
+}
+
+let interval: NodeJS.Timeout
+
+onMounted(async () => {
+  await app.init({ background: '#121212', antialias: true, resizeTo: pixiCon.value })
+  pixiCon.value?.appendChild(app.canvas)
+  const progress = new ProgressBar(app, { w: 700, h: 20 }).onClick((percentile: number) => {
+    audioParse.currentTimePercentile = percentile
+  })
+
+  audioParse = new AudioParse(fftSize, music)
+
+  pane = new Pane()
+  glowPane(pane)
+  musicPane(pane)
+  const { points, group } = initPoints(pointNum)
+  app.stage.addChild(group)
+
+  function getBeat() {
+    const bassFrequency = audioParse.getBass()
+    const data = new DataProcessor(bassFrequency).avgBucket(1).normalize(255).data[0]
+    return data
+  }
+  interval = setInterval(() => {
+    let beat: number
+    if (!audioParse.paused) {
+      beat = getBeat()
+    }
+    points.forEach((p) => {
+      if (!audioParse.paused && beat > 0.7) {
+        p.updateAcc(new Vector2(10, 0).multiply(beat))
       }
     })
-  }, 1000)
-
-  const bezierLine = new BezierLine(app).setPos(0, height / 2)
-
-  function getBezierLineCoords() {
-    const { width } = app.canvas
-    const coordsNum = 10
-    const gap = Math.floor(width / coordsNum)
-    const coords: Coord[] = Array.from({ length: coordsNum }).fill(0).map((item, i) => ({ x: i * gap, y: 0 }))
-    const yRange = [-40, 40]
-
-    let t = 0
-    function getCoords() {
-      t += 0.1
-      coords.forEach((item, i) => {
-        const m = Math.sin(t + i * 10) * 0.5 + 0.5
-        const y = map(m, 0, 1, yRange[0], yRange[1])
-        item.y = y
-      })
-
-      return coords
-    }
-
-    return getCoords
-  }
-
-  const getCoords = getBezierLineCoords()
+  }, 1500)
 
   app.ticker.add(() => {
     points.forEach((p) => {
       p.update()
     })
-    bezierLine.update(getCoords())
+
+    progress.update(audioParse.currentTimePercentile)
   })
 })
 
 onUnmounted(() => {
   app.destroy()
   pane.dispose()
+  audioParse.destroy()
+  clearInterval(interval)
 })
 </script>
 
 <template>
   <div class="w-full h-100vh">
+    <input ref="inputAudio" type="file" accept="audio/*" class="hidden" @change="handleMusicUpload">
     <div ref="pixiCon" class="w-full h-full" />
   </div>
 </template>

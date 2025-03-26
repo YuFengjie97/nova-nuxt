@@ -11,8 +11,8 @@ export class AudioParse {
   dataArrayTimeDomain: Uint8Array
   floatArrayFrequency: Float32Array
   floatArrayTimeDomain: Float32Array
-  constructor(url: string, public fftSize = 1024) {
-    this.audio = new Audio(url)
+  constructor(public fftSize = 1024, src?: string) {
+    this.audio = new Audio(src)
     this.audioCtx = new AudioContext()
     this.source = this.audioCtx.createMediaElementSource(this.audio)
     this.analyser = this.audioCtx.createAnalyser()
@@ -29,29 +29,33 @@ export class AudioParse {
     this.floatArrayTimeDomain = new Float32Array(this.bufferLength)
   }
 
+  get paused() {
+    return this.audio.paused
+  }
+
   setUrl(url: string) {
     this.audio.src = url
   }
 
   play() {
-    if (this.audio.paused) {
+    if (this.audio.paused && this.audio.src) {
       this.audio.play()
     }
   }
 
   pause() {
-    if (!this.audio.paused) {
+    if (!this.audio.paused && this.audio.src) {
       this.audio.pause()
     }
   }
 
-  get progress() {
-    return this.audio.currentTime / this.audio.duration
-  }
-
-  setCurrentTimeByPercentile(percentile: number) {
+  set currentTimePercentile(percentile: number) {
     const currentTime = percentile * this.audio.duration
     this.audio.currentTime = currentTime
+  }
+
+  get currentTimePercentile() {
+    return this.audio.currentTime / this.audio.duration
   }
 
   reset() {
@@ -107,6 +111,7 @@ export class AudioParse {
   }
 
   getFrequencyRange(range: [number, number]) {
+    this.getByteFrequencyData()
     const res = []
     for (let i = 0; i < this.bufferLength; i++) {
       const binMid = (i + 0.5) * this.bin
