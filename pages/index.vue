@@ -39,6 +39,9 @@
     <NuxtLink to="pixi/graphics">
       graphics
     </NuxtLink>
+    <NuxtLink to="pixi/fire">
+      fire
+    </NuxtLink>
   </div>
 </template>
 
