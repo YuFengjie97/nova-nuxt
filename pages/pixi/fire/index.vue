@@ -97,7 +97,7 @@ class Fire {
     this.displacementFilter.scale.set(100)
     this.glowFilter = new AdvancedBloomFilter({ bloomScale: 0.5, threshold: 0.2 })
     this.group.filters = [this.displacementFilter, this.glowFilter]
-    const w = trackHalfWidth + 40
+    const w = trackHalfWidth + 80
     const h = trackHeight + 80
     this.group.filterArea = new Rectangle(-w, -40, w * 2, h)
     this.group.scale.y = -1
@@ -137,6 +137,7 @@ onMounted(async () => {
   pixCon.value?.appendChild(app.canvas)
 
   const texture = await Assets.load(runtimePath('/img/fire-texture.jpg'))
+  // const texture = await Assets.load(runtimePath('/img/displacement_map.png'))
   const sprite = new Sprite(texture)
   sprite.texture.source.wrapMode = 'mirror-repeat'
 
