@@ -36,9 +36,6 @@
     <NuxtLink to="pixi/music">
       music
     </NuxtLink>
-    <NuxtLink to="pixi/graphics">
-      graphics
-    </NuxtLink>
     <NuxtLink to="pixi/fire">
       fire
     </NuxtLink>
