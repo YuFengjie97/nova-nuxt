@@ -42,6 +42,9 @@
     <NuxtLink to="pixi/fire">
       fire
     </NuxtLink>
+    <NuxtLink to="pixi/fire2">
+      fire2
+    </NuxtLink>
   </div>
 </template>
 
