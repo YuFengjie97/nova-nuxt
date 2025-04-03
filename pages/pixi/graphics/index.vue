@@ -3,9 +3,9 @@ import chroma from 'chroma-js'
 import { AdvancedBloomFilter } from 'pixi-filters'
 import { Application, Container } from 'pixi.js'
 import { Pane } from 'tweakpane'
+import { Point } from '~/utils/pixi/point'
+import { ProgressBar } from '~/utils/pixi/ui'
 import { Vector2 } from '~/utils/vector'
-import { ProgressBar } from '../music/ui'
-import { Point } from './point'
 import music from '/sound/savageLove.aac'
 
 const pixiCon = ref<HTMLElement>()

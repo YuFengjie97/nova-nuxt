@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { Application } from 'pixi.js'
 import { Pane } from 'tweakpane'
-import { BarChart, LineChart, ProgressBar } from './ui'
+import { BarChart, LineChart, ProgressBar } from '~/utils/pixi/ui'
 import music from '/sound/savageLove.aac'
 
 const inputFile = ref<HTMLInputElement>()
