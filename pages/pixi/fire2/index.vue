@@ -2,6 +2,7 @@
 import type { Texture } from 'three'
 import chroma from 'chroma-js'
 import { AdvancedBloomFilter } from 'pixi-filters'
+import { Stats } from 'pixi-stats'
 import { Application, Assets, Container, DisplacementFilter, Graphics, Sprite } from 'pixi.js'
 
 type FirePixels = Map<ReturnType<Vector2['toString']>, FirePixel>
@@ -13,7 +14,6 @@ const firePixelSize = 10
 const fireScaleColors = chroma.scale(['#130f40', '#d63031', '#f9ca24', '#fff'])
   .mode('lch')
   .colors(36)
-let stats: PixiStatsWrap
 
 function showFireScaleColor(app: Application) {
   const group = new Container()
@@ -155,8 +155,7 @@ onMounted(async () => {
   await app.init({ background: fireScaleColors[0], antialias: true, resizeTo: pixCon.value })
   pixCon.value?.appendChild(app.canvas)
 
-  stats = new PixiStatsWrap(app)
-  console.log(stats)
+  const _ = new Stats(app.renderer)
 
   showFireScaleColor(app)
 
@@ -175,7 +174,6 @@ onMounted(async () => {
 
 onUnmounted(() => {
   app.destroy()
-  // stats.destory()
 })
 </script>
 
