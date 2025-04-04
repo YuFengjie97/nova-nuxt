@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import type { Texture } from 'three'
 import chroma from 'chroma-js'
-import { Stats } from 'pixi-stats'
 import { Application, Assets, Container, Graphics, Sprite } from 'pixi.js'
 
 const { ceil, round, random, min, max } = Math
@@ -12,6 +11,7 @@ const fireScaleColors = chroma.scale(['#130f40', '#d63031', '#f9ca24', '#fff'])
   .mode('lch')
   .colors(36)
 const firePixels: Map<ReturnType<Vector2['toString']>, FirePixel> = new Map()
+let stats: PixiStatsWrap
 
 function showFireScaleColor(app: Application) {
   const group = new Container()
@@ -124,8 +124,7 @@ onMounted(async () => {
   await app.init({ background: fireScaleColors[0], antialias: true, resizeTo: pixCon.value })
   pixCon.value?.appendChild(app.canvas)
 
-  const stats = new Stats(app.renderer)
-  console.log(stats)
+  stats = new PixiStatsWrap(app)
 
   showFireScaleColor(app)
   const texturePath = runtimePath('img/white.png')
@@ -148,6 +147,7 @@ onMounted(async () => {
 
 onUnmounted(() => {
   app.destroy()
+  stats.destory()
 })
 </script>
 
