@@ -2,8 +2,8 @@
 import type { Texture } from 'three'
 import chroma from 'chroma-js'
 import { AdvancedBloomFilter } from 'pixi-filters'
-import { Stats } from 'pixi-stats'
 import { Application, Assets, Container, DisplacementFilter, Graphics, Sprite } from 'pixi.js'
+import Stats from 'stats.js'
 
 type FirePixels = Map<ReturnType<Vector2['toString']>, FirePixel>
 
@@ -145,17 +145,27 @@ async function getDisplacementFilter() {
   // const texture = await Assets.load(runtimePath('/img/fire-texture.jpg'))
   const texture = await Assets.load(runtimePath('/img/displacement_map.png'))
   const sprite = new Sprite(texture)
-  sprite.texture.source.wrapMode = 'mirror-repeat'
+  sprite.texture.source.addressMode = 'mirror-repeat'
 
-  const filter = new DisplacementFilter(sprite, 10)
+  const filter = new DisplacementFilter({ sprite, scale: 10 })
   return filter
+}
+
+function initStats() {
+  const stats = new Stats()
+  pixCon.value?.appendChild(stats.dom)
+  Object.assign(stats.dom.style, {
+    left: null,
+    right: '0px',
+  })
+  return stats
 }
 
 onMounted(async () => {
   await app.init({ background: fireScaleColors[0], antialias: true, resizeTo: pixCon.value })
   pixCon.value?.appendChild(app.canvas)
 
-  const _ = new Stats(app.renderer)
+  const stats = initStats()
 
   showFireScaleColor(app)
 
@@ -165,10 +175,14 @@ onMounted(async () => {
   fireGroup.filters = [bloomFilter, displacementFilter]
 
   app.ticker.add(() => {
+    stats.begin()
+
     for (const pixel of firePixels.values()) {
       pixel.spreadFire(firePixels)
       pixel.draw()
     }
+
+    stats.end()
   })
 })
 
