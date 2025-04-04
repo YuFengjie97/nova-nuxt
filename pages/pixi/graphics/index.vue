@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import type { Filter } from 'pixi.js'
 import chroma from 'chroma-js'
 import { AdvancedBloomFilter } from 'pixi-filters'
 import { Application, Container } from 'pixi.js'
@@ -9,10 +10,17 @@ import { Vector2 } from '~/utils/vector'
 import music from '/sound/savageLove.aac'
 
 const pixiCon = ref<HTMLElement>()
-const app = new Application()
 const inputAudio = ref<HTMLInputElement>()
+
+const app = new Application()
+
 let pane: Pane
+const fftSize = 1024
+let audioParse: AudioParse
+
+const pointNum = 20
 const colors = chroma.scale(['#ff6b6b', '#feca57']).mode('hsl').colors(6)
+
 const glowSettings = {
   show: true,
   bloomScale: 1.4,
@@ -23,12 +31,8 @@ const glowSettings = {
   pixelSize: { x: 1, y: 1 },
 }
 const { show, ...filterSettins } = glowSettings
-const glowFilter = new AdvancedBloomFilter(filterSettins)
-const fftSize = 1024
-let audioParse: AudioParse
-const pointNum = 20
 
-function glowPane(pane: Pane) {
+function glowPane(pane: Pane, glowFilter: AdvancedBloomFilter) {
   const folder = pane.addFolder({ title: 'glow' })
   folder.addBinding(glowSettings, 'show').on('change', (e) => {
     if (e.value) {
@@ -82,7 +86,7 @@ function handleMusicUpload(e: Event) {
   audioParse.setUrl(url)
 }
 
-function initPoints(num: number) {
+function initPoints(num: number, filters: Filter[]) {
   const { width, height } = app.canvas
   const points: Point[] = []
   const group = new Container()
@@ -97,7 +101,7 @@ function initPoints(num: number) {
     points.push(point)
   }
 
-  group.filters = [glowFilter]
+  group.filters = [...filters]
 
   return {
     group,
@@ -110,6 +114,7 @@ let interval: NodeJS.Timeout
 onMounted(async () => {
   await app.init({ background: '#121212', antialias: true, resizeTo: pixiCon.value })
   pixiCon.value?.appendChild(app.canvas)
+
   const progress = new ProgressBar(app, { w: 700, h: 20 }).onClick((percentile: number) => {
     audioParse.currentTimePercentile = percentile
   })
@@ -117,9 +122,11 @@ onMounted(async () => {
   audioParse = new AudioParse(fftSize, music)
 
   pane = new Pane()
-  glowPane(pane)
   musicPane(pane)
-  const { points, group } = initPoints(pointNum)
+
+  const glowFilter = new AdvancedBloomFilter(filterSettins)
+  glowPane(pane, glowFilter)
+  const { points, group } = initPoints(pointNum, [glowFilter])
   app.stage.addChild(group)
 
   function getBeat() {
