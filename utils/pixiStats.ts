@@ -18,7 +18,5 @@ export class PixiStatsWrap {
     if (parent) {
       parent.removeChild(dom)
     }
-
-    this.app?.ticker?.remove(this.stats.update)
   }
 }
