@@ -70,6 +70,17 @@ const charWrap = ref<HTMLElement>()
 let ind = 0
 
 onMounted(async () => {
+  const path = runtimePath('/fonts/DwarvenAxe BB W00 Regular.ttf')
+
+  const style = document.createElement('style')
+  style.innerHTML = `
+    @font-face {
+      font-family: 'DwarvenAxe';
+      src: url('${path}');
+    }
+  `
+  document.head.appendChild(style)
+
   while (ind < text.length) {
     const char = text[ind]
     const charWrap = new CharWrap(ind, char)
@@ -104,10 +115,10 @@ onUnmounted(() => {
 </template>
 
 <style lang="less" scoped>
-@font-face {
-  font-family: 'DwarvenAxe';
-  src: url('/fonts/DwarvenAxe BB W00 Regular.ttf');
-}
+// @font-face {
+//   font-family: 'DwarvenAxe';
+//   src: url('/fonts/DwarvenAxe BB W00 Regular.ttf');
+// }
 
 .char-wrap {
   --font-size: 40px;
