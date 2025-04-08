@@ -1,4 +1,7 @@
+import { createNoise2D } from 'simplex-noise'
 import { Vector2, Vector3 } from 'three'
+
+const noise2d = createNoise2D()
 
 export function getTriangleCenter<T>(p1: T, p2: T, p3: T): T {
   if (p1 instanceof Vector2 && p2 instanceof Vector2 && p3 instanceof Vector2)
@@ -76,4 +79,29 @@ export function lerpArrBySize(arr: number[], targetSize: number, byMax?: boolean
     res.push(value)
   }
   return res
+}
+
+// https://thebookofshaders.com/13/?lan=ch
+export function fbm2D(x: number, y: number, fbmOptions: { octaves: number, lacunarity: number, gain: number, amplitude: number, frequency: number }) {
+  const { octaves, lacunarity, gain, amplitude, frequency } = fbmOptions
+
+  let fre = frequency
+  let amp = amplitude
+
+  let res = 0
+
+  for (let i = 0; i < octaves; i++) {
+    res += amp * noise2d(fre * x, fre * y)
+    fre *= lacunarity
+    amp *= gain
+  }
+
+  return res
+}
+
+export function catmullRom(p0: number, p1: number, p2: number, p3: number, t: number) {
+  const v0 = (p2 - p0) * 0.5
+  const v1 = (p3 - p1) * 0.5
+  return (2 * p1 - 2 * p2 + v0 + v1) * t * t * t
+    + (-3 * p1 + 3 * p2 - 2 * v0 - v1) * t * t + v0 * t + p1
 }

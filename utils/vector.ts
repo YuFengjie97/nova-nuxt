@@ -39,6 +39,12 @@ export class Vector2 {
     return this
   }
 
+  sub(vec2: Vector2) {
+    this.x -= vec2.x
+    this.y -= vec2.y
+    return this
+  }
+
   multiply(arg: number): Vector2
   multiply(arg: Vector2): Vector2
   multiply(arg: number | Vector2): Vector2 {
@@ -83,6 +89,11 @@ export class Vector2 {
 
   get length() {
     return Math.sqrt(this.x ** 2 + this.y ** 2)
+  }
+
+  dist(vec2: Vector2) {
+    const dist = vec2.clone().sub(this)
+    return dist.length
   }
 
   toArray(): [number, number] {
