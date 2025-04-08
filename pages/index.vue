@@ -45,6 +45,12 @@
     <NuxtLink to="pixi/fire2">
       fire2
     </NuxtLink>
+    <NuxtLink to="pixi/catmullRom">
+      catmull-rom
+    </NuxtLink>
+    <NuxtLink to="pixi/lightning">
+      lightning
+    </NuxtLink>
   </div>
 </template>
 
