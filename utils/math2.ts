@@ -77,8 +77,8 @@ export function catmullRom(p0: number, p1: number, p2: number, p3: number, t: nu
 
 export function catmullRomPoint(p0: Vector2, p1: Vector2, p2: Vector2, p3: Vector2, segementNum: number) {
   const points: Vector2[] = []
-  for (let i = 0; i <= segementNum; i++) {
-    const t = i / segementNum
+  for (let i = 0; i < segementNum; i++) {
+    const t = (i + 1) / segementNum
     const x = catmullRom(p0.x, p1.x, p2.x, p3.x, t)
     const y = catmullRom(p0.y, p1.y, p2.y, p3.y, t)
     points.push(new Vector2(x, y))

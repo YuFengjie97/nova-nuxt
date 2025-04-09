@@ -5,7 +5,7 @@ import { Pane } from 'tweakpane'
 
 const pixiCon = ref<HTMLElement>()
 const app = new Application()
-const { atan2 } = Math
+const { atan2, sin, cos, PI } = Math
 
 const noise2d = createNoise2D()
 
@@ -133,35 +133,34 @@ class Lightning {
       const dy = next.y - p.y
       const dx = next.x - p.x
       const angle = atan2(dy, dx)
-      const sin = Math.sin(angle)
-      const cos = Math.cos(angle)
 
-      const base = i * noiseBase
+      const base = i / noiseBase
 
       let av
       if (useNoiseOrFbm.useNoise) {
-        av = lightningLen * 0.1 * noise2d(base + offset, offset) * amp
+        av = lightningLen * 0.1 * noise2d(base - offset, offset) * amp
       }
       else {
-        av = lightningLen * 0.1 * fbm2D(base + offset, offset, fbmOptions) * amp
+        av = lightningLen * 0.1 * fbm2D(base - offset, offset, fbmOptions) * amp
       }
-      const ax = av * cos
-      const ay = av * sin
+      const ax = av * cos(angle - PI / 2)
+      const ay = av * sin(angle - PI / 2)
 
       let bv
       if (useNoiseOrFbm.useNoise) {
-        bv = lightningLen * 0.1 * noise2d(base - offset, offset) * amp
+        bv = lightningLen * 0.1 * noise2d(base + offset, offset) * amp
       }
       else {
-        bv = lightningLen * 0.1 * fbm2D(base - offset, offset, fbmOptions) * amp
+        bv = lightningLen * 0.1 * fbm2D(base + offset, offset, fbmOptions) * amp
       }
-      const bx = bv * cos
-      const by = bv * sin
+      const bx = bv * cos(angle + PI / 2)
+      const by = bv * sin(angle + PI / 2)
 
+      // 减轻两端的噪音
       const m = Math.sin(i / len * Math.PI)
 
       const x = p.x + (ax + bx) * m
-      const y = p.y - (ay + by) * m
+      const y = p.y + (ay + by) * m
 
       const np = new Vector2(x, y)
       noisePoints.push(np)
@@ -189,7 +188,7 @@ class Lightning {
         }
       }
 
-      if (k > -1) {
+      if (k !== -1) {
         shortest.push(points[k])
         i = k - 1 // k-1而不是k,是为了尽量保证连续性
       }
@@ -241,7 +240,7 @@ class Lightning {
         const { x, y } = points[i]
         this.pathGraph.lineTo(x, y)
       }
-      this.pathGraph.stroke({ color: 'rgb(74, 231, 255)', width: 4 })
+      this.pathGraph.stroke({ color: 'rgb(74, 231, 255)', width: 4, join: 'round' })
     }
   }
 }
@@ -254,7 +253,7 @@ function modelParamPane(pane: Pane, title: string, lightning: Lightning, modelPa
   folder.addBinding(modelParam, 'amp', { min: 0.1, max: 2, step: 0.1 }).on('change', (event) => {
     lightning.changeModelParam(modelParam, 'amp', event.value)
   })
-  folder.addBinding(modelParam, 'speed', { min: 0.01, max: 2, step: 0.01 }).on('change', (event) => {
+  folder.addBinding(modelParam, 'speed', { min: 0.01, max: 0.2, step: 0.01 }).on('change', (event) => {
     lightning.changeModelParam(modelParam, 'amp', event.value)
   })
 }
