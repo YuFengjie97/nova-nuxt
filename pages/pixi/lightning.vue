@@ -270,7 +270,7 @@ function initStats() {
 }
 
 let stats: Stats
-
+let pane: Pane
 onMounted(async () => {
   await app.init({ background: '#111', resizeTo: pixiCon.value, antialias: true })
   app.stage.eventMode = 'static'
@@ -281,7 +281,7 @@ onMounted(async () => {
 
   const lightning = new Lightning(app)
 
-  const pane = new Pane()
+  pane = new Pane()
   fbmPane(pane)
   modelParamPane(pane, 'modelParam_1', lightning, modelParam1)
   modelParamPane(pane, 'modelParam_2', lightning, modelParam2)
@@ -304,6 +304,7 @@ onMounted(async () => {
 
 onUnmounted(() => {
   app.destroy(true, { children: true, texture: true })
+  pane.dispose()
 })
 </script>
 
