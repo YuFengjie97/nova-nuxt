@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { Application, Container, Graphics, Rectangle } from 'pixi.js'
 import { createNoise2D } from 'simplex-noise'
+import Stats from 'stats.js'
 import { Pane } from 'tweakpane'
 
 const pixiCon = ref<HTMLElement>()
@@ -254,15 +255,29 @@ function modelParamPane(pane: Pane, title: string, lightning: Lightning, modelPa
     lightning.changeModelParam(modelParam, 'amp', event.value)
   })
   folder.addBinding(modelParam, 'speed', { min: 0.01, max: 0.2, step: 0.01 }).on('change', (event) => {
-    lightning.changeModelParam(modelParam, 'amp', event.value)
+    lightning.changeModelParam(modelParam, 'speed', event.value)
   })
 }
+
+function initStats() {
+  const stats = new Stats()
+  pixiCon.value?.appendChild(stats.dom)
+  // Object.assign(stats.dom.style, {
+  //   left: null,
+  //   right: '0px',
+  // })
+  return stats
+}
+
+let stats: Stats
 
 onMounted(async () => {
   await app.init({ background: '#111', resizeTo: pixiCon.value, antialias: true })
   app.stage.eventMode = 'static'
   app.stage.hitArea = new Rectangle(0, 0, app.screen.width, app.screen.height)
   pixiCon.value?.appendChild(app.canvas)
+
+  stats = initStats()
 
   const lightning = new Lightning(app)
 
@@ -283,6 +298,7 @@ onMounted(async () => {
   app.ticker.add(() => {
     lightning.update()
     lightning.draw()
+    stats.update()
   })
 })
 
