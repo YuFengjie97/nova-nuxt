@@ -51,6 +51,9 @@
     <NuxtLink to="pixi/lightning">
       lightning
     </NuxtLink>
+    <NuxtLink to="pixi/noise">
+      noise
+    </NuxtLink>
   </div>
 </template>
 

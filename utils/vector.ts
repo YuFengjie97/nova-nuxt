@@ -17,6 +17,12 @@ export class Vector2 {
     }
   }
 
+  static fromAngle(angle: number) {
+    const x = Math.cos(angle)
+    const y = Math.sin(angle)
+    return new Vector2(x, y)
+  }
+
   set(x: number, y: number): Vector2
   set(vec2: Vector2): Vector2
   set(...args: [number, number] | [Vector2]) {

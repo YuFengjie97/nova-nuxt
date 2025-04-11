@@ -85,3 +85,8 @@ export function catmullRomPoint(p0: Vector2, p1: Vector2, p2: Vector2, p3: Vecto
   }
   return points
 }
+
+export function randomRange(min: number, max: number) {
+  const { random } = Math
+  return random() * (max - min) + min
+}
