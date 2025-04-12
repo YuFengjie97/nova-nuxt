@@ -54,6 +54,9 @@
     <NuxtLink to="pixi/noise">
       noise
     </NuxtLink>
+    <NuxtLink to="pixi/bezierMove">
+      bezierMove
+    </NuxtLink>
   </div>
 </template>
 
