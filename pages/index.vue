@@ -57,6 +57,9 @@
     <NuxtLink to="pixi/bezierMove">
       bezierMove
     </NuxtLink>
+    <NuxtLink to="pixi/wave">
+      wave
+    </NuxtLink>
   </div>
 </template>
 
