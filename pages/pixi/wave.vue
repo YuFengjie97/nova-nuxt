@@ -19,11 +19,11 @@ class Wave {
   noiseOffset: number = 0
   noiseInc: number = 0.02
   color: string = 'red'
-  constructor(app: Application, pos: Vector2) {
+  constructor(app: Application, graph: Graphics, pos: Vector2) {
     this.pos = pos
     this.initPoint()
 
-    this.graph = new Graphics()
+    this.graph = graph
     app.stage.addChild(this.graph)
   }
 
@@ -49,7 +49,7 @@ class Wave {
 
     for (let i = 0; i < basePoints.length; i++) {
       const angle = i * a
-      const dist = (noise2D(noiseOffset + i / basePoints.length, noiseOffset) * 0.5 + 0.5) * gainRadius + baseRadius
+      const dist = (noise2D(noiseOffset + i * 10, noiseOffset) * 0.5 + 0.5) * gainRadius + baseRadius
 
       const x = Math.cos(angle) * dist
       const y = Math.sin(angle) * dist
@@ -90,7 +90,6 @@ class Wave {
 
   draw() {
     const { graph, points, color } = this
-    graph.clear()
     const fir = points[0]
     graph.moveTo(fir.x, fir.y)
     for (let i = 1; i < points.length; i++) {
@@ -107,6 +106,10 @@ onMounted(async () => {
   await app.init({ antialias: true, background: '#111', resizeTo: pixiCon.value })
   pixiCon.value?.appendChild(app.canvas)
 
+  const graph = new Graphics()
+  graph.blendMode = 'add'
+  app.stage.addChild(graph)
+
   const stats = new Stats()
   pixiCon.value?.appendChild(stats.dom)
 
@@ -122,18 +125,24 @@ onMounted(async () => {
   for (let i = 0; i < colors.length; i++) {
     const color = colors[i]
     const offset = i
-    const wave = new Wave(app, center).setNoiseOffset(offset).setColor(color)
+    const wave = new Wave(app, graph, center).setNoiseOffset(offset).setColor(color)
     waves.push(wave)
   }
 
   app.ticker.add(() => {
     stats.update()
 
+    graph.clear()
+
     for (const wave of waves) {
       wave.update()
       wave.draw()
     }
   })
+})
+
+onUnmounted(() => {
+  app.destroy(true, { children: true })
 })
 </script>
 
