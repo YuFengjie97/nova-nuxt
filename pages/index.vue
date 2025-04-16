@@ -2,7 +2,7 @@
 </script>
 
 <template>
-  <div class="flex gap-10px">
+  <div class="flex gap-10px flex-wrap p-10px">
     <NuxtLink to="css/flipcardwall">
       css flip wall
     </NuxtLink>
@@ -60,9 +60,19 @@
     <NuxtLink to="pixi/wave">
       wave
     </NuxtLink>
+    <NuxtLink to="canvas/wave">
+      canvas  wave
+    </NuxtLink>
   </div>
 </template>
 
-<style>
-
+<style lang="less" scoped>
+a{
+  display: block;
+  background-color: rgb(52, 52, 52);
+  padding: 10px 20px;
+  color: #fff;
+  border-radius: 4px;
+  text-decoration: none;
+}
 </style>
