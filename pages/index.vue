@@ -63,6 +63,9 @@
     <NuxtLink to="canvas/wave">
       canvas  wave
     </NuxtLink>
+    <NuxtLink to="pixi/bubble">
+      bubble
+    </NuxtLink>
   </div>
 </template>
 
