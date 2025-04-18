@@ -66,6 +66,9 @@
     <NuxtLink to="pixi/bubble">
       bubble
     </NuxtLink>
+    <NuxtLink to="pixi/smoke">
+      smoke
+    </NuxtLink>
   </div>
 </template>
 

@@ -90,3 +90,9 @@ export function randomRange(min: number, max: number) {
   const { random } = Math
   return random() * (max - min) + min
 }
+
+export function times(count: number, fn: (n?: number) => void) {
+  for (let i = 0; i < count; i++) {
+    fn(i)
+  }
+}
