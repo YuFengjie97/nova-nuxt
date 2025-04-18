@@ -25,6 +25,7 @@
     "stats.js": "^0.17.0",
     "three": "^0.174.0",
     "tweakpane": "^4.0.5",
+    "vite-plugin-glsl": "^1.4.0",
     "vue": "latest",
     "vue-router": "latest"
   },

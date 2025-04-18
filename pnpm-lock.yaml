@@ -50,6 +50,9 @@ importers:
       tweakpane:
         specifier: ^4.0.5
         version: 4.0.5
+      vite-plugin-glsl:
+        specifier: ^1.4.0
+        version: 1.4.0(rollup@4.34.8)(vite@6.1.1(@types/node@22.13.5)(jiti@2.4.2)(less@4.2.2)(terser@5.39.0)(yaml@2.7.0))
       vue:
         specifier: latest
         version: 3.5.13(typescript@5.7.3)
@@ -4354,6 +4357,12 @@ packages:
         optional: true
       vue-tsc:
         optional: true
+
+  vite-plugin-glsl@1.4.0:
+    resolution: {integrity: sha512-mjT4AaU4qRmlpawgd0M2Qz72tvK4WF0ii2p0WbVRpr7ga6+cRScJUT3oIMv5coT8u/lqUe9u9T5+0zJLZ1uhug==}
+    engines: {node: '>= 20.17.0', npm: '>= 10.8.3'}
+    peerDependencies:
+      vite: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0
 
   vite-plugin-inspect@0.8.9:
     resolution: {integrity: sha512-22/8qn+LYonzibb1VeFZmISdVao5kC22jmEKm24vfFE8siEn47EpVcCLYMv6iKOYMJfjSvSJfueOwcFCkUnV3A==}
@@ -9602,6 +9611,13 @@ snapshots:
       eslint: 9.21.0(jiti@2.4.2)
       optionator: 0.9.4
       typescript: 5.7.3
+
+  vite-plugin-glsl@1.4.0(rollup@4.34.8)(vite@6.1.1(@types/node@22.13.5)(jiti@2.4.2)(less@4.2.2)(terser@5.39.0)(yaml@2.7.0)):
+    dependencies:
+      '@rollup/pluginutils': 5.1.4(rollup@4.34.8)
+      vite: 6.1.1(@types/node@22.13.5)(jiti@2.4.2)(less@4.2.2)(terser@5.39.0)(yaml@2.7.0)
+    transitivePeerDependencies:
+      - rollup
 
   vite-plugin-inspect@0.8.9(@nuxt/kit@3.15.4(magicast@0.3.5))(rollup@4.34.8)(vite@6.1.1(@types/node@22.13.5)(jiti@2.4.2)(less@4.2.2)(terser@5.39.0)(yaml@2.7.0)):
     dependencies:

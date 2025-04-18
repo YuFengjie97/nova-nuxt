@@ -3,6 +3,9 @@
 
 <template>
   <div class="flex gap-10px flex-wrap p-10px">
+    <div class="border">
+      css
+    </div>
     <NuxtLink to="css/flipcardwall">
       css flip wall
     </NuxtLink>
@@ -30,6 +33,9 @@
     <NuxtLink to="music/dancedoge">
       狗子
     </NuxtLink>
+    <div class="border">
+      pixi
+    </div>
     <NuxtLink to="pixi/begin">
       pixi
     </NuxtLink>
@@ -69,6 +75,12 @@
     <NuxtLink to="pixi/smoke">
       smoke
     </NuxtLink>
+    <div class="border">
+      shader
+    </div>
+    <NuxtLink to="shader/begin">
+      begin
+    </NuxtLink>
   </div>
 </template>
 
@@ -80,5 +92,20 @@ a{
   color: #fff;
   border-radius: 4px;
   text-decoration: none;
+}
+.border{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &::before, &::after{
+    content: '';
+    display: block;
+    flex: 1;
+    height: 0px;
+    border: 2px solid black;
+    border-radius: 2px;
+    margin: 0px 20px;
+  }
 }
 </style>

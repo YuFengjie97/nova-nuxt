@@ -1,4 +1,5 @@
 import { env } from 'node:process'
+import glsl from 'vite-plugin-glsl'
 // 需要本地env文件,但是nuxt3因为安全,env文件不会选择推送
 // const baseURL = process.env.BASE_URL || '/nova-nuxt/'
 
@@ -13,6 +14,9 @@ export default defineNuxtConfig({
   modules: [
     '@unocss/nuxt',
   ],
+  vite: {
+    plugins: [glsl()],
+  },
   app: {
     baseURL,
     pageTransition: { name: 'page', mode: 'out-in' },
