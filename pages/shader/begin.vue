@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Application, Assets, Geometry, Mesh, Shader } from 'pixi.js'
+import { Application, Assets, Geometry, Mesh, Shader, UniformGroup } from 'pixi.js'
 import fragment from '~/shaders/begin/frag.frag'
 import vertex from '~/shaders/begin/vert.vert'
 
@@ -11,20 +11,18 @@ onMounted(async () => {
   pixiCon.value?.appendChild(app.canvas)
   const { width, height } = app.screen
 
+  const scale = Math.min(width, height)
+
   const geometry = new Geometry({
     attributes: {
-      aPosition: [
-        0,
-        0, // x, y
-        width,
-        0, // x, y
-        width,
-        height, // x, y,
-        0,
-        height, // x, y,
-      ],
+      aPosition: [0, 0, width, 0, width, height, 0, height],
+      aUV: [0, 0, width / scale, 0, width / scale, height / scale, 0, height / scale],
     },
     indexBuffer: [0, 1, 2, 0, 2, 3],
+  })
+
+  const uTime = new UniformGroup({
+    uTime: { value: 1, type: 'f32' },
   })
 
   const shader = Shader.from({
@@ -33,11 +31,10 @@ onMounted(async () => {
       fragment,
     },
     resources: {
-      shaderToyUniforms: {
-        iResolution: { value: [width, height, 1], type: 'vec3<f32>' },
-        iTime: { value: 0, type: 'f32' },
-      },
-      uTexture: (await Assets.load(runtimePath('/img/noise/perlin.jpg'))).source,
+      uTime,
+      texNoise: (await Assets.load(runtimePath('/img/noise/good/noise1.jpg'))).source,
+      // texDistort: (await Assets.load(runtimePath('/img/noise/good/perlin.jpg'))).source,
+      texDistort: (await Assets.load(runtimePath('/img/noise/WaterDistortion.jpg'))).source,
     },
   })
 
@@ -48,8 +45,10 @@ onMounted(async () => {
   mesh.position.set(0, 0)
   app.stage.addChild(mesh)
 
+  let t = 0
   app.ticker.add(() => {
-    shader.resources.shaderToyUniforms.uniforms.iTime += 0.1
+    t += 0.1
+    uTime.uniforms.uTime = t
   })
 })
 
