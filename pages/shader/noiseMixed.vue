@@ -22,6 +22,7 @@ const textures: Array<{
   { alias: 'texture6', src: '/img/noise/WaterDistortion.jpg' },
   { alias: 'texture7', src: '/img/noise/noiseTexture.png' },
   { alias: 'texture8', src: '/img/noise/2d perlin noise bw.png' },
+  { alias: 'texture9', src: '/img/noise/2d perlin noise color.png' },
 ]
 
 const shaderOptions: {

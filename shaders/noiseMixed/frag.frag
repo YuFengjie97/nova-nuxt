@@ -15,7 +15,9 @@ vec3 palette(float t, vec3 a, vec3 b, vec3 c, vec3 d){ return a + b*cos( 6.28318
 
 
 void main() {
-    vec2 uv = fract(vUV);
+    vec2 uv = vUV;
+    uv.x = fract(vUV.x);
+
 
     vec2 uv_anime = uv;
     // uv_anime.x += sin(uTime) * 0.01;
