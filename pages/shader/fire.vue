@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { Application, Assets, Geometry, Mesh, Shader, UniformGroup } from 'pixi.js'
-import fragment from '~/shaders/begin/frag.frag'
-import vertex from '~/shaders/begin/vert.vert'
+import fragment from '~/shaders/fire/frag.frag'
+import vertex from '~/shaders/fire/vert.vert'
 
 const pixiCon = ref<HTMLElement>()
 const app = new Application()

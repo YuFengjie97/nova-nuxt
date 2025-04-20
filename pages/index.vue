@@ -78,8 +78,11 @@
     <div class="border">
       shader
     </div>
-    <NuxtLink to="shader/begin">
-      begin
+    <NuxtLink to="shader/fire">
+      fire
+    </NuxtLink>
+    <NuxtLink to="shader/noiseMixed">
+      noiseMixed
     </NuxtLink>
   </div>
 </template>
