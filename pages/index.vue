@@ -84,6 +84,9 @@
     <NuxtLink to="shader/noiseMixed">
       noiseMixed
     </NuxtLink>
+    <NuxtLink to="shader/hole">
+      devil butt hole
+    </NuxtLink>
   </div>
 </template>
 
