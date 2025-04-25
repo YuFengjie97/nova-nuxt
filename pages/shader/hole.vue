@@ -90,4 +90,8 @@ onUnmounted(() => {
   <div ref="pixiCon" class="w-full h-100vh" />
 </template>
 
-<style></style>
+<style>
+a{
+  color: rgb(183, 21, 64);
+}
+</style>

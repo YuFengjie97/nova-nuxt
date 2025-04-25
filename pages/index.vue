@@ -87,6 +87,9 @@
     <NuxtLink to="shader/hole">
       devil butt hole
     </NuxtLink>
+    <NuxtLink to="shader/xielunyan">
+      写轮眼
+    </NuxtLink>
   </div>
 </template>
 
