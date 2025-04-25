@@ -90,6 +90,9 @@
     <NuxtLink to="shader/xielunyan">
       写轮眼
     </NuxtLink>
+    <NuxtLink to="shader/xielunyan2">
+      写轮眼-三勾玉
+    </NuxtLink>
   </div>
 </template>
 
