@@ -93,6 +93,9 @@
     <NuxtLink to="shader/xielunyan2">
       写轮眼-三勾玉
     </NuxtLink>
+    <NuxtLink to="shader/sdfGouyu">
+      sdf 勾玉
+    </NuxtLink>
   </div>
 </template>
 
