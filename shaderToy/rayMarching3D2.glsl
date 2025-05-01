@@ -40,7 +40,6 @@ float map(vec3 p){
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord){
   vec2 uv = (fragCoord.xy*2.-iResolution.xy)/iResolution.y;
-  vec2 m = (iMouse.xy*2.-iResolution.xy)/iResolution.y;
   vec3 col = vec3(0.);
 
   vec3 ro = vec3(0.,0.,-3.);
@@ -57,10 +56,10 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord){
     if(t<0.001 || t>100.) break;
   }
 
-  //float s = pow(0.5/(t*0.2), 1.);
-  //vec3 glow = s * vec3(1.,0.,0.);
-  //col += 1.-exp(-glow);
+  float s = pow(1./(t*0.2), 1.);
+  vec3 glow = s * vec3(1.,0.,0.);
+  col += 1.-exp(-glow);
   
-  col = vec3(t*0.05);
+  //col = vec3(t*0.05);
   fragColor = vec4(col,1.);
 }
