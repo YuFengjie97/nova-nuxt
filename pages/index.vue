@@ -96,7 +96,7 @@
     <NuxtLink to="shader/sdfGouyu">
       sdf 勾玉
     </NuxtLink>
-    <a href="/html/raymarching3D2.html">
+    <a :href="runtimePath('/html/raymarching3D2.html')">
       rayMarching 3D
     </a>
   </div>
