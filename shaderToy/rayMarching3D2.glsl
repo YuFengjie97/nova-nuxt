@@ -53,7 +53,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord){
 
     t += d;
 
-    if(t<0.001 || t>100.) break;
+    if(d<0.001 || t>100.) break;
   }
 
   float s = pow(1./(t*0.2), 1.);

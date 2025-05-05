@@ -21,7 +21,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord){
 
     t += d;
 
-    if(t<0.001 || t>100.) break;
+    if(d<0.001 || t>100.) break;
   }
   col = vec3(t*0.3);
   fragColor = vec4(col,1.);

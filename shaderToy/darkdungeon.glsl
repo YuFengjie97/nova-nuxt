@@ -26,11 +26,6 @@ float sdRhombus( in vec2 p, in vec2 b )
     return d * sign( p.x*b.y + p.y*b.x - b.x*b.y );
 }
 
-vec2 twistH(vec2 p){
-  float offset = sin(p.x) * sin(4.*p.x)/10.;
-  p.y += offset;
-  return p;
-}
 
 mat2 rotate(float angle){
   float s = sin(angle);
