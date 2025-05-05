@@ -19,6 +19,7 @@ float getDist(vec3 p){
   return min(sphere, ground);
 }
 
+//https://iquilezles.org/articles/normalsSDF/
 vec3 getNormal(vec3 p){
   float d = getDist(p);
   vec2 e = vec2(0.01,0.);
