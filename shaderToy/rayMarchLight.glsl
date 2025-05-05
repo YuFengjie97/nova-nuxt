@@ -34,9 +34,12 @@ vec3 getNormal2(vec3 p){
 
 float getLight(vec3 p){
   vec3 lightPos = vec3(0.,1.,0.);
+
+  lightPos.xz += vec2(sin(iTime), cos(iTime));
+
   vec3 l = normalize(lightPos - p);
   vec3 n = getNormal(p);
-  float dif = dot(l,n);
+  float dif = clamp(dot(l,n),0.,1.);
   return dif;
 }
 
