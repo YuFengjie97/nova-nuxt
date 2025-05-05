@@ -24,7 +24,8 @@ float smin( float a, float b, float k )
     return min(a,b) - h*h*h*k*(1.0/6.0);
 }
 float map(vec3 p){
-  vec3 sphere_pos = vec3(sin(iTime*0.5)*3.,0.,0.);
+  vec3 sphere_pos = vec3(sin(iTime*0.5)*2.,cos(iTime) * 2. * 0.5 + 1.,0.);
+  sphere_pos.z += iTime + sin(iTime) * 1.;
   float sphere = sdfSphere(p-sphere_pos, .5);
 
   vec3 p2 = p;
@@ -44,7 +45,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord){
 
   vec3 ro = vec3(0.,0.,-3.);
   vec3 rd = normalize(vec3(uv,1.));
-
+  ro.z += iTime;
 
   float t = 0.;
   for(int i=0;i<80;i++){
