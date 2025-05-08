@@ -25,12 +25,12 @@ vec2 catmullRom(vec2 p0, vec2 p1, vec2 p2, vec2 p3, float t) {
 void mainImage(out vec4 fragColor, in vec2 fragCoord) {
     vec2 R = iResolution.xy;
     vec2 uv = (fragCoord - 0.5 * R) / R.y;
-    vec2 m = (iMouse.xy - 0.5 * R) / R.y;
+    uv *= 3.;
 
-    float T = iTime * .2;
+    float T = iTime * .05;
     float t = mod(T, 4.);
     float ti = floor(t);
-    float tf = fract(t*1.2);
+    float tf = fract(t*.5);
 
     vec2 c = vec2(0.);
     vec2 c1 = vec2( 0.285, 0.01);// 连通、对称
