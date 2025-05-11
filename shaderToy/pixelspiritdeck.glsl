@@ -47,9 +47,9 @@ vec3 magician(vec2 p){
 }
 
 vec3 highPriestess(vec2 p){
-  float d = abs(sdfCircle(p, 0.3));
+  float d = abs(sdfCircle(p, 0.2));
   float aa = fwidth(d);
-  float w = 0.03;
+  float w = 0.02;
   return smoothstep(w+aa,w-aa,d) * white;
 }
 
