@@ -8,12 +8,11 @@ float random (vec3 st) {
 float noiseValue3D(vec3 st) {
     vec3 i = floor(st);
     vec3 f = fract(st);
-    // vec3 u = f*f*(3.0-2.0*f);
-    // vec3 u = f * 1.2;
 
     // this step make noise point became cube
-    f *= 2.;
-    
+    f *= mod(iTime * .1, 2.) + 1.;
+
+    // vec3 u = f*f*(3.0-2.0*f);
     vec3 u = smoothstep(0.,1.,f);
     
     float size = 1.;
@@ -74,7 +73,7 @@ void mainImage(out vec4 O, in vec2 I){
   }
 
   // col = t * 0.02 * vec3(1.,1.,0.);
-  col = sin(vec3(3.,2.,1.) + t*0.12);
+  col = sin(vec3(3.,2.,1.) + t * 0.13);
 
   
   O = vec4(col,1.);
