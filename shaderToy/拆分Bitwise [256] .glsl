@@ -1,6 +1,7 @@
 // https://www.shadertoy.com/view/Wf3GzS
 
 float map(vec3 rd, float d, float z){
+  // 迭代制造分型
   for(float f = 1.;f<1e2;f+=f) {
     vec3 p =  rd * z;
     p.z -= iTime;
