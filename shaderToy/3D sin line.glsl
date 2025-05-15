@@ -27,7 +27,7 @@ void mainImage(out vec4 O, in vec2 I){
 
 
 
-  for(float i=0.;i<1e3;i++){
+  for(float i=0.;i<1e2;i++){
     vec3 p = z * rd + ro;
 
     if(iMouse.z > 0.) {
@@ -37,9 +37,12 @@ void mainImage(out vec4 O, in vec2 I){
     vec3 q = vec3(p.x, sin(p.x + iTime), cos(p.x+iTime));
     d = length(p-q)-0.5;
 
-    z+=d*0.5;
+
+    z+=min(0.5,d);
+
+    O.rgb += sin(vec3(3.,2.,1.)+d*1.5);
+
     if(z > 1e3 || d < 1e-3) break;
   }
-  float s = smoothstep(0.01, 0., d);
-  O.rgb = s * vec3(1.,0.,0.);
+  O.rgb = tanh(O.rgb * 0.1);
 }
