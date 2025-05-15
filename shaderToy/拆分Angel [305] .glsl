@@ -48,7 +48,7 @@ void mainImage(out vec4 O, in vec2 I){
     float freq = .5;
     // amp 累积过大,会让颜色(形状)出现过多的噪音
     float amp = 1.;
-    for(float i=1.;i<15.;i++){
+    for(float i=1.;i<8.;i++){
       p += amp * sin(p.zxy * freq + T * 0.1) / freq;
       // freq *= 1.3 + easeOutElastic(fract(T*0.6)) * 0.8;
       freq *= 1.5 + .8 * (sin(T) * 0.5 + 0.5);
