@@ -37,7 +37,7 @@ void mainImage(out vec4 O, in vec2 I){
     // 使用对数极坐标增加中心部分扭曲
     float mask = texture(iChannel0, vec2(p.x + i * 2.1, log(p.y) - t + i * 4.2)).r;
     // 增加0处特征范围 与 加强总体特征
-    mask = smoothstep(0.5, 1., mask) * 2.;
+    mask = smoothstep(0.5, .7, mask) * 2.;
 
     // 随着时间渐渐消失
     float fadeOut = smoothstep(1., 0.6,t);
