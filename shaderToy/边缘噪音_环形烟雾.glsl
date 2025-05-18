@@ -88,9 +88,11 @@ void mainImage(out vec4 O, in vec2 I){
   float r = 0.4;
   float d = length(uv);
   float w = 0.4;
+  // 圆环,半径是r,border是w*2.
   float s = smoothstep(w,0.,abs(d-r));
 
-  s *= n;
+
+  s *= n;              // 通过形状来取噪音展示范围
   float v = 0.6;       // 确定哪些值会表现形状的阈值
   float feath = 0.01;  // 值越大,噪音的边缘越模糊
 
