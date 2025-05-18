@@ -60,7 +60,6 @@ float getBlenderNoise(vec2 p, int type){
   float n=0.;
   if(type == 0) {
     n += texture(iChannel0, p).r;
-    n += texture(iChannel0, p+vec2(0.1)).r;
   }
   if(type == 1) {
     float nn = fbm(p);
