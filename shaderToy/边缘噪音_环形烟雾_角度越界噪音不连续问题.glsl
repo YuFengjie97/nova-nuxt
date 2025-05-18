@@ -63,9 +63,6 @@ float getBlenderNoise(vec2 p, int type){
     n += texture(iChannel0, p+vec2(0.1)).r;
   }
   if(type == 1) {
-    // n += fbm(p);
-    // n += fbm(p+vec2(0.1));
-
     float nn = fbm(p);
     nn += pow(nn,1.6);
     n += nn;
@@ -84,9 +81,8 @@ void mainImage(out vec4 O, in vec2 I){
 
   O.rgb += grid(uv);
 
-  vec2 q = vec2(atan(uv.y, uv.x) / PI + PI, (length(uv)));
-
-  q.x -= 0.5;
+  vec2 q = vec2(atan(uv.y, uv.x) + PI, (length(uv)));
+  q.x = sin(q.x);
 
   float scale = 0.02;
   vec2 offset = vec2(0., -T);
@@ -108,7 +104,7 @@ void mainImage(out vec4 O, in vec2 I){
 
   s *= n;
   float v = 0.5;       // 确定哪些值会表现形状的阈值,0.5取一半的值,按理是表现最好的
-  float feath = 0.01;  // 值越大,噪音的边缘越模糊
+  float feath = 0.1;  // 值越大,噪音的边缘越模糊
 
   vec3 c = sin(vec3(3.,2.,1.) + pow(s, 4.)*2.5);
 
