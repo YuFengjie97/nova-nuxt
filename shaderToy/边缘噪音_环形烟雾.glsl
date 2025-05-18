@@ -43,6 +43,9 @@ float getBlenderNoise(vec2 p, int type){
   if(type == 1) {
     n += fbm(p);
     n += fbm(p+vec2(0.1));
+    // float nn = fbm(p);
+    // nn = pow(nn,nn*2.);
+    // n += nn;
   }
 
   return n;
@@ -61,7 +64,7 @@ void mainImage(out vec4 O, in vec2 I){
   vec2 q = vec2(atan(uv.y, uv.x), log(length(uv)));
   // q.x = cos(2.*q.x);
   float scale = 0.01;
-  vec2 offset = vec2(0., T);
+  vec2 offset = vec2(0., -T);
   q *= scale;
   q += offset;
 
@@ -85,8 +88,8 @@ void mainImage(out vec4 O, in vec2 I){
   float s = smoothstep(w,0.,abs(d-r));
 
   s *= n;
-  float v = 0.6;
-  float feath = 0.1;
+  float v = 0.5;
+  float feath = 0.01;
 
   vec3 c = sin(vec3(3.,2.,1.) + pow(s, 3.));
 
