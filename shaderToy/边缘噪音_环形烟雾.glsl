@@ -41,10 +41,13 @@ float getBlenderNoise(vec2 p, int type){
     n += texture(iChannel0, p+vec2(0.1)).r;
   }
   if(type == 1) {
+    // 使用不同位置的噪音叠加,增加细节
     n += fbm(p);
     n += fbm(p+vec2(0.1));
+    
+    // 也可以通过pow增强特征的方式,但是感觉效果没那么好
     // float nn = fbm(p);
-    // nn = pow(nn,nn*2.);
+    // nn += pow(nn,2.);
     // n += nn;
   }
 
@@ -62,7 +65,13 @@ void mainImage(out vec4 O, in vec2 I){
   O.rgb += grid(uv);
 
   vec2 q = vec2(atan(uv.y, uv.x), log(length(uv)));
+
+  // 让角度对阵的方式: 使用三角函数扰动,但是会出现对称
   // q.x = cos(2.*q.x);
+
+  // q.x = cos(q.x);
+  // q.y = sin(q.y);
+
   float scale = 0.01;
   vec2 offset = vec2(0., -T);
   q *= scale;
@@ -74,12 +83,6 @@ void mainImage(out vec4 O, in vec2 I){
     n += getBlenderNoise(q, 0);
   }else{
     n += getBlenderNoise(q, 1);
-
-    // float a = q.x / (PI*2.) + 0.5;
-    // float n1 = getBlenderNoise(vec2(a, q.y), 1);
-    // float n2 = getBlenderNoise(vec2(mod(a + .001, 1.0), q.y), 1);
-    // float blend = smoothstep(.9, 1.0, a);
-    // n += mix(n1, n2, a);
   }
 
   float r = 0.4;
@@ -88,8 +91,8 @@ void mainImage(out vec4 O, in vec2 I){
   float s = smoothstep(w,0.,abs(d-r));
 
   s *= n;
-  float v = 0.5;
-  float feath = 0.01;
+  float v = 0.6;       // 确定哪些值会表现形状的阈值
+  float feath = 0.01;  // 值越大,噪音的边缘越模糊
 
   vec3 c = sin(vec3(3.,2.,1.) + pow(s, 3.));
 
