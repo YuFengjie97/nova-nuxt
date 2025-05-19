@@ -2,6 +2,7 @@
 
 #define PI 3.141596
 #define BaseRadius 0.4
+#define NoiseRadius .3
 
 float fbm(vec2 p){
   float f = 1.;
@@ -59,6 +60,8 @@ float getBlenderNoise(vec2 uv, vec2 scale, vec2 offset){
   q2 *= scale;
   q2 += offset;
 
+  float grad = smoothstep(NoiseRadius,0.,q.x);
+
   float n = 0.;
   float nR = fbm(q) * smoothstep(-BaseRadius,0.,uv.x);
   float nL = fbm(q2+vec2(.1,.2)) * smoothstep(BaseRadius,0.,uv.x);
@@ -78,12 +81,11 @@ void mainImage(out vec4 O, in vec2 I){
   O.rgb *= 0.;
   O.a = 1.;
 
-  O.rgb += grid(uv);
+  // O.rgb += grid(uv);
 
 
   float d = length(uv);
-  float w = .3;
-  float s = smoothstep(w,0.,abs(d-BaseRadius));
+  float s = smoothstep(NoiseRadius,0.,abs(d-BaseRadius));
 
 
   vec2 scale = vec2(0.02);
