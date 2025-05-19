@@ -62,7 +62,7 @@ void mainImage(out vec4 O, in vec2 I){
 
   float n = getBlenderNoise(uv); // 获取噪音
   n *= s;                        // 噪音限制范围
-  n *= 1.4;
+  n *= 1.4;                      // 特征加强
 
   float f = .1;
 
