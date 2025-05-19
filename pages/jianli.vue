@@ -79,4 +79,7 @@ onMounted(async () => {
     transform: translateY(0px);
   }
 }
+#fjekfejk{
+  color: rgb(16, 94, 8);
+}
 </style>
