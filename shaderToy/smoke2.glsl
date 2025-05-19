@@ -1,5 +1,7 @@
 #iChannel0 "file://D:/workspace/nova-nuxt/public/img/noise/shaderToy/noise_1.png"
 
+// -PI 到 PI边界噪音连续,用两层噪音,翻转方向,渐隐不连续的部分.然后合在一起
+
 #define PI 3.141596
 
 float random (in vec2 st) {

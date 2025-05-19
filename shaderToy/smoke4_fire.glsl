@@ -1,5 +1,7 @@
 #iChannel0 "file://D:/workspace/nova-nuxt/public/img/noise/shaderToy/noise_1.png"
 
+// 可自定义外层,内层颜色,火焰!
+
 #define PI 3.141596
 #define BaseRadius 0.5
 #define NoiseRadius .4

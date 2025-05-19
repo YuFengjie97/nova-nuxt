@@ -1,5 +1,7 @@
 #iChannel0 "file://D:/workspace/nova-nuxt/public/img/noise/shaderToy/noise_1.png"
 
+// 烟雾但是-PI到PI边界,噪音不连续
+
 #define PI 3.141596
 
 float fbm(vec2 p){
