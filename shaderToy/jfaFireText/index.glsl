@@ -58,19 +58,21 @@ void mainImage(out vec4 O, in vec2 I){
   O.rgb *= 0.;
   O.a = 1.;
 
+
   float d = texture(iChannel1, uv).a/R.y;
+  float s = smoothstep(0.,0.4,d)*0.1;
 
-  float cir = log(length(abs(uv-0.5)));
-  vec2 dir = vec2(dFdx(cir), dFdx(cir));
-
-  vec2 offset = dir+iTime * 0.001;
-
-  vec2 scale = vec2(.05,.05);
+  // vec2 dir = -normalize(vec2(dFdx(d), dFdy(d)));
+  vec2 dir = vec2(0.,1.);
+  vec2 offset = dir * iTime * 0.0001;
+  vec2 scale = vec2(.06,.01);
   float n = getBlenderNoise(uv, scale, offset);
 
-  d*=n;
-  vec3 c1 = vec3(1.,0.,0.);
-  d = glow(d,0.005,2.);
+  s *= n;
+  float v = 0.01;
+  s = smoothstep(v,v+0.01,s);
 
-  O.rgb += d * c1;
+  vec3 c1 = vec3(1.,0.,0.);
+
+  O.rgb += s * c1;
 }
