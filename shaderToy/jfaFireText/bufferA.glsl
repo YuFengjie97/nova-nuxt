@@ -23,10 +23,11 @@ void mainImage(out vec4 O, in vec2 I){
   }
   else{
     float dMin = texelFetch(iChannel0, uv, 0).a;
+    int step = 1 << iFrame % 8;
+
     for(int x=-1;x<=1;x++){
       for(int y=-1;y<=1;y++){
         if(x==0 && y==0) continue;
-        int step = 1 << iFrame % 8;
         ivec2 target = ivec2(uv) + step * ivec2(x,y);
         if(target.x < 0 || target.y < 0 || target.x >= int(R.x) || target.y >= int(R.y)) continue;
 
