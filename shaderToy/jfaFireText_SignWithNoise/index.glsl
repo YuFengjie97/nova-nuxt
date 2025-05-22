@@ -63,7 +63,7 @@ void mainImage(out vec4 O, in vec2 I){
   vec4 D = texelFetch(iChannel1, ivec2(uv), 0);   // 必须使用texelFetch,用归一化的uv坐标来展示jfa计算后的图像,会导致撕裂,挤压,不连续
 
   vec2 scale = vec2(0.0002, 0.0001);
-  vec2 offset = vec2(0., -0.01) * T;
+  vec2 offset = vec2(0., -1.) * (smoothstep(0.,10.,T) + 10.);
   float n = getBlenderNoise(uv, scale, offset);
 
   float d = (length(uv-D.xy) - length(uv-D.zw)) / R.y;
@@ -71,8 +71,8 @@ void mainImage(out vec4 O, in vec2 I){
 
   d *= n;
 
-  vec3 c1 = vec3(1.,1.,0.);
-  vec3 c2 = vec3(1.,0.,0.);
+  vec3 c1 = vec3(1.,.6,0.);
+  vec3 c2 = vec3(1.,.3,0.);
 
   float d1 = smoothstep(0.,0.1,d);
   d1 = glow(d1,0.05,2.);
