@@ -7,7 +7,13 @@ float char(vec2 uv, vec2 i){
   vec2 p = uv * s;
   p = fract(p);
 
-  float d = texture(iChannel1, i/16.+p/16.).r;
+  // 使用rgb这三个通道会截取到step产生的边框
+  //float d = texture(iChannel1, i/16.+p/16.).r;
+  //d*=step(0.,uv.x) * step(uv.x,1./s) * step(0.,uv.y) * step(uv.y,1./s);
+
+
+  float d = texture(iChannel1, i/16.+p/16.).a;
+  d = smoothstep(0.5,0.4, d);
   d*=step(0.,uv.x) * step(uv.x,1./s) * step(0.,uv.y) * step(uv.y,1./s);
 
   return d;
