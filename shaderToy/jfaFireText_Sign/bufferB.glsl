@@ -1,39 +1,87 @@
-// 这个buffer是显示字符的
+// 这个buffer根据jfa字符计算sdf
 
-#iChannel1 "file://D:/workspace/nova-nuxt/public/img/texture_char.png"
+#iChannel0 "file://D:/workspace/nova-nuxt/shaderToy/jfaFireText_Sign/bufferA.glsl"
+#iChannel1 "file://D:/workspace/nova-nuxt/shaderToy/jfaFireText_Sign/bufferB.glsl"
+#iKeyboard
 
-float char(vec2 uv, vec2 i){
-  float s = 4.;        // uv sclae
-  vec2 p = uv * s;
-  p = fract(p);
-
-  // 使用rgb这三个通道会截取到step产生的边框
-  //float d = texture(iChannel1, i/16.+p/16.).r;
-  //d*=step(0.,uv.x) * step(uv.x,1./s) * step(0.,uv.y) * step(uv.y,1./s);
-
-
-  float d = texture(iChannel1, i/16.+p/16.).a;
-  d = smoothstep(0.5,0.4, d);
-  d*=step(0.,uv.x) * step(uv.x,1./s) * step(0.,uv.y) * step(uv.y,1./s);
-
-  return d;
-}
+#define FAR 1e6
+#define D distance
 
 
 void mainImage(out vec4 O, in vec2 I){
   vec2 R = iResolution.xy;
-  vec2 uv = (I*2.-R)/R.y;
-  O.rgb *= 0.;
-  O.a = 1.;
+  ivec2 iuv = ivec2(I);
+  vec2 uv = I;
+  
+  bool inChar = texelFetch(iChannel0, iuv, 0).r > 0.;
 
-  vec2 uvChar = uv * .4;
-  vec2 baseOffset = vec2(-.35, -.1);
-  vec2 charOffset = vec2(0.15, 0.);
-  float d1 = char(uvChar -baseOffset - charOffset * 0., vec2(6., 11.));
-  float d2 = char(uvChar -baseOffset - charOffset * 1., vec2(9., 9.));
-  float d3 = char(uvChar -baseOffset - charOffset * 2., vec2(2., 8.));
-  float d4 = char(uvChar -baseOffset - charOffset * 3., vec2(5., 9.));
+  /* 
+  0位置代表的是你要探测的形状,最近0位置就是边界
+  xy存放的是当前位置(外部)像素距离最近0位置的像素坐标
+  zw存放的是当前位置(内部)像素距离最近0位置的像素坐标
+  初始化:
+  如果当前像素位于形状内部,xy为当前像素的uv坐标,即d = D(uv, O.xy),因为O.xy存储上帧距离0最近像素位置,即为uv,d即为0
+  如果当前像素位于形状外部,xy为vec2(FAR)
 
-  float d = d1 + d2 + d3 + d4;
-  O.rgb += d;
+  后续距离比较:
+  4个洪水步进方向比较
+  O_nei.xy邻居像素存储的距离0最近的像素位置, 当前像素距离0最近的像素位置也是O_nei.xy (我的邻居距离A最近,所以我距离A也是最近的), d = D(uv, O_nei.xy)
+  4个邻居,哪个邻居距离0像素位置最近,所以当前像素xy就是那个邻居存储的xy
+
+  zw逻辑相同,不过是在初始化时,将uv vec2(FAR)反转了
+  */
+
+  if(iFrame <= 10 
+    || texelFetch(iChannel1,ivec2(0,0),0).w != R.x * R.y
+    // || texelFetch(iChannel3,ivec2(32,0),0).x > 0. // shaderToy keyBoard channel
+    || isKeyReleased(32)                             // vscode shaderToy插件用法
+    ){
+    
+    if (iuv.x == 0 && iuv.y == 0){
+      O = vec4(0, 0, 0, R.x * R.y);
+      return;
+    }
+
+    O.xy = vec2(FAR);
+    O.zw = vec2(uv);
+    if(inChar) {
+      O.xy = vec2(uv);
+      O.zw = vec2(FAR);
+    }
+  }
+  // 大于固定帧数后,不再进行j
+  // else if(iFrame > 200){
+  //   O = texelFetch(iChannel1, iuv, 0);
+  // }
+  else{
+    O = texelFetch(iChannel1, iuv, 0);
+
+    // 分辨率信息排除
+    if(iuv.x == 0 && iuv.y == 0) return;
+    
+    // 每次迭代的前进像素数
+    int step = 1 << (iFrame % 8);
+    
+    for(int x=-1;x<=1;x++){
+      for(int y=-1;y<=1;y++){
+        // 邻居坐标指向自己
+        if(x==0 && y == 0) continue;
+
+        ivec2 neigh_c = iuv + ivec2(x,y) * step;
+        // 邻居越界(超出分辨率像素尺寸)
+        if(neigh_c.x < 0 || neigh_c.y < 0 || neigh_c.x >= int(R.x) || neigh_c.y >= int(R.y)) continue;
+
+        // 邻居中储存的信息
+        vec4 neigh = texelFetch(iChannel1, neigh_c, 0);
+
+        // 分辨率信息排除
+        if(neigh_c.x == 0 && neigh_c.y == 0) continue;
+
+
+        // 当前像素位置 到 上帧存储最近0位置距离 < 当前像素位置 到 邻居最近0位置距离 ? 延用上帧 : 用邻居
+        O.xy = D(uv, O.xy) < D(uv, neigh.xy) ? O.xy : neigh.xy;
+        O.zw = D(uv, O.zw) < D(uv, neigh.zw) ? O.zw : neigh.zw;
+      }
+    }
+  }
 }
