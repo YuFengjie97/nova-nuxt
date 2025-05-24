@@ -168,7 +168,7 @@ void mainImage(out vec4 O, in vec2 I){
 
     uv *= vec2(3.,2.);
     vec2 i = floor(uv);
-    vec2 f = fract(uv)  * 10.;
+    vec2 f = fract(uv)  * 4.;
 
     float n = 0.;
     if(i.x==0. && i.y==0.){
