@@ -95,7 +95,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord){
   // col += d*.5;
   // col = getNormal(p);
   float dif = getLight(p);
-  col += dif;
+  col += sin(vec3(.3,.2,.1)+dif);
 
   fragColor = vec4(col, 1.);
 }
