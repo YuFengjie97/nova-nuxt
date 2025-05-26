@@ -1,4 +1,3 @@
-#define PI 3.141596
 #define T iTime
 
 void mainImage(out vec4 O, in vec2 I){
@@ -13,7 +12,7 @@ void mainImage(out vec4 O, in vec2 I){
   uv *= 4.;
 
   // uv += sin(uv.xy * (8.+sin(T)*4.));
-  uv += sin(uv.xy * 4.);
+  uv += sin(uv.xy * 6.);
 
   float d = length(uv);
   d = pow(1./d, d)*4.;
