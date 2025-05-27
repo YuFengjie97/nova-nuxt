@@ -44,6 +44,6 @@ void mainImage(out vec4 O, in vec2 I){
     // d = min(d, l);
   }
 
-  d = smoothstep(0.05,0.04,d);
-  O.rgb += d;
+  vec3 c = sin(vec3(3,2,1) + pow(d,10.))*80.;
+  O.rgb += d*c;
 }
