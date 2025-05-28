@@ -35,21 +35,18 @@ float noise(vec2 p) {
 }
 
 float fbm(vec2 p){
-  float f = 1.;
-  float a = .5;
   float n = 0.;
-  for(float i=0.;i<4.;i++){
-    n += a * noise(p*f);
-    f *= 2.;
-    a *= .5;
-  }
+  n += 1. * noise(p*.2);
+  n += 2. * noise(p*.25);
+  n += 3. * noise(p*.15);
+  n += 4. * noise(p*.05);
   return n;
 }
 
 
 float getBlenderNoise(vec3 p){
   vec3 q1 = p, q2 = p;
-  float scale = .3;
+  float scale = .35;
   float offset = T*10.;
 
   q1.y += -offset;
@@ -57,6 +54,8 @@ float getBlenderNoise(vec3 p){
 
   float n1 = noise(q1.xy*scale);
   float n2 = noise(q2.xz*scale);
+  // float n1 = fbm(q1.xy * 2.);
+  // float n2 = fbm(q2.xz * 2.);
   return (n1 + n2)/2.;
 }
 
