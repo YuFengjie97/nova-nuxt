@@ -1,5 +1,5 @@
 #define T iTime
-#define showNor 1
+#define showNor 0
 
 mat2 rotate(float a){
   float c = cos(a);
@@ -62,7 +62,8 @@ float getBlenderNoise(vec3 p){
 
 float map(vec3 p){
   float r = 2.;
-  float h = 8.;
+  float h = 9.;
+  p.xy += vec2(0,2); // 火球位置
 
   vec3 dir = p - vec3(0);
   float n = getBlenderNoise(p)*(smoothstep(-4.,1.,p.y)*.4+0.1);
@@ -71,9 +72,14 @@ float map(vec3 p){
   // 球
   float d1 = length(p)-r;
   
-  // 被截取下部分,缩小上部分的圆柱
-  float d2 = length(p.xz)-smoothstep(h,0.,p.y)*r;
-  d2 = max(d2, -p.y);
+  float d2 = length(p.xz);
+  // 圆柱体,圆柱体的半径被smoothstep自0到上变细
+  d2 -= smoothstep(h,0.,p.y)*r;
+  // 圆柱体去掉下面多余部分
+  d2 = max(d2, -(-p.y+h));
+  // 圆柱体去掉上面多余部分
+  d2 = max(d2, -(p.y));
+  
 
   d1 = min(d1, d2);
 
@@ -89,22 +95,6 @@ vec3 calcNormal(vec3 pos){
       n += e*map(pos+0.0005*e);
   }
   return normalize(n);
-}
-
-
-//https://iquilezles.org/articles/distfunctions/
-float sdCapsule( vec3 p, vec3 a, vec3 b, float r )
-{
-  vec3 pa = p - a, ba = b - a;
-  float h = clamp( dot(pa,ba)/dot(ba,ba), 0.0, 1.0 );
-  return length( pa - ba*h ) - r;
-}
-
-float hash11(float v){
-  return fract(sin(v*1345.154+112.36));
-}
-vec2 hash22(vec2 v){
-  return sin(v * vec2(1,2))*0.5+0.5;
 }
 
 
@@ -135,11 +125,18 @@ void mainImage(out vec4 O, in vec2 I){
     d_acc += .1/d;
     z += d;
 
+    #if showNor
+    if(i==50.){
+      O.rgb = calcNormal(p);
+    }
+    #endif
+
     if(z>1e2)break;
   }
 
+  #if showNor!=1
   d_acc = pow(d_acc, 2.);
-  vec3 c = sin(vec3(3,2,1)+T+p.z*0.01)*0.5+0.5;
+  vec3 c = sin(vec3(10,6,2)+T+p.z*0.1)*0.5+0.5;
   O.rgb = tanh(c*d_acc/z/1e2);
-
+  #endif
 }
