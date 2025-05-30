@@ -47,15 +47,23 @@ void mainImage(out vec4 O, in vec2 I){
   O.rgb *= 0.;
   O.a = 1.;
 
+  // 用噪音扭曲坐标
   uv+=noise(uv+T*0.1)*0.1;
 
-  // 使用噪音和缩放制作锯齿形状
-  float d = fbm(uv*vec2(8.,1.1)+vec2(0.,T));
-  d = uv.y+d*0.8;
+  // 使用噪音和缩放制作随机柔和锯齿形状
+  float d = fbm(uv*vec2(5.,1.1)+vec2(0.,-T));
+  d = uv.y+d*0.3;
+  d = clamp(d, 0., 1.);
+  // d = pow(.2/(1.-d),2.);
 
-  vec3 c = vec3(3,2,1)+d*d;
+  vec3 red = vec3(1,0,0);
+  vec3 yellow = vec3(1,1,0);
 
-  c = tanh(c*0.4);
+  vec3 c = mix(vec3(0), red, pow(smoothstep(0.,0.4,d),4.));
+  c = mix(c, yellow, smoothstep(0.6,1.,d)*.5);
+
+
+  // c = tanh(c/1.);
 
   O.rgb = d*c;
 
