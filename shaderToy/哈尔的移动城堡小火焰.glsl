@@ -5,7 +5,6 @@
 #define white vec3(1)
 #define black vec3(0,0,0)
 #define R iResolution.xy
-#define pix 1./R.y
 
 vec2 hash(vec2 p) {
     p = vec2(dot(p, vec2(127.1, 311.7)),
@@ -48,7 +47,7 @@ float fbm(vec2 p){
 
 vec4 Eye(vec2 p){
   p.x = abs(p.x);
-  p-=vec2(0.2,0.06);
+  p-=vec2(0.2,-.13);
   float d = length(p);
   d += noise(p*20.+T*2.)*0.005;
   float aa = fwidth(d);
@@ -66,7 +65,7 @@ vec4 Eye(vec2 p){
 }
 
 vec4 Mouth(vec2 p){
-  p -= vec2(0,-0.2);
+  p -= vec2(0,-0.35);
   p *= vec2(1.,3.);
   float d = length(p);
 
@@ -101,24 +100,28 @@ void mainImage(out vec4 O, in vec2 I){
   r_acc *= hor;
 
 
-  vec2 uv_d = uv + noise(uv+T*vec2(0,1))*0.1 *vec2(0,1);  // 噪音跳动
-  float d = length(uv_d)-r_acc; //
+  vec2 uv_flame = uv + noise(uv+T*vec2(0,1))*vec2(0,0.1);  // 噪音-->火焰跳动
+  float d = length(uv_flame)-r_acc; //
 
   float aa = 5./R.y;
   // aa = 0.1;
   float v1 = 0.5;
-  float d1 = smoothstep(v1+aa,v1,d);
+  float d1 = smoothstep(v1+aa,v1,d);               // 外层红色火焰
   vec3 c = mix(O.rgb, red, d1);
 
+
+  float d2 = length(uv_flame-vec2(0,-0.15))-r_acc; // 内层黄色火焰,位置相较于红色火焰稍微向下移动
   float v2 = 0.3;
-  float d2 = smoothstep(v2+aa,v2,d);
+  d2 = smoothstep(v2+aa,v2,d2);
   c = mix(c, yellow, d2);
 
   O.rgb = c;
+  
+  vec2 uv_face = uv + noise(uv+T*vec2(0,1))*vec2(0,0.05);  // 噪音-->面部跳动小变化
 
-  vec4 eye = Eye(uv_d);
+  vec4 eye = Eye(uv_face);
   O.rgb = mix(O.rgb, eye.rgb, eye.a);
 
-  vec4 mouth = Mouth(uv_d);
+  vec4 mouth = Mouth(uv_face);
   O.rgb = mix(O.rgb, mouth.rgb, mouth.a);
 }
