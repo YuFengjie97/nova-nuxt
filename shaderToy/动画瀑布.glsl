@@ -46,44 +46,43 @@ void mainImage(out vec4 O, in vec2 I){
   // 背景色
   O.rgb = vec3(0.69,0.8,0.54);
   O.a = 1.;
+  float n,d,s,aa;
 
   // 背部大面积涟漪
-  float n = noise(uv * vec2(12.,1.)+vec2(0,T*2.));
-  float s = smoothstep(0.2,0.1,abs(n));
+  n = noise(uv * vec2(12.,1.)+vec2(0,T*1.5));
+  s = smoothstep(0.2,0.1,abs(n));
   O.rgb = mix(O.rgb, vec3(0.81,0.93,0.66), s);
 
 
   // 底部阴影
-  n = noise(uv*vec2(10.,.5)+vec2(T));
+  n = noise(uv*vec2(6.,.5)+vec2(0,T));
   float d1 = uv.y-0.2 + n*0.6;
   s = smoothstep(0.2,0.1,d1);
   O.rgb = mix(O.rgb, vec3(0.52,0.61,0.41),s);
 
 
   // 底部阴影的阴影
-  d1 = abs(uv.y-sin(20.*uv.x+T*10.)/20.-0.2);  // 使用sin函数确定出范围
-  s = smoothstep(0.1,0.,d1);
-  n = noise(uv*vec2(40.,.5)+vec2(T));
-  s *= n*0.5;                                  // 在区域范围中,使用噪音进行采样,噪音乘以固定值,减少其采样
-  s = smoothstep(0.2,0.3,s);                   // 描绘出形状
+  d1 = abs(uv.y-sin(7.*uv.x+T*3.)/20.-0.2);    // 距离场
+  s =  smoothstep(0.1,0.,d1);                   // 通过距离场限制范围
+  n = noise(uv*vec2(40.,1.5)+vec2(T));         // 噪音值缩放
+  s *= n*smoothstep(0.,0.5,sin(uv.x*4.-0.8));     // 在区域范围中,使用噪音进行采样,并且通过uv.x遮挡范围
+  s = smoothstep(0.2,0.25,s);                  // 具体形状                
   O.rgb = mix(O.rgb, vec3(0.44,0.5,0.32), s);
 
   // 中部高亮
-  d1 = abs(uv.y-sin(20.*uv.x+T*10.)/20.-0.5);
-  s = smoothstep(0.2,0.,d1);
-  n = noise(uv*vec2(35.,.5)+vec2(T));
-  s *= n*0.7;                                     
+  d = abs(uv.y-sin(30.*uv.x+T*3.)/20.-0.5);
+  s = smoothstep(0.2,0.,d);
+  s *= n*smoothstep(0.,0.5,sin(uv.x*6.-2.));                                     
   s = smoothstep(0.1,0.2,s);               
-  O.rgb = mix(O.rgb, vec3(1,1,0.8), s);
+  O.rgb = mix(O.rgb, vec3(1,1,0.85), s);
 
 
   // 顶部高亮
-  d1 = abs(uv.y-sin(20.*uv.x+T*10.)/20.-0.8);
-  s = smoothstep(0.1,0.,d1);
-  n = noise(uv*vec2(30.,.5)+vec2(1.)+vec2(T));
-  s *= n*0.8;                                     
+  d1 = abs(uv.y-sin(20.*uv.x+T*4.)/40.-0.8);
+  s = smoothstep(0.15,0.,d1);
+  s *= n*smoothstep(0.,0.1,sin(uv.x*8.));                                     
   s = smoothstep(0.05,0.2,s);               
-  O.rgb = mix(O.rgb, vec3(1,1,0.8), s);
+  O.rgb = mix(O.rgb, vec3(1,1,0.95), s);
 
 
   // 底部浪
