@@ -1,6 +1,5 @@
 #define T iTime
 #define white vec3(1)
-#define SIN(v) sin(v)*0.5+0.5
 
 vec2 hash(vec2 p) {
     p = vec2(dot(p, vec2(127.1, 311.7)),
