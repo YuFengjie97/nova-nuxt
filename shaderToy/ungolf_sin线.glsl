@@ -1,5 +1,14 @@
+#define PI 3.141596
+
+mat2 rotate(float a){
+  float s = sin(a);
+  float c = cos(a);
+  return mat2(c,-s,s,c);
+}
+
 void mainImage(out vec4 O, in vec2 I){
   vec2 R = iResolution.xy;
+  vec2 m = (iMouse.xy*2.-R)/R.y;
 
   float T=.3*iTime;
 
@@ -14,20 +23,28 @@ void mainImage(out vec4 O, in vec2 I){
   vec4 U = vec4(0,1,2,3);
   vec4 o = vec4(0);
 
+
   // 普通rayMarch
   for(float i=0.;i<77.;i++){
 
     p = rd*z;
     d = 4.;
-    p.z-=4.;
+    p.z-=40.;
+
+    
+    if(iMouse.z > 0.) {
+      p.xz *= rotate(m.x * PI * 2.);
+      p.yz *= rotate(m.y * PI * 2.);
+    }
+
 
     // 这个for循环就是map函数
     for(float j=4.;j<9.;j++){
 
       D = 2./(j-3.)+p.y/3.;
       P = vec4(p,p.z);
-      P.x -= .3*sin(p.y+T);
-      P.xz *= mat2(cos(j-T+p.y+11.*U.xywx));
+      // P.x -= .3*sin(p.y+T);
+      // P.xz *= mat2(cos(j-T+p.y+11.*U.xywx));
       P = abs(P);
       D = min(max(P.z,P.x-D)+2E-2,
               length(P.xz-D*U.yx)
