@@ -71,24 +71,30 @@ void mainImage(out vec4 O, in vec2 I){
   uvf-=0.5;
 
   vec2 grid = min(vec2(1),fwidth(uv)/abs(uv-round(uv)));
-  // O.rgb += max(grid.x,grid.y);
+  //O.rgb += max(grid.x,grid.y);
 
 
   float d = 1e5;
+  float d1 = 1e6;//当前像素距离最近点距离
+  float d2 = 1e6;//当前像素距离次近点距离
   for(float x=-1.;x<=1.;x++){
     for(float y=-1.;y<=1.;y++){
       vec2 nei = vec2(x,y);
       
       vec2 feature = random2(nei+uvi)*PI*2.;
-      feature = sin(T*5.+feature)*0.25+0.25;
+      feature = sin(feature+T)*0.25+0.25;
       
       vec2 p = nei-uvf-feature;
-      float d1 = length(p);
-      d = min(d,d1);
+      float d_nei = length(p);
+      d = min(d,d_nei);
+      if(d_nei<d1){
+        d2 = d1;
+        d1 = d_nei;
+      }else if(d_nei<d2){
+        d2 = d_nei;
+      }
     }
   }
-  d = 1.-d;
-  d = S(0.5,0.,d);
-  // d = S(0.01,0.,abs(d-0.5));
+  d = S(0.05,0.,d2-d1);
   O.rgb+=d;  
 }
