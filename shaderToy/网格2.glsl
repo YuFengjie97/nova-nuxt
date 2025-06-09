@@ -31,23 +31,18 @@ float noise(vec2 p) {
     return dot(n, vec3(70.0));
 }
 
+float fbm(vec2 p){
+  float a = .5;
+  float n = 0.;
 
-
-
-// iq article https://iquilezles.org/articles/smin/
-float smin( float a, float b, float k )
-{
-    k *= 1.0;
-    float r = exp2(-a/k) + exp2(-b/k);
-    return -k*log2(r);
+  for(float i=0.;i<4.;i++){
+    n += a * noise(p);
+    p *= 2.;
+    a *= .5;
+  }
+  return n;
 }
 
-float sdSegment( in vec2 p, in vec2 a, in vec2 b )
-{
-    vec2 pa = p-a, ba = b-a;
-    float h = clamp( dot(pa,ba)/dot(ba,ba), 0.0, 1.0 );
-    return length( pa - ba*h );
-}
 
 mat2 rotate(float a){
   float c = cos(a);
@@ -85,7 +80,7 @@ void mainImage(out vec4 O, in vec2 I){
       feature = sin(feature+T)*0.25+0.25;
       
       vec2 p = nei-uvf-feature;
-      float d_nei = length(p);
+      float d_nei = length(p+fbm(p+T)*0.1);
       d = min(d,d_nei);
       if(d_nei<d1){
         d2 = d1;
@@ -95,6 +90,7 @@ void mainImage(out vec4 O, in vec2 I){
       }
     }
   }
-  d = S(0.05,0.,d2-d1);
+  d = d2-d1;
+  d = pow(.05/d,2.);
   O.rgb+=d;  
 }
