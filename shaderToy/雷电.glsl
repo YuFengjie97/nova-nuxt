@@ -34,7 +34,7 @@ float fbm(vec2 p){
   float a = .5;
   float n = 0.;
 
-  for(float i=0.;i<4.;i++){
+  for(float i=0.;i<8.;i++){
     n += a * noise(p);
     p *= 2.;
     a *= .5;
@@ -66,7 +66,10 @@ void mainImage(out vec4 O, in vec2 I){
   float n2 = fbm(uv+v2);
   float n = (n1 + n2)/2.;
 
-  float d = abs(p.y+n*S(1.2,0.,abs(p.x)));
+  float power = (sin(10.*T+sin(20.*T)))*.8;
+  float range = S(1.2,0.,abs(p.x));
+
+  float d = abs(p.y+n*range*power);
   d = pow(.01/d,2.);
   O.rgb += d;
 }
