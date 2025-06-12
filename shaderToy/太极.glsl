@@ -63,7 +63,8 @@ void mainImage(out vec4 O, in vec2 I){
   vec2 R = iResolution.xy;
   vec2 uv = (I*2.-R)/R.y;
 
-  O.rgb = vec3(0.4,0.4,0.1);     // 黑色很特殊,既是 黑 又是 无,为了保证所有形状都展示出来,这里不能设置默认全黑
+  // O.rgb = vec3(0.4,0.4,0.1);     // 黑色很特殊,既是 黑 又是 无,为了保证所有形状都展示出来,这里不能设置默认全黑
+  O.rgb *= 0.;
   O.a = 1.;
 
   float r = 0.5;
