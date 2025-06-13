@@ -34,6 +34,27 @@ float noise(vec2 p) {
     return dot(n, vec3(70.0));
 }
 
+float map(vec3 p){
+  p.xy += cos(p.yx*2.+T*2.)*.3;
+
+  float d = length(p)-0.5;
+  return d;
+}
+
+float getLight(vec3 p){
+  vec3 light1 = normalize(vec3(sin(T),1,-2)   - p);
+  // vec3 light2 = normalize(vec3(1,-1,-2) - p);
+  vec2 e = vec2(0.01,0);
+  vec3 g = normalize(vec3(
+    map(p+e.xyy)-map(p-e.xyy),
+    map(p+e.yxy)-map(p-e.yxy),
+    map(p+e.yyx)-map(p-e.yyx)
+  ));
+  float lightDif = clamp(dot(light1, g),0.,1.);
+  // lightDif += clamp(dot(light2, g),0.,1.)*0.5;
+  return lightDif;
+}
+
 void mainImage(out vec4 O, in vec2 I){
   vec2 R = iResolution.xy;
   vec2 uv = (I*2.-R)/R.y;
@@ -42,38 +63,28 @@ void mainImage(out vec4 O, in vec2 I){
   O.rgb *= 0.;
   O.a = 1.;
 
-  // uv *= 10.;
-  // float d = length(uv);
-  // d = sin(d);
-  // O.rgb += d;
-  // return;
-
-  vec3 ro = vec3(0,0,-17);
+  vec3 ro = vec3(0,0,-1);
   vec3 rd = normalize(vec3(uv, 1.));
   float d = 0.;
-  float d_acc = 0.;
   float z = 0.;
   vec3 p;
 
-  for(float i=0.;i<40.;i++){
+  for(float i=1.;i<60.;i++){
     p = ro + rd * z;
 
-    if(iMouse.z>0.){
+    if(iMouse.z > 0.){
       p.xz *= rotate(m.x);
       p.yz *= rotate(m.y);
     }
 
-    d = length(p);
-    float di = floor(d/8.);
-    d = d - di - 4.;
-    d = 1e-2 + abs(d);
+    float d = map(p);
+    float dif = getLight(p);
+
     z += d;
+    O.rgb = sin(vec3(3,2,1)+cos(p.x)*40.)*0.1;
 
-    vec3 c = vec3(3,2,1);
-    c = sin(c+di);
-    O.rgb += c * .01/(d*d);
+    O.rgb += dif * dif * vec3(1);
+    
+    if(d<1e-4) break;
   }
-
-
-  O.rgb = tanh(O.rgb*1e1);
 }
