@@ -69,8 +69,9 @@ void mainImage(out vec4 O, in vec2 I){
   O.a = 1.;
 
   float r = 0.5;
+  vec2 dir = abs(uv)*0.001;
 
-  float n = fbm(uv*rotate(T) * 4.);                 // 旋转的噪音
+  float n = fbm(uv*rotate(T) * 4.+dir*T);                 // 旋转的噪音
   vec2 p = uv*rotate(-T*0.5);
   float d = sdf_gouyu(p+n*0.1, r);
   float d2 = length(p-vec2(-0.25,0))-0.05-0.05*n;   // 扣掉的空心
