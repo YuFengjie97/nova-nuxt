@@ -109,6 +109,7 @@ void mainImage(out vec4 O, in vec2 I){
   // for(int i=0;i<TOTAL;i++){
     // d = min(d, length(uv-points[i]));
   // }
+
   
   // 绘制线条  https://www.shadertoy.com/view/WdK3Dz  getSegment
   for(int i=0;i<TOTAL-1;i++){
@@ -118,11 +119,10 @@ void mainImage(out vec4 O, in vec2 I){
     vec2 p2 = points[i];
     float d1 = sdBezier(uv, p1, p2, c);
 
-    float ii = float(i/TOTAL);
     // d = min(d, d1-S(0.,1.,ii)*10.);
-    d = min(d, d1-S(0.,1.,ii));
+    d = min(d, d1-0.05);
   }
-  // d = S(0.01,0.,d-0.05);
+  // d = S(0.01,0.,d);
   d = pow(.05/d,2.);
   O.rgb += d;
 }
