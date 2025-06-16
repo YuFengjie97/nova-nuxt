@@ -78,13 +78,13 @@ void mainImage(out vec4 O, in vec2 I){
     }
 
     float d = map(p);
-    float dif = getLight(p);
 
     z += d;
     O.rgb = sin(vec3(3,2,1)+cos(p.x)*40.)*0.1;
 
-    O.rgb += dif * dif * vec3(1);
     
     if(d<1e-4) break;
   }
+  float dif = getLight(p);
+  O.rgb += dif * dif * vec3(1);
 }
