@@ -78,11 +78,12 @@ vec3 rayMarch(vec3 ro, vec3 rd){
   float z;
   for(float i=0.;i<100.;i++){
     p = ro + rd * z;
+    p.z += T;
     
     float d = map(p);
     z += d;
 
-    if(z>1e2 || d<1e-2) break;
+    if(z>50. || d<1e-2) break;
   }
   return p;
 }
