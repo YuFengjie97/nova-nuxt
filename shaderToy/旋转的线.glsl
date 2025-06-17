@@ -17,7 +17,9 @@ float smin( float a, float b, float k )
 }
 
 
-float map(vec3 p){
+vec4 map(vec3 p){
+  vec3 col = vec3(0);
+
   p.z += T*2.;
   float t = sin(T)*0.5+0.5;
   float a =  .1*p.z;
@@ -34,9 +36,10 @@ float map(vec3 p){
     float d2 = length(p.xy) - .06;
     d2 *= 0.2;
     d1 = min(d1, d2);
+    col+=d2*i;
   }
   d = smin(d, d1, 0.3);
-  return d;
+  return vec4(col, d);
   // return abs(d)+0.01;
 }
 
@@ -50,7 +53,7 @@ vec3 calcNormal4( in vec3 p ) // for function f(p)
     for( int i=ZERO; i<4; i++ )
     {
         vec3 e = 0.5773*(2.0*vec3((((i+3)>>1)&1),((i>>1)&1),(i&1))-1.0);
-        n += e*map(p+e*h);
+        n += e*map(p+e*h).w;
     }
     return normalize(n);
 }
@@ -60,7 +63,7 @@ vec3 rayMarch(vec3 ro, vec3 rd){
   float z;
   for(float i=0.;i<100.;i++){
     p = ro + rd * z;
-    float d = map(p);
+    float d = map(p).w;
     z += d;
 
     if(z>100. || d<1e-2) break;
@@ -79,6 +82,6 @@ void mainImage(out vec4 O, in vec2 I){
   vec3 ro = vec3(0.,0.,-10.);
   vec3 rd = normalize(vec3(uv, 1.));
   vec3 p = rayMarch(ro, rd);
-  float d = map(p);
-  O.rgb += sin(vec3(3,2,1)+p.z*0.3+d);
+  vec4 M = map(p);
+  O.rgb += sin(vec3(3,2,1)+M.rgb);
 }
