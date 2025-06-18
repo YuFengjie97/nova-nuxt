@@ -1,5 +1,6 @@
 #define T iTime
 #define PI 3.141596
+#define S smoothstep
 
 
 mat2 rotate(float a){
