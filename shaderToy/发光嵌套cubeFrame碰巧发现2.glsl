@@ -40,9 +40,10 @@ void mainImage(out vec4 O, in vec2 I){
   for(float i =0.;i<100.;i++){
     vec3 p = ro + rd * z;
 
+    // some twist rotate always be fun
     vec3 q=p;
     mat2 R1 = rotate(iTime * .1 * floor(i/5.));
-    mat2 R2 = rotate(iTime * .1 + floor(i/5.));
+    mat2 R2 = rotate(iTime * .1 + floor(i/4.));
     q.xy *= R1;
     q.xz *= R2;
     q.yz *= R1;
