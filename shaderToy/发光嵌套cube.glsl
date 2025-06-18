@@ -48,6 +48,7 @@ void mainImage(out vec4 O, in vec2 I){
       q.xy *= rotate(iTime * .2*i + i);
 
       float D = sdBox(q, vec3(i));
+      // float D = sdCube(q, i);
 
       // if(D<.4){
         col += (1.+sin(vec3(3,2,1)+q.x+i))/D*(1.-i*0.2)*0.01;
