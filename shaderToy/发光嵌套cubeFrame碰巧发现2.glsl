@@ -19,6 +19,13 @@ float sdBoxFrame( vec3 p, vec3 b, float e )
       length(max(vec3(q.x,q.y,p.z),0.0))+min(max(q.x,max(q.y,p.z)),0.0));
 }
 
+float sdBox( vec3 p, vec3 b )
+{
+  vec3 q = abs(p) - b;
+  float d = length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0);
+  // return d;
+  return abs(d)+0.1;
+}
 
 
 
@@ -49,7 +56,8 @@ void mainImage(out vec4 O, in vec2 I){
     q.yz *= R1;
 
 
-    float D = sdBoxFrame(q, vec3(4.), 0.);
+    // float D = sdBoxFrame(q, vec3(4.), 0.);
+    float D = sdBox(q, vec3(4.));
 
     col += (1.1+sin(vec3(3,2,1)+(q.x+q.y)*0.3))/D;
 
