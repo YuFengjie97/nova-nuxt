@@ -52,7 +52,7 @@ void mainImage(out vec4 O, in vec2 I){
     float d = 1e5;
     {
       float range = 3.;
-      for(float x = -range; x <= range; x++) {
+      for(float x = 0.; x <= range; x++) {
         float idd = id+x;
         vec3 q = p;
         q.xy*=rotate(T*0.1+idd*0.1);
