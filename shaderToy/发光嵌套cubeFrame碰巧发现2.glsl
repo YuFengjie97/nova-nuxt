@@ -42,22 +42,24 @@ void mainImage(out vec4 O, in vec2 I){
   vec3 col = vec3(0);
 
   vec4 A = vec4(0,33,11,0);
-  float t = sin(T);
+  float t = sin(T)*0.5+0.5;
 
   for(float i =0.;i<100.;i++){
     vec3 p = ro + rd * z;
 
     // some twist rotate always be fun
     vec3 q=p;
-    mat2 R1 = rotate(iTime * .1 * floor(i/5.));
-    mat2 R2 = rotate(iTime * .1 + floor(i/4.));
+    mat2 R1 = rotate(iTime * .3 * floor(i/5.));
+    mat2 R2 = rotate(iTime * .3 + floor(i/4.));
     q.xy *= R1;
     q.xz *= R2;
     q.yz *= R1;
 
+    // boxFrame and box sdf mix
+    float D1 = sdBoxFrame(q, vec3(4.), 0.);
+    float D2 = sdBox(q, vec3(4.));
+    float D = mix(D1, D2, t);
 
-    // float D = sdBoxFrame(q, vec3(4.), 0.);
-    float D = sdBox(q, vec3(4.));
 
     col += (1.1+sin(vec3(3,2,1)+(q.x+q.y)*0.3))/D;
 
