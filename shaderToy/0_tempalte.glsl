@@ -17,8 +17,8 @@ float map(vec3 p){
   for(float i=1.;i<6.;i*=1.5){
     p += sin(p.zxy * freq  + T*0.05) / freq;
     freq *= 2.;
-    d =  abs(length(p.xy)-9.) / 30.;
   }
+  d =  abs(length(p.xy)-9.) / 30.;
 
   return d;
 
