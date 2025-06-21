@@ -11,18 +11,6 @@ mat2 rotate(float a){
 
 
 float map(vec3 p){
-  float d;
-  float freq = .5;
-
-  // xor https://mini.gmshaders.com/p/turbulence
-  for(float i=1.;i<6.;i*=1.5){
-    p += sin(p.zxy * freq  + T*0.05) / freq;
-    freq *= 2.;
-    d =  abs(length(p.xy)-9.) / 30.;
-  }
-
-  return d;
-
 }
 
 
@@ -64,5 +52,5 @@ void mainImage(out vec4 O, in vec2 I){
     if(z>1e2 || d<1e-3) break;
   }
 
-
+  O.rgb = tanh(O.rgb * 1e-3);
 }
