@@ -53,7 +53,7 @@ vec3 rayMarch(vec3 ro, vec3 rd){
   for(float i=0.;i<100.;i++){
     p = ro + rd * z;
     float d= map(p).w;
-    z += d * 350./p.z;
+    z += d;
 
     if(z>100. || d<1e-2) break;
   }
