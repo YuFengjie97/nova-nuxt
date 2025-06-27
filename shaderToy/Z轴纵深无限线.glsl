@@ -30,11 +30,10 @@ void mainImage(out vec4 O, in vec2 I){
   vec4 U;
 
   float st = sin(T*0.1)*0.5+0.5;
+  ro.z += T*10.;
 
   for(float i =0.;i<60.;i++){
     vec3 p = ro + rd * z;
-
-    p.z += T*10.;
 
     // p.y += sin(p.x*5.)/5.;
 
@@ -51,10 +50,10 @@ void mainImage(out vec4 O, in vec2 I){
     float id = floor(rep);
     q.z -= rep;
 
-    q.xy *= rotate(id*0.04);
+    q.xy *= rotate(id*0.1);
     q.y -= 10.;
 
-    float d = length(q.yz)-.5;
+    float d = length(q.yz)-.6;
     d = max(d, 1e-1);
     D = min(D, d);
 
