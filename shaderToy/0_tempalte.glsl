@@ -71,8 +71,8 @@ void mainImage(out vec4 O, in vec2 I){
 
   vec3 light = normalize(vec3(1,1,p.z)-p);
   vec3 nor = calcNormal4(p);
-  // float dif = clamp(dot(light, nor), 0., 1.);
-  float dif = dot(light, nor);
+  float dif = clamp(dot(light, nor), 0., 1.);
+  // float dif = dot(light, nor);
   
   O.rgb = sin(vec3(3,2,1)+d*30.+p.z*0.1);
   O.rgb += dif*dif*vec3(1,1,0)*0.8;
