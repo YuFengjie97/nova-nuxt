@@ -33,9 +33,10 @@ void mainImage(out vec4 O, in vec2 I){
 
     float s = 5.;
     vec2 id = round(p.xy/s);
+    id = clamp(id, -1., 1.);
+
     for(float x=-1.;x<=1.;x++){
       for(float y=-1.;y<=1.;y++){
-        id = clamp(id, -1., 1.);
 
         vec2 q = p.xy - s*(id + vec2(x,y));
         // vec2 q = p.xy - s*id;
