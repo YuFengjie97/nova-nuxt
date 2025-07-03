@@ -76,4 +76,8 @@ void mainImage(out vec4 O, in vec2 I){
   }
 
   O.rgb = tanh(O.rgb / 1e5);
+
+  // vec2 d1 = abs(uv) - vec2(0.5,0.2);
+  // float s = length(max(d1,0.0));
+  // O.rgb += s;
 }
