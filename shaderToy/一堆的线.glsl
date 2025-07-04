@@ -66,7 +66,7 @@ void mainImage(out vec4 O, in vec2 I){
         vec2 rid = id + vec2(x,y)*o;
         rid = clamp(rid, -2., 2.);
         vec2 r = p.xz - s*rid; 
-        float d1 = length(r-vec2(5.)) - (sin(dot(id,id))+1.1);
+        float d1 = length(r-vec2(5.)) - (sin(dot(id,id)+p.y*0.5+T*7.)+1.1);
         d1 = max(0.01,d1*.2);
         d = min(d, d1);
       }
