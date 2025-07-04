@@ -54,6 +54,8 @@ void mainImage(out vec4 O, in vec2 I){
 
     p.xz *= rotate(p.y*0.1+T);
 
+
+    // domain repetition https://iquilezles.org/articles/sdfrepetition/
     vec3 q = p;
     float s = 10.;
     vec2 id = floor(q.xz / s);
@@ -77,7 +79,4 @@ void mainImage(out vec4 O, in vec2 I){
 
   O.rgb = tanh(O.rgb / 5e4);
 
-  // vec2 d1 = abs(uv) - vec2(0.5,0.2);
-  // float s = length(max(d1,0.0));
-  // O.rgb += s;
 }
