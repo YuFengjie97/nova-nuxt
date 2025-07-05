@@ -16,6 +16,7 @@ mat2 rotate(float a){
   return mat2(c,-s,s,c);
 }
 
+// // this noise trick is from diatribes https://www.shadertoy.com/view/w3tGWS
 float fbm(vec3 p, vec3 seed){
   float res = 0.;
   for(float i=1.;i<8.;i*=1.42){
