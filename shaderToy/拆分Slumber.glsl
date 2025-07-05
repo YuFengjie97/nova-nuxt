@@ -24,7 +24,7 @@ void mainImage( out vec4 o, in vec2 u )
 
       // fbm, N()是cos的简便3D噪音
       for(float n = 1.;n < 8.;n *= 1.42){
-        w.y -= N(t+w, .04);
+        w.y -= N(w, .04);
         d += N(p, .13);
       }
 
