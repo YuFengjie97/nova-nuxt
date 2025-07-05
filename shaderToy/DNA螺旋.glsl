@@ -1,3 +1,6 @@
+#iChannel0 "file://D:/workspace/nova-nuxt/public/img/noise/shaderToy/texture1.jpg"
+
+
 #define T iTime
 #define PI 3.141596
 #define S smoothstep
@@ -7,6 +10,10 @@ mat2 rotate(float a){
   float s = sin(a);
   float c = cos(a);
   return mat2(c,-s,s,c);
+}
+
+vec3 tex(vec2 p){
+  return texture(iChannel0, p).rgb;
 }
 
 // this noise trick is from diatribes https://www.shadertoy.com/view/w3tGWS
@@ -59,7 +66,6 @@ void mainImage(out vec4 O, in vec2 I){
     d3 = max(0.01, d3*.8);
     d = min(d, d3);
     O.rgb += (1.1+sin(vec3(3,2,1)+q2.y*.2))/d3;
-
 
     z += d;
     if(z>100. || d<1e-3) break;
