@@ -24,6 +24,18 @@ float map(vec3 p){
 
 }
 
+// https://iquilezles.org/articles/normalsSDF/
+vec3 calcNormal( in vec3 pos )
+{
+    vec2 e = vec2(1.0,-1.0);
+    const float eps = 0.0005;
+    return normalize( 
+            e.xyy*map( pos + e.xyy*eps ) + 
+					  e.yyx*map( pos + e.yyx*eps ) + 
+					  e.yxy*map( pos + e.yxy*eps ) + 
+					  e.xxx*map( pos + e.xxx*eps ) );
+}
+
 
 // https://iquilezles.org/articles/normalsSDF/
 vec3 calcNormal4( in vec3 p ) // for function f(p)
