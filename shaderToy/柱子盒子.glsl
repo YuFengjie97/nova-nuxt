@@ -47,15 +47,15 @@ void mainImage(out vec4 O, in vec2 I){
   for(float i =0.;i<100.;i++){
     vec3 p = ro + rd * z;
 
-    p.xy *= rotate(T*.5);
-    p.xz *= rotate(T*.5);
+    p.xy *= rotate(T*.2);
+    p.xz *= rotate(T*.2);
     // p.yz *= rotate(T*.5);
 
     vec3 q = p;
     vec3 id = round(q/4.)*4.;
     q -= id;
 
-    q-=cos(id);
+    q-=cos(id+T*5.);
 
     float r = .5;
     float d1 = length(q.yz)-r; 
