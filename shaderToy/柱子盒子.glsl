@@ -66,8 +66,8 @@ void mainImage(out vec4 O, in vec2 I){
 
     {
       vec3 q = p;
-      q = abs(q) - vec3(8.);
-      float box = max(max(q.x,q.y),q.z)-2.;
+      q = abs(q) - vec3(10.);
+      float box = max(max(q.x,q.y),q.z);
       d = max(d, box);
     }
 
