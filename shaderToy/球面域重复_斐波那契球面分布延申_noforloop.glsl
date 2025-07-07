@@ -3,13 +3,12 @@
 #define S smoothstep
 
 
-float N = 30.;
+float N = 200.;
 
 //=================================================================================================
 // https://www.shadertoy.com/view/lllXz4
 // https://dl.acm.org/doi/10.1145/2816795.2818131
 //=================================================================================================
-
 vec2 inverseSF( vec3 p ) 
 {
     const float kTau = 6.28318530718;
@@ -29,6 +28,7 @@ vec2 inverseSF( vec3 p )
 
     float d = 8.0;
     float j = 0.0;
+    vec3 q2;
     for( int s=0; s<4; s++ ) 
     {
         vec2  uv = vec2(s&1,s>>1);
@@ -39,16 +39,22 @@ vec2 inverseSF( vec3 p )
         float sinTheta = sqrt(1.0-cosTheta*cosTheta);
         
         vec3 q = vec3( cos(phi)*sinTheta, sin(phi)*sinTheta, cosTheta );
-        float tmp = dot(q-p, q-p);
-        if( tmp<d ) 
-        {
-            d = tmp;
-            j = id;
+        // float tmp = dot(q-p, q-p);
+        // if( tmp<d ) 
+        // {
+        //     d = tmp;
+        //     j = id;
+        // }
+
+        float tmp = length(q-p);
+        if(tmp<d){
+          d = tmp;
+          j = id;
         }
     }
-    return vec2( j, sqrt(d) );
+    // return vec2( j, sqrt(d) );
+    return vec2( j, d );
 }
-
 
 
 mat2 rotate(float a){
@@ -96,21 +102,20 @@ void mainImage(out vec4 O, in vec2 I){
     p.xz *= rotate(T*.5);
     p.yz *= rotate(T*.5);
 
-    // float r = 5.;
-    // d = length(p)-r;
-    // d = max(0.01,abs(d)-.1);
-    
-    vec3 nor = (p);
+    vec3 nor = (p)/5.;
 
     vec2 fi = inverseSF(nor);
-    float d1 = fi.y - .2;
+    float d1 = fi.y-.05;
     d = min(d, max(.01,d1));
-    
-    
+
+    // vec3 pos = fibonacciSphere(fi.x, N);
+    // float d1 = length(p-pos)-.1;
+    // d = min(d, max(.01,d1));
+
     O.rgb += (1.1+sin(vec3(3,2,1)+fi.x*.2+T))/d;
     z += d;
 
-    if(z>25. || d<1e-3) break;
+    if(z>55. || d<1e-3) break;
   }
 
   O.rgb = tanh(O.rgb / 1e4);
