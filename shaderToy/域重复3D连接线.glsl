@@ -68,7 +68,7 @@ void mainImage(out vec4 O, in vec2 I){
 
     d = max(0.01, d);
     
-    O.rgb += (1.1+sin(vec3(3,2,1)+(id.x+id.y)*.5+p.x))/d;
+    O.rgb += (1.1+sin(vec3(3,2,1)+(id.x+id.y)*.5+p.x+T))/d;
     z += d;
 
     if(z>50. || d<1e-3) break;
