@@ -35,18 +35,19 @@ void mainImage(out vec4 O, in vec2 I){
   vec2 p2 = fract(p);
   float d = abs(length(p2-.5)-.1);
 
-  vec3 col = vec3(0);
+  vec3 col = vec3(0.);
 
   for(float x=-1.;x<=1.;x++){
   for(float y=-1.;y<=1.;y++){
     vec2 nei = id+vec2(x,y);
-    vec2 pp = abs((id+nei));
+    vec2 pp = abs(id+nei);
     float n = hash21(pp+T*1e-5);
+    // float n = hash21(pp);
     if(n<.2){
       float d1 = sdSegment(p, id+.5, nei+.5)-.02;
       d = min(d, d1);
 
-      col = sin(vec3(3,2,1)+n*30.);
+      col = sin(vec3(3,2,1)+n*20.)*.5+.5;
     }
   }}
 
