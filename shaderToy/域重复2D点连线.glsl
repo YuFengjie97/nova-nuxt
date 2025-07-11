@@ -47,11 +47,11 @@ void mainImage(out vec4 O, in vec2 I){
       float d1 = sdSegment(p, id+.5, nei+.5)-.02;
       d = min(d, d1);
 
-      col = sin(vec3(3,2,1)+n*20.)*.5+.5;
+      col = (sin(vec3(3,2,1)+n*20.)*.5+.5);
     }
   }}
 
-  // d = S(0.04,0.,d);
-  d = pow(.04/d, 2.);
+  d = S(0.04,0.,d);
+  // d = pow(.1/d, 2.);
   O.rgb += d*col;
 }
