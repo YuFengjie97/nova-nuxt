@@ -91,6 +91,6 @@ void mainImage(out vec4 O, in vec2 I){
 
   vec3 nor = calcNormal(p);
   if(z<100.){
-    O.rgb = O.rgb*.5 + boxmap(iChannel0, p*.1, nor, 3.).rgb;
+    O.rgb = O.rgb*.5 + boxmap(iChannel0, p*.06, nor, 3.).rgb;
   }
 }
