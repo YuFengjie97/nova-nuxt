@@ -66,13 +66,17 @@ void mainImage(out vec4 O, in vec2 I){
     p.yz *= rotate(T*.5);
 
     d = map(p);
-    // d = max(0.01, d);
+    d = max(0.01, d);
+
     z+=d;
+    O.rgb += (1.1+sin(vec3(3,2,1)+p.x*.5))/d;
     if(z>10. || d<1e-3) break;
   }
 
+  O.rgb = tanh(O.rgb/1e4);
+
   vec3 nor = calcNormal(p);
   if(z<10.){
-    O.rgb = boxmap(iChannel0, p*.1, nor, 3.).rgb;
+    O.rgb = mix(O.rgb, boxmap(iChannel0, p*.1, nor, 3.).rgb,.5);
   }
 }
