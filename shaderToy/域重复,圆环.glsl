@@ -8,8 +8,8 @@ mat2 rotate(float a){
   return mat2(c,-s,s,c);
 }
 
-float sdRing(vec3 p, float r, float rr){
-  float d = length(vec2(length(p.xz)-r, p.y))-rr;
+float map(vec3 p, float r1, float r2){
+  float d = length(vec2(length(p.xy)-r1, p.z))-r2;
   return d;
 }
 
@@ -19,32 +19,34 @@ void mainImage(out vec4 O, in vec2 I){
   vec2 R = iResolution.xy;
   vec2 uv = (I*2.-R)/R.y;
 
-  O.rgb *= 0.;
+  O.rgb = vec3(0);
   O.a = 1.;
 
   vec3 ro = vec3(0.,0.,-10.);
   vec3 rd = normalize(vec3(uv, 1.));
 
-  float z;
+  float z = 0.;
   float d = 1e10;
 
   for(float i =0.;i<100.;i++){
     vec3 p = ro + rd * z;
 
-    p.yz *= rotate(T*.4);
+    p.xz *= rotate(T);
 
     vec3 q = p;
-    float s = .4;
-    float id = (round(length(q.xz)/s));
-    id = clamp(id, 1., 10.);
-    q.y -= sin(id+T*3.);
-    float d1 = sdRing(q, id*s, .02);
-    d = min(d, d1);
-
+    float s = 1.;
+    float dc = length(q.xyz);
+    float id = clamp(round(dc/s),1.,4.);
+    float r = dc-id*s;
+    float theta = acos(q.z/r);
+    float phi = atan(q.y,q.x);
+    float x1 = r * sin(theta) * cos(phi);
+    float y1 = r * sin(theta) * sin(phi);
+    float z1 = r * cos(theta);
+    q -= vec3(x1,y1,z1);
+    d = map(q, .5, .1);
     d = max(0.01,d);
 
-    O.rgb += (1.1+sin(vec3(3,2,1)+id))/d;
-    z += d;
 
     if(z>100. || d<1e-3) break;
   }
