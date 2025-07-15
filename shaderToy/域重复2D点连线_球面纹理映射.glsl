@@ -6,12 +6,7 @@
 
 
 float map(vec3 p) {
-  float d1 = length(p)-4.;
-
-  p = abs(p)-vec3(4.);
-  float d2 = max(p.x,max(p.y,p.z));
-  
-  float d = mix(d1, d2, sin(T)*.5+.5);
+  float d = length(p)-4.;
   return d;
 }
 
@@ -41,45 +36,6 @@ vec4 boxmap( in sampler2D s, in vec3 p, in vec3 n, in float k )
 	return (x*m.x + y*m.y + z*m.z) / (m.x + m.y + m.z);
 }
 
-// https://www.shadertoy.com/view/ws3Bzf
-vec4 biplanar( sampler2D sam, in vec3 p, in vec3 n, in float k )
-{
-    // grab coord derivatives for texturing
-    vec3 dpdx = dFdx(p);
-    vec3 dpdy = dFdy(p);
-    n = abs(n);
-
-    // determine major axis (in x; yz are following axis)
-    ivec3 ma = (n.x>n.y && n.x>n.z) ? ivec3(0,1,2) :
-               (n.y>n.z)            ? ivec3(1,2,0) :
-                                      ivec3(2,0,1) ;
-    // determine minor axis (in x; yz are following axis)
-    ivec3 mi = (n.x<n.y && n.x<n.z) ? ivec3(0,1,2) :
-               (n.y<n.z)            ? ivec3(1,2,0) :
-                                      ivec3(2,0,1) ;
-    // determine median axis (in x;  yz are following axis)
-    ivec3 me = ivec3(3) - mi - ma;
-    
-    // project+fetch
-    vec4 x = textureGrad( sam, vec2(   p[ma.y],   p[ma.z]), 
-                               vec2(dpdx[ma.y],dpdx[ma.z]), 
-                               vec2(dpdy[ma.y],dpdy[ma.z]) );
-    vec4 y = textureGrad( sam, vec2(   p[me.y],   p[me.z]), 
-                               vec2(dpdx[me.y],dpdx[me.z]),
-                               vec2(dpdy[me.y],dpdy[me.z]) );
-    
-    // blend factors
-    vec2 w = vec2(n[ma.x],n[me.x]);
-    // make local support
-    w = clamp( (w-0.5773)/(1.0-0.5773), 0.0, 1.0 );
-    // shape transition
-    w = pow( w, vec2(k/8.0) );
-    // blend and return
-    return (x*w.x + y*w.y) / (w.x + w.y);
-}
-
-
-
 
 mat2 rotate(float a){
   float s = sin(a);
@@ -100,27 +56,24 @@ void mainImage(out vec4 O, in vec2 I){
 
   float z;
   float d = 1e10;
-  vec3 p;
 
   for(float i =0.;i<100.;i++){
-    p = ro + rd * z;
-    p.xz *= rotate(T*.5);
-    p.xy *= rotate(T*.5);
-    p.yz *= rotate(T*.5);
-
+    vec3 p = ro + rd * z;
     d = map(p);
-    d = max(0.01, d);
-
     z+=d;
-    O.rgb += (1.1+sin(vec3(3,2,1)+p.x*.5))/d;
     if(z>10. || d<1e-3) break;
   }
 
   O.rgb = tanh(O.rgb/1e4);
 
-  vec3 nor = calcNormal(p);
   if(z<10.){
-    O.rgb = mix(O.rgb, boxmap(iChannel0, p*.16, nor, 3.).rgb,.5);
-    // O.rgb = mix(O.rgb, biplanar(iChannel0, p*.1, nor, 3.).rgb,.5);
+    vec3 p = ro+rd*z;
+    vec3 nor = calcNormal(p);
+
+    p.xz *= rotate(T*.3);
+    p.yz *= rotate(T*.3);
+
+    O.rgb = 1.1+sin(vec3(3,2,1)+p.x*.4);
+    O.rgb = mix(O.rgb, boxmap(iChannel0, fract(p*.2), nor, 3.).rgb, .7);
   }
 }
