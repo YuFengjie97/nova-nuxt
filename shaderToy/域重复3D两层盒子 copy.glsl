@@ -24,15 +24,16 @@ float sdBox( vec3 p, vec3 b )
 
 vec3 map(vec3 p){
   vec3 q = p;
+  float d = -abs(q.y)+10.;   // up and down plane
+
   if(q.y<0.){
     q.x += 43.;
   }
   q.y = abs(q.y);
   q.y -= 10.;
 
-  float d = 1e10;
 
-  // domainrepetition https://iquilezles.org/articles/sdfrepetition/
+  // // domainrepetition https://iquilezles.org/articles/sdfrepetition/
   float s = 2.;
   vec2 id = round(q.xz/s);
   vec2  o = sign(q.xz-s*id);
@@ -102,11 +103,16 @@ void mainImage(out vec4 O, in vec2 I){
 
   if(z<zMax){
     vec3 nor = calcNormal(p, .001);
+    // float diff = dot(nor, vec3(.2));
+    // O = vec4((1.1+sin(vec3(1,2,3)+id.x+id.y))*diff, 1);
+
     vec3 col = boxmap(iChannel0, fract(p*.04+vec3(id,1.)), nor, 7.).rgb;
+    // AO handler https://www.shadertoy.com/view/MtsGWH
     float occ = clamp(0.4 + 0.6*nor.x, 0.0, 1.0);
     col = col*col;
     col *= occ;
     col *= 2.0;
+    col = sqrt( col );
     O = vec4(col, 1.);
   }
 }
