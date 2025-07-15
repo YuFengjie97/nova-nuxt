@@ -1,10 +1,19 @@
+#iChannel0 "file://D:/workspace/nova-nuxt/public/img/noise/shaderToy/texture2.jpg"
+
 #define T iTime
 #define PI 3.141596
 #define S smoothstep
 
+float sdBox( vec3 p, vec3 b )
+{
+  vec3 q = abs(p) - b;
+  return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0);
+}
 
 float map(vec3 p) {
-  float d = length(p)- 4.;
+  float d1 = length(p)- 4.;
+  float d2 = sdBox(p, vec3(3.));
+  float d = mix(d1, d2, sin(T)*.5+.5);
   return d;
 }
 
@@ -20,6 +29,20 @@ vec3 calcNormal( in vec3 pos )
 					  e.yxy*map( pos + e.yxy*eps ) + 
 					  e.xxx*map( pos + e.xxx*eps ) );
 }
+
+// https://www.shadertoy.com/view/MtsGWH
+vec4 boxmap( in sampler2D s, in vec3 p, in vec3 n, in float k )
+{
+    // project+fetch
+	vec4 x = texture( s, p.yz );
+	vec4 y = texture( s, p.zx );
+	vec4 z = texture( s, p.xy );
+    
+    // and blend
+  vec3 m = pow( abs(n), vec3(k) );
+	return (x*m.x + y*m.y + z*m.z) / (m.x + m.y + m.z);
+}
+
 
 
 mat2 rotate(float a){
@@ -41,9 +64,13 @@ void mainImage(out vec4 O, in vec2 I){
 
   float z = 0.;
   float zMax = 100.;
+  vec3 p;
 
   for(float i =0.;i<100.;i++){
-    vec3 p = ro + rd * z;
+    p = ro + rd * z;
+    
+    p.xz*=rotate(T);
+    p.yz*=rotate(T);
 
     float d = map(p);
     if(d<1e-3) break;
@@ -52,10 +79,8 @@ void mainImage(out vec4 O, in vec2 I){
   }
 
   if(z<zMax) {
-    vec3 col = vec3(1,0,0);
-    vec3 p = ro + rd * z;
     vec3 nor = calcNormal(p);
-    float diff = clamp(dot(nor, vec3(0,0,-4)),0.,1.);
-    O = vec4(col*diff, 1);
+    vec3 col = boxmap(iChannel0, fract(p*.1), nor, 7.).rgb;
+    O = vec4(col, 1);
   }
 }
