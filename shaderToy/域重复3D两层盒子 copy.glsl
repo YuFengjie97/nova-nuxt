@@ -102,7 +102,7 @@ void mainImage(out vec4 O, in vec2 I){
 
   if(z<zMax){
     vec3 nor = calcNormal(p, .001);
-    vec3 col = boxmap(iChannel0, fract(p*.1), nor, 7.).rgb;
+    vec3 col = boxmap(iChannel0, fract(p*.04+vec3(id,1.)), nor, 7.).rgb;
     float occ = clamp(0.4 + 0.6*nor.x, 0.0, 1.0);
     col = col*col;
     col *= occ;
