@@ -3,6 +3,7 @@
 #define T iTime
 #define PI 3.141596
 #define S smoothstep
+#define eee(v) (1.-exp(-v*5.))
 
 // https://iquilezles.org/articles/distfunctions/
 float sdBox( vec3 p, vec3 b )
@@ -10,10 +11,51 @@ float sdBox( vec3 p, vec3 b )
   vec3 q = abs(p) - b;
   return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0);
 }
+float sdBoxFrame( vec3 p, vec3 b, float e )
+{
+       p = abs(p  )-b;
+  vec3 q = abs(p+e)-e;
+  return min(min(
+      length(max(vec3(p.x,q.y,q.z),0.0))+min(max(p.x,max(q.y,q.z)),0.0),
+      length(max(vec3(q.x,p.y,q.z),0.0))+min(max(q.x,max(p.y,q.z)),0.0)),
+      length(max(vec3(q.x,q.y,p.z),0.0))+min(max(q.x,max(q.y,p.z)),0.0));
+}
+float sdOctahedron( vec3 p, float s )
+{
+  p = abs(p);
+  float m = p.x+p.y+p.z-s;
+  vec3 q;
+       if( 3.0*p.x < m ) q = p.xyz;
+  else if( 3.0*p.y < m ) q = p.yzx;
+  else if( 3.0*p.z < m ) q = p.zxy;
+  else return m*0.57735027;
+    
+  float k = clamp(0.5*(q.z-q.y+s),0.0,s); 
+  return length(vec3(q.x,q.y-s+k,q.z-k)); 
+}
 
 float map(vec3 p) {
-  float d = length(p)-4.;
-  // float d = sdBox(p, vec3(3.));
+  float d1 = length(p)-4.;
+  float d2 = sdBox(p, vec3(3));
+  float d3 = sdOctahedron(p, 4.);
+  float d4 = sdBoxFrame(p, vec3(3), .4);
+
+  float t = mod(T/2., 4.);
+  float ti = floor(t);
+  float tf = fract(t);
+  float d;
+  if(ti==0.){
+    d = mix(d1, d2, eee(tf));
+  }
+  else if(ti==1.){
+    d = mix(d2, d3, eee(tf));
+  }
+  else if(ti==2.){
+    d = mix(d3, d4, eee(tf));
+  }
+  else if(ti==3.){
+    d = mix(d4, d1, eee(tf));
+  }
   return d;
 }
 
@@ -59,9 +101,13 @@ void mainImage(out vec4 O, in vec2 I){
 
   float z = 0.;
   float zMax = 20.;
+  vec3 p;
 
   for(float i =0.;i<100.;i++){
-    vec3 p = ro + rd * z;
+    p = ro + rd * z;
+    p.xz*=rotate(T*.5);
+    p.yz*=rotate(T*.5);
+
     float d = map(p);
     if(d<1e-3) break;
     z+=d;
@@ -69,14 +115,8 @@ void mainImage(out vec4 O, in vec2 I){
   }
 
   if(z<zMax){
-    vec3 p = ro+rd*z;
-
-    p.xz *= rotate(T*.3);
-    p.yz *= rotate(T*.3);
     vec3 nor = calcNormal(p, 0.001);
-
-    float diff = clamp(dot(nor, vec3(0,0,-1)),0.,1.);
-    O.rgb = vec3(1,0,0)*diff;
-    O.rgb = mix(O.rgb, boxmap(iChannel0, fract(p*.2), nor, 8.).rgb, .7);
+    O.rgb = 1.1+sin(vec3(3,2,1)+p.x*.4);
+    O.rgb = mix(O.rgb, boxmap(iChannel0, fract(p*.1), nor, 8.).rgb, .8);
   }
 }
