@@ -156,24 +156,24 @@ void mainImage(out vec4 O, in vec2 I){
     vec3 lightPos = vec3(4, 4, -4.);
     vec3 lightDir = normalize(lightPos-p);
     float diff = clamp(dot(lightDir, nor),0.,1.);
+    O.rgb *= diff;
 
     #if 0
     // 普通阴影+简单的漫反射
     float shadowLen = rayMarch(p+nor*PRECISION, lightDir);
     if(shadowLen < length(lightPos-p)){
-      diff*=0.1;  // 不是0,简单模拟漫反射
+      O.rgb*=0.1;  // 不是0,简单模拟漫反射
     }
-    O.rgb = O.rgb * diff;
     #else
     // 柔和阴影
     float ss = clamp(softShadow(p, lightDir, .1, 10.), 0., 1.0);
-    O.rgb = diff * O.rgb * ss;
+    O.rgb *= ss;
     #endif
 
     // 高光
     vec3 ref = reflect(lightDir, nor);
-    float spe = clamp(dot(ref, -rd),0.,1.);
-    O.rgb += vec3(1,0,0)*pow(spe, 10.);
+    float spe = pow(clamp(dot(ref, -rd),0.,1.), 10.);
+    O.rgb += vec3(1,0,0)*spe;
 
     // fog
     // O.rgb = mix(O.rgb, vec3(0.), 1.0 - exp(-0.00002 * pow(z, 3.)));
