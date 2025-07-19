@@ -13,6 +13,7 @@ float smin( float a, float b)
            length(max(k-vec2(a,b),0.0));
 }
 
+// https://iquilezles.org/articles/functions/
 float sinc( float x, float k )
 {
     float a = PI*(k*x-1.0);
@@ -57,7 +58,7 @@ vec4 map(vec3 p) {
     if(d_plane<.01){
       col = vec3(.7,.6,0);
     }
-    d_plane += fbm(q*.1, .02);
+    d_plane += fbm(q*.1+T*.1, .05);
     d = min(d, d_plane);
   }
 
@@ -237,7 +238,7 @@ void mainImage(out vec4 O, in vec2 I){
 
   float zMax = 100.;
 
-  float z = rayMarch(ro, rd, 0.1, 100.);
+  float z = rayMarch(ro, rd, 0.1, 50.);
 
   vec3 col = vec3(0);
   if(z<zMax) {
@@ -262,7 +263,7 @@ void mainImage(out vec4 O, in vec2 I){
     // col += spe * vec3(1)*.2;
   }
 
-  col *= exp(-1e-6*z*z*z);
+  col *= exp(-1e-4*z*z*z);
   col = pow(col, vec3(.72));
   O.rgb = col;
 
