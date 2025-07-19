@@ -27,10 +27,10 @@ mat2 rotate(float a){
   return mat2(c,-s,s,c);
 }
 
-float fbm(vec3 p, float amp){
+float fbm(vec3 p, float v){
   float res = 0.;
   for(float i =1.;i<5.;i++){
-    res += abs(dot(cos(p*i*10.+i*.32), vec3(amp)))/i;
+    res += abs(dot(cos(p*i*10.+i*.32), vec3(v)))/i;
   }
   return res;
 }
@@ -264,7 +264,7 @@ void mainImage(out vec4 O, in vec2 I){
   }
 
   col *= exp(-1e-4*z*z*z);
-  col = pow(col, vec3(.72));
+  col = pow(col, vec3(.62));
   O.rgb = col;
 
 }
