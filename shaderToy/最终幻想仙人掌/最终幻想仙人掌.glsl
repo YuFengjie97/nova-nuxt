@@ -26,10 +26,10 @@ mat2 rotate(float a){
   return mat2(c,-s,s,c);
 }
 
-float fbm(vec3 p){
+float fbm(vec3 p, float amp){
   float res = 0.;
   for(float i =1.;i<5.;i++){
-    res += abs(dot(cos(p*i*10.+i*.32), vec3(0.02)))/i;
+    res += abs(dot(cos(p*i*10.+i*.32), vec3(amp)))/i;
   }
   return res;
 }
@@ -47,16 +47,29 @@ float sdSphere(vec3 p, float r){
 
 vec4 map(vec3 p) {
   float d = 1e4;
-  vec3 col = vec3(0,1,0);
+  vec3 col = vec3(0,.8,0);
+
+  // plane
+  float d_plane;
+  {
+    vec3 q = p;
+    d_plane = (q.y+4.5);
+    if(d_plane<.01){
+      col = vec3(.7,.6,0);
+    }
+    d_plane += fbm(q*.1, .02);
+    d = min(d, d_plane);
+  }
 
   p.xz *= rotate(PI * 2. * sinc(mod(T, 4.), 1.));
   p.xy *= rotate(radians(-36.));
   
+  float d_cacti=1e4;
   // body
   {
     vec3 q = p;
     float d1 = sdVerticalCapsule(q, 4., 1.4);
-    d = min(d, d1);
+    d_cacti = min(d_cacti, d1);
   }
   // eye
   {
@@ -66,29 +79,34 @@ vec4 map(vec3 p) {
     q.yz *= rotate(radians(90.));
 
     float d1 = sdVerticalCapsule(q, 3., .2);
-    d = max(d, -d1);
+    d_cacti = max(d_cacti, -d1);
   }
   // mouth
   {
     vec3 q = p;
     q -= vec3(0,1.8,-1.4);
     float d1 = sdVerticalCapsule(q, .7, .18);
-    d = max(d, -d1);
+    d_cacti = max(d_cacti, -d1);
   }
   // hair
   {
+    float dd = 1e4;
     vec3 q = p;
     q -= vec3(0,5.2,0);
     float d1 = sdVerticalCapsule(q, .8, .08);
-    d = smin(d, d1);
+    dd = min(dd, d1);
     {
       vec3 q = p;
       q.x = abs(q.x);
       q -= vec3(0.5,5.1,0);
       q.xy *= rotate(radians(30.));
       float d1 = sdVerticalCapsule(q, .8, .08);
-      d = smin(d, d1);
+      dd = min(dd, d1);
     }
+    if(dd<0.1){
+      col = vec3(.7,0,0);
+    }
+    d_cacti = smin(d_cacti, dd);
   }
   // left arm
   {
@@ -96,12 +114,12 @@ vec4 map(vec3 p) {
     q -= vec3(-1.,2.,0);
     q.xy *= rotate(radians(-90.));
     float d1 = sdVerticalCapsule(q, 1.8, .5);
-    d = smin(d, d1);
+    d_cacti = smin(d_cacti, d1);
     {
       vec3 q = p;
       q -= vec3(-3.,2.,0);
       float d1 = sdVerticalCapsule(q, 1.8, .5);
-      d = smin(d, d1);
+      d_cacti = smin(d_cacti, d1);
     }
   }
   // right arm
@@ -110,12 +128,12 @@ vec4 map(vec3 p) {
     q -= vec3(3.,2.,0);
     q.xy *= rotate(radians(-90.));
     float d1 = sdVerticalCapsule(q, 1.8, .5);
-    d = smin(d, d1);
+    d_cacti = smin(d_cacti, d1);
     {
       vec3 q = p;
       q -= vec3(3.,.2,0);
       float d1 = sdVerticalCapsule(q, 1.8, .5);
-      d = smin(d, d1);
+      d_cacti = smin(d_cacti, d1);
     }
   }
   // left leg
@@ -124,12 +142,12 @@ vec4 map(vec3 p) {
     q -= vec3(-.8,-.6,0);
     q.xy *= rotate(radians(-90.));
     float d1 = sdVerticalCapsule(q, 1.8, .6);
-    d = smin(d, d1);
+    d_cacti = smin(d_cacti, d1);
     {
       vec3 q = p;
       q -= vec3(-2.6,-3.,0);
       float d1 = sdVerticalCapsule(q, 2.4, .6);
-      d = smin(d, d1);
+      d_cacti = smin(d_cacti, d1);
     }
   }
   // right leg
@@ -137,18 +155,18 @@ vec4 map(vec3 p) {
     vec3 q = p;
     q -= vec3(.8,-2.4,0);
     float d1 = sdVerticalCapsule(q, 1.8, .6);
-    d = smin(d, d1);
+    d_cacti = smin(d_cacti, d1);
     {
       vec3 q = p;
       q -= vec3(.8,-2.4,0);
       q.xy *= rotate(radians(90.));
       float d1 = sdVerticalCapsule(q, 2.4, .6);
-      d = smin(d, d1);
+      d_cacti = smin(d_cacti, d1);
     }
   }
-  // d = length(p)-3.;
 
-  d += fbm(p)*.4;
+  d_cacti += fbm(p, .02)*.4;
+  d = min(d, d_cacti);
   
   return vec4(col, d);
 }
@@ -191,6 +209,22 @@ float rayMarch(vec3 ro, vec3 rd, float zMin, float zMax){
 }
 
 
+
+// https://iquilezles.org/articles/rmshadows/
+float softShadow(vec3 ro, vec3 rd, float mint, float tmax) {
+  float res = 1.0;
+  float t = mint;
+
+  for(int i = 0; i < 100; i++) {
+      float h = map(ro + rd * t).w;
+      res = min(res, 8.0*h/t);
+      t += clamp(h, 0.02, 0.10);
+      if(h < 0.001 || t > tmax) break;
+  }
+
+  return clamp( res, 0.0, 1.0 );
+}
+
 void mainImage(out vec4 O, in vec2 I){
   vec2 R = iResolution.xy;
   vec2 uv = (I*2.-R)/R.y;
@@ -215,16 +249,21 @@ void mainImage(out vec4 O, in vec2 I){
     col = M.rgb;
     // col = boxmap(iChannel0, fract(p*.5), nor, 7.).rgb;
 
-    vec3 l_dir = normalize(vec3(0,0,-6)-p);
+    vec3 l_dir = normalize(vec3(1,6,-4)-p);
     float diff = clamp(dot(l_dir, nor), 0., 1.);
-    col *= diff;
+    col *= diff*.6;
+    
+    // soft shadow
+    float ss = clamp(softShadow(p, l_dir, .1, 10.), 0.1, 10.0);
+    col *= ss;
 
     // blinn phong hight light
     // float spe = clamp(dot(normalize(l_dir-rd), nor),0.,1.);
-    // col += spe * vec3(1);
+    // col += spe * vec3(1)*.2;
   }
 
-  col *= exp(-1e-4*z*z*z);
+  col *= exp(-1e-6*z*z*z);
+  col = pow(col, vec3(.72));
   O.rgb = col;
 
 }
