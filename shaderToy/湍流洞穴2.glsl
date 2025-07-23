@@ -56,6 +56,7 @@ float rayMarch(vec3 ro, vec3 rd, float zMin, float zMax){
   for(float i=0.;i<100.;i++){
     vec3 p = ro + rd * z;
     float d = map(p).w;
+    d*=.2;
     if(d<1e-3 || z>zMax) break;
     z += d;
   }
@@ -74,9 +75,9 @@ void mainImage(out vec4 O, in vec2 I){
   vec3 ro = vec3(0,0,T*5.);
   vec3 rd = normalize(vec3(uv, 1.));
 
-  float zMax = 100.;
+  float zMax = 30.;
 
-  float z = rayMarch(ro, rd, 0.1, 100.);
+  float z = rayMarch(ro, rd, 0.1, zMax);
 
   vec3 col = vec3(0);
   if(z<zMax) {
