@@ -26,6 +26,7 @@ vec4 map(vec3 p) {
   return vec4(col, d);
 }
 
+// https://www.shadertoy.com/view/lsKcDD
 mat3 setCamera( in vec3 ro, in vec3 ta, float cr )
 {
 	vec3 cw = normalize(ta-ro);            // 相机前
