@@ -26,6 +26,16 @@ vec4 map(vec3 p) {
   return vec4(col, d);
 }
 
+mat3 setCamera( in vec3 ro, in vec3 ta, float cr )
+{
+	vec3 cw = normalize(ta-ro);            // 相机前
+	vec3 cp = vec3(sin(cr), cos(cr),0.0);  // 滚角
+	vec3 cu = normalize( cross(cw,cp) );   // 相机右
+	vec3 cv = normalize( cross(cu,cw) );   // 相机上
+  return mat3( cu, cv, cw );
+}
+
+
 
 // https://iquilezles.org/articles/normalsSDF/
 vec3 calcNormal( in vec3 pos )
@@ -84,7 +94,10 @@ void mainImage(out vec4 O, in vec2 I){
   O.a = 1.;
 
   vec3 ro = vec3(0.,0.,-10.);
-  vec3 rd = normalize(vec3(uv, 1.));
+  ro.xz = vec2(cos(T), sin(T))*10.;
+
+  // vec3 rd = normalize(vec3(uv, 1.));
+  vec3 rd = setCamera(ro, vec3(0), 0.)*normalize(vec3(uv, 1.));
 
   float zMax = 100.;
 
