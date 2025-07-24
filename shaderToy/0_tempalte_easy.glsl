@@ -36,6 +36,21 @@ mat3 setCamera( in vec3 ro, in vec3 ta, float cr )
   return mat3( cu, cv, cw );
 }
 
+// https://www.shadertoy.com/view/lsKcDD
+float calcAO( in vec3 pos, in vec3 nor )
+{
+	float occ = 0.0;
+    float sca = 1.0;
+    for( int i=0; i<5; i++ )
+    {
+        float h = 0.001 + 0.15*float(i)/4.0;
+        float d = map( pos + h*nor ).w;
+        occ += (h-d)*sca;
+        sca *= 0.95;
+    }
+    return clamp( 1.0 - 1.5*occ, 0.0, 1.0 );    
+}
+
 
 
 // https://iquilezles.org/articles/normalsSDF/
@@ -98,7 +113,7 @@ void mainImage(out vec4 O, in vec2 I){
   ro.xz = vec2(cos(T), sin(T))*10.;
 
   // vec3 rd = normalize(vec3(uv, 1.));
-  vec3 rd = setCamera(ro, vec3(0), 0.)*normalize(vec3(uv, 1.));
+  vec3 rd = normalize(setCamera(ro, vec3(0), 0.)*vec3(uv, 1.));
 
   float zMax = 100.;
 
@@ -108,7 +123,17 @@ void mainImage(out vec4 O, in vec2 I){
   if(z<zMax) {
     vec3 p = ro + rd * z;
     vec3 nor = calcNormal(p);
-    col = boxmap(iChannel0, fract(p*.1), nor, 7.).rgb;
+    col = boxmap(iChannel0, p*.1, nor, 7.).rgb;
+    
+    vec3 l_dir = normalize(vec3(3,3,-4)-p);
+    float diff = max(0., dot(l_dir, nor));
+    col += diff*.5;
+
+    // float spe = pow(max(0., dot(reflect(-l_dir, nor), -rd)), 5.);
+    float spe = max(0., dot(normalize(l_dir-rd), nor)) * .5;
+    col += spe;
+
+    col *= calcAO(p, nor);
   }
 
   col *= exp(-1e-3*z*z*z);
