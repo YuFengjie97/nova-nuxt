@@ -123,21 +123,20 @@ void mainImage(out vec4 O, in vec2 I){
   if(z<zMax) {
     vec3 p = ro + rd * z;
     vec3 nor = calcNormal(p);
-    col = boxmap(iChannel0, p*.1, nor, 7.).rgb;
-    
+    vec3 baseColor = boxmap(iChannel0, p*.1, nor, 7.).rgb;
+
     vec3 l_dir = normalize(vec3(3,3,-4)-p);
-    float diff = max(0., dot(l_dir, nor));
-    col += diff*.5;
+    float diff = max(0.2, dot(l_dir, nor));
 
     // float spe = pow(max(0., dot(reflect(-l_dir, nor), -rd)), 5.);
-    float spe = max(0., dot(normalize(l_dir-rd), nor)) * .5;
-    col += spe;
+    float spe = pow(max(0., dot(normalize(l_dir-rd), nor)) * .5, 100.);
 
+    col = (1. + diff + spe)*baseColor;
     col *= calcAO(p, nor);
   }
 
-  col *= exp(-1e-3*z*z*z);
-  col = pow(col, vec3(.5));
+  col *= exp(-1e-4*z*z*z);
+  // col = pow(col, vec3(.5));
   O.rgb = col;
 
 }
