@@ -39,6 +39,17 @@ vec3 calcNormal( in vec3 pos )
 					  e.xxx*map( pos + e.xxx*eps ).w );
 }
 
+vec3 calcNormal2(vec3 pos){
+  vec2 e = vec2(0.0005,0);
+  return normalize(
+    vec3(
+      map(pos+e.xyy).w,
+      map(pos+e.yxy).w,
+      map(pos+e.yyx).w
+    )-map(pos).w
+  );
+}
+
 // https://www.shadertoy.com/view/MtsGWH
 vec4 boxmap( in sampler2D s, in vec3 p, in vec3 n, in float k )
 {
