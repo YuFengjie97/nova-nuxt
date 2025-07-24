@@ -77,7 +77,7 @@ void mainImage(out vec4 O, in vec2 I){
 
   float zMax = 100.;
 
-  float z = rayMarch(ro, rd, 0.1, 100.);
+  float z = rayMarch(ro, rd, 0.1, zMax);
 
   vec3 col = vec3(0);
   if(z<zMax) {
