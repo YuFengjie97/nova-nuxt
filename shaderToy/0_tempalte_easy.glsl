@@ -1,4 +1,7 @@
-#iChannel0 "file://D:/workspace/nova-nuxt/public/img/noise/shaderToy/texture2.jpg"
+// #iChannel0 "file://D:/workspace/nova-nuxt/public/img/noise/shaderToy/texture1.jpg"
+// #iChannel0 "file://D:/workspace/nova-nuxt/public/img/noise/shaderToy/texture2.jpg"
+// #iChannel0 "file://D:/workspace/nova-nuxt/public/img/noise/shaderToy/texture3.jpg"
+#iChannel0 "file://D:/workspace/nova-nuxt/public/img/noise/shaderToy/texture4.jpg"
 
 #define T iTime
 #define PI 3.141596
@@ -19,10 +22,9 @@ float sdBox( vec3 p, vec3 b )
 }
 
 vec4 map(vec3 p) {
-  float d1 = length(p)- 4.;
-  float d2 = sdBox(p, vec3(3.));
-  float d = mix(d1, d2, sin(T)*.5+.5);
-  vec3 col = vec3(1,0,0);
+  float d = length(p)- 4.;
+  // vec3 col = sin(vec3(3,2,1)+(p.x+p.y+p.z)*.1);
+  vec3 col = vec3(.5);
   return vec4(col, d);
 }
 
@@ -110,10 +112,10 @@ void mainImage(out vec4 O, in vec2 I){
   O.a = 1.;
 
   vec3 ro = vec3(0.,0.,-10.);
-  ro.xz = vec2(cos(T), sin(T))*10.;
+  // ro.xz = vec2(cos(T), sin(T))*10.;
 
-  // vec3 rd = normalize(vec3(uv, 1.));
-  vec3 rd = normalize(setCamera(ro, vec3(0), 0.)*vec3(uv, 1.));
+  vec3 rd = normalize(vec3(uv, 1.));
+  // vec3 rd = normalize(setCamera(ro, vec3(0), 0.)*vec3(uv, 1.));
 
   float zMax = 100.;
 
@@ -123,16 +125,17 @@ void mainImage(out vec4 O, in vec2 I){
   if(z<zMax) {
     vec3 p = ro + rd * z;
     vec3 nor = calcNormal(p);
-    vec3 baseColor = boxmap(iChannel0, p*.1, nor, 7.).rgb;
+    // vec3 baseColor = boxmap(iChannel0, p*.1, nor, 7.).rgb;
+    vec3 objColor = map(p).rgb;
 
-    vec3 l_dir = normalize(vec3(3,3,-4)-p);
-    float diff = max(0.2, dot(l_dir, nor));
+    vec3 l_dir = normalize(vec3(4,4,-4)-p);
+    float diff = max(0., dot(l_dir, nor));
 
     // float spe = pow(max(0., dot(reflect(-l_dir, nor), -rd)), 5.);
-    float spe = pow(max(0., dot(normalize(l_dir-rd), nor)) * .5, 100.);
+    float spe = pow(max(0., dot(normalize(l_dir-rd), nor)), 30.);
 
-    col = (1. + diff + spe)*baseColor;
-    col *= calcAO(p, nor);
+    col = (.4 + diff*.6*vec3(0,1,0) + spe*.4*vec3(1,0,0))*objColor;
+    // col *= calcAO(p, nor);
   }
 
   col *= exp(-1e-4*z*z*z);
