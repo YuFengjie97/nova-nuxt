@@ -125,8 +125,8 @@ void mainImage(out vec4 O, in vec2 I){
   if(z<zMax) {
     vec3 p = ro + rd * z;
     vec3 nor = calcNormal(p);
-    // vec3 baseColor = boxmap(iChannel0, p*.1, nor, 7.).rgb;
-    vec3 objColor = map(p).rgb;
+    vec3 objColor = boxmap(iChannel0, p*.1, nor, 7.).rgb;
+    // vec3 objColor = map(p).rgb;
 
     vec3 l_dir = normalize(vec3(4,4,-4)-p);
     float diff = max(0., dot(l_dir, nor));
