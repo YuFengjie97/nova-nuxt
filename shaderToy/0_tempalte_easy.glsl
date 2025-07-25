@@ -23,8 +23,8 @@ float sdBox( vec3 p, vec3 b )
 
 vec4 map(vec3 p) {
   float d = length(p)- 4.;
-  // vec3 col = sin(vec3(3,2,1)+(p.x+p.y+p.z)*.1);
-  vec3 col = vec3(.5);
+  vec3 col = sin(vec3(3,2,1)+(p.x+p.y+p.z)*2.);
+  // vec3 col = vec3(.5);
   return vec4(col, d);
 }
 
@@ -125,8 +125,8 @@ void mainImage(out vec4 O, in vec2 I){
   if(z<zMax) {
     vec3 p = ro + rd * z;
     vec3 nor = calcNormal(p);
-    vec3 objColor = boxmap(iChannel0, p*.1, nor, 7.).rgb;
-    // vec3 objColor = map(p).rgb;
+    // vec3 objColor = boxmap(iChannel0, p*.1, nor, 7.).rgb;
+    vec3 objColor = map(p).rgb;
 
     vec3 l_dir = normalize(vec3(4,4,-4)-p);
     float diff = max(0., dot(l_dir, nor));
@@ -134,7 +134,7 @@ void mainImage(out vec4 O, in vec2 I){
     // float spe = pow(max(0., dot(reflect(-l_dir, nor), -rd)), 5.);
     float spe = pow(max(0., dot(normalize(l_dir-rd), nor)), 30.);
 
-    col = (.4 + diff*.6*vec3(0,1,0) + spe*.4*vec3(1,0,0))*objColor;
+    col = (1. + diff + spe)*objColor;
     // col *= calcAO(p, nor);
   }
 
