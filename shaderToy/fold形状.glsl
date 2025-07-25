@@ -15,7 +15,7 @@ mat2 rotate(float a){
   return mat2(c,-s,s,c);
 }
 
-
+// knighty  https://www.shadertoy.com/view/XlX3zB
 vec3 fold(vec3 p) {
 	vec3 nc = vec3(-.5, -.809017, .309017);
 	for (int i = 0; i < 5; i++) {
