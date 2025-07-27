@@ -156,7 +156,7 @@ void mainImage(out vec4 O, in vec2 I){
 
     if(id==0.){
       col *= diff*.5;
-      float spe = pow(max(0., dot(normalize(l_dir-rd), nor)), 30.);
+      float spe = pow(max(0., dot(normalize(l_dir-rd), nor)), 40.);
       col += spe;
     }
     if(id==1.){
