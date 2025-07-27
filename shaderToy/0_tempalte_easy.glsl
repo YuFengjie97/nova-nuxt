@@ -22,6 +22,7 @@ float sdBox( vec3 p, vec3 b )
 }
 
 vec4 map(vec3 p) {
+  p.xz *= rotate(T*.5);
   float d = length(p)- 4.;
   vec3 col = sin(vec3(3,2,1)+(p.x+p.y+p.z)*.4);
   // vec3 col = vec3(.5);
@@ -117,7 +118,7 @@ void mainImage(out vec4 O, in vec2 I){
   vec3 rd = normalize(vec3(uv, 1.));
   // vec3 rd = normalize(setCamera(ro, vec3(0), 0.)*vec3(uv, 1.));
 
-  float zMax = 100.;
+  float zMax = 50.;
 
   float z = rayMarch(ro, rd, 0.1, zMax);
 
