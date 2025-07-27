@@ -44,7 +44,8 @@ vec4 map(vec3 p) {
   float d2 = sdBox(p.xy, vec2(4.));
   float dd = mix(d1, d2, sin(T*.5)*.5+.5);
 
-  float d = length(vec2(dd, dd))-2.;
+  // float d = length(vec2(dd, dd))-2.;
+  float d = -d1;
 
   vec3 col = sin(vec3(3,2,1)+(p.z)*.4)*.5+.5;
   // vec3 col = vec3(.5);
