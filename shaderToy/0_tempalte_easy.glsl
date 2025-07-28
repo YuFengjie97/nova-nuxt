@@ -21,12 +21,17 @@ float sdBox( vec3 p, vec3 b )
   return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0);
 }
 
-vec4 map(vec3 p) {
+struct Surface{
+  float d;
+  vec3 col;
+};
+
+Surface map(vec3 p) {
   p.xz *= rotate(T*.5);
   float d = length(p)- 4.;
   vec3 col = sin(vec3(3,2,1)+(p.x+p.y+p.z)*.4);
   // vec3 col = vec3(.5);
-  return vec4(col, d);
+  return Surface(d, col);
 }
 
 // https://www.shadertoy.com/view/lsKcDD
@@ -47,7 +52,7 @@ float calcAO( in vec3 pos, in vec3 nor )
     for( int i=0; i<5; i++ )
     {
         float h = 0.001 + 0.15*float(i)/4.0;
-        float d = map( pos + h*nor ).w;
+        float d = map( pos + h*nor ).d;
         occ += (h-d)*sca;
         sca *= 0.95;
     }
@@ -62,20 +67,20 @@ vec3 calcNormal( in vec3 pos )
     vec2 e = vec2(1.0,-1.0);
     const float eps = 0.0005;
     return normalize( 
-            e.xyy*map( pos + e.xyy*eps ).w + 
-					  e.yyx*map( pos + e.yyx*eps ).w + 
-					  e.yxy*map( pos + e.yxy*eps ).w + 
-					  e.xxx*map( pos + e.xxx*eps ).w );
+            e.xyy*map( pos + e.xyy*eps ).d + 
+					  e.yyx*map( pos + e.yyx*eps ).d + 
+					  e.yxy*map( pos + e.yxy*eps ).d + 
+					  e.xxx*map( pos + e.xxx*eps ).d );
 }
 
 vec3 calcNormal2(vec3 pos){
   vec2 e = vec2(0.0005,0);
   return normalize(
     vec3(
-      map(pos+e.xyy).w,
-      map(pos+e.yxy).w,
-      map(pos+e.yyx).w
-    )-map(pos).w
+      map(pos+e.xyy).d,
+      map(pos+e.yxy).d,
+      map(pos+e.yyx).d
+    )-map(pos).d
   );
 }
 
@@ -92,16 +97,26 @@ vec4 boxmap( in sampler2D s, in vec3 p, in vec3 n, in float k )
 	return (x*m.x + y*m.y + z*m.z) / (m.x + m.y + m.z);
 }
 
-float rayMarch(vec3 ro, vec3 rd, float zMin, float zMax){
+struct RM{
+  float z;
+  bool hit;
+};
+
+RM rayMarch(vec3 ro, vec3 rd, float zMin, float zMax){
   float z = zMin;
+  bool hit = false;
   for(float i=0.;i<100.;i++){
     vec3 p = ro + rd * z;
-    float d = map(p).w;
-    if(d<1e-3 || z>zMax) break;
+    float d = map(p).d;
+    if(d<1e-3 ){
+      hit = true;
+      break;
+    }
+    if(z>zMax) break;
     z += d;
   }
 
-  return z;
+  return RM(z, hit);
 }
 
 
@@ -120,14 +135,16 @@ void mainImage(out vec4 O, in vec2 I){
 
   float zMax = 50.;
 
-  float z = rayMarch(ro, rd, 0.1, zMax);
+  RM rm = rayMarch(ro, rd, 0.1, zMax);
+  bool hit = rm.hit;
+  float z = rm.z;
 
   vec3 col = vec3(0);
-  if(z<zMax) {
+  if(hit) {
     vec3 p = ro + rd * z;
     vec3 nor = calcNormal(p);
     // vec3 objCol = boxmap(iChannel0, p*.1, nor, 7.).rgb;
-    vec3 objCol = map(p).rgb;
+    vec3 objCol = map(p).col;
     // vec3 objCol = vec3(1,0,0);
 
     float amb = .5;
