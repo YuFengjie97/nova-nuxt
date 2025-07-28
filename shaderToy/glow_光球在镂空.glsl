@@ -48,7 +48,7 @@ Surface map(vec3 p) {
   d = max(d, -d1);
   d += max(sin((p.x)*10.) * .4, 0.);
   d *= .08;
-  vec3 col = sin(vec3(3,2,1)+(q.x)*.2+T)*.5+.5;
+  vec3 col = sin(vec3(3,2,1)+(q.x)*.2+T*4.)*.5+.5;
   
   float d2 = length(q-vec3(sin(T*2.)*4.,0,0)) - .2;
   d = min(d, d2);
@@ -153,9 +153,14 @@ void mainImage(out vec4 O, in vec2 I){
   vec3 ro = vec3(0.,0.,-5.);
   // ro.xz = vec2(cos(T), sin(T))*10.;
 
+  float t = fract(T / 6.);
+  if(t<.5){
+    ro = vec3(5,0,-1);
+  }
+
 
   // vec3 rd = normalize(vec3(uv, 1.));
-  vec3 rd = normalize(setCamera(ro, vec3(0), 0.)*vec3(uv, 1.));
+  vec3 rd = setCamera(ro, vec3(0), 0.) * normalize(vec3(uv, 1.));
 
 
 
