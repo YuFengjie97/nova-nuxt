@@ -146,7 +146,7 @@ void mainImage(out vec4 O, in vec2 I){
   vec2 R = iResolution.xy;
   vec2 uv = (I*2.-R)/R.y;
 	vec2 m = iMouse.xy/iResolution.xy;
-  l_col = sin(vec3(3,2,1)+T)*.4+.6;
+  l_col = sin(vec3(3,2,1)+T*14.)*.4+.6;
   l_pos.xz += vec2(cos(T), sin(T))*6.;
   l_pos.y += sin(T)*2.+1.;
 
