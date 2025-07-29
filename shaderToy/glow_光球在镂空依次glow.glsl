@@ -1,6 +1,6 @@
 
 /*
-灵感来自:
+base inspire from:
 https://www.shadertoy.com/view/WXcGD2
 https://www.shadertoy.com/view/MtBcDd
 
@@ -22,10 +22,6 @@ mat2 rotate(float a){
   float s = sin(a);
   float c = cos(a);
   return mat2(c,-s,s,c);
-}
-
-float hash(float v){
-  return abs(dot(cos(vec3(v)), vec3(.04)));
 }
 
 vec3 glowCol = vec3(0);
