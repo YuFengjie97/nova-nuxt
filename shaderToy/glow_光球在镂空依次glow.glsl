@@ -135,6 +135,7 @@ RM rayMarch(vec3 ro, vec3 rd, float zMin, float zMax){
 }
 
 
+
 void mainImage(out vec4 O, in vec2 I){
   vec2 R = iResolution.xy;
   
@@ -189,7 +190,7 @@ void mainImage(out vec4 O, in vec2 I){
     // vec3 objCol = vec3(1,0,0);
 
 
-    vec3 l_dir = normalize(vec3(0,5,-5));
+    vec3 l_dir = normalize(vec3(0,2,-2));
     float diff = max(0., dot(l_dir, nor));
     col += objCol * diff;
 
