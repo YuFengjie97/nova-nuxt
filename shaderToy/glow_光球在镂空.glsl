@@ -96,29 +96,6 @@ vec3 calcNormal( in vec3 pos )
 					  e.xxx*map( pos + e.xxx*eps ).d );
 }
 
-vec3 calcNormal2(vec3 pos){
-  vec2 e = vec2(0.0005,0);
-  return normalize(
-    vec3(
-      map(pos+e.xyy).d,
-      map(pos+e.yxy).d,
-      map(pos+e.yyx).d
-    )-map(pos).d
-  );
-}
-
-// https://www.shadertoy.com/view/MtsGWH
-vec4 boxmap( in sampler2D s, in vec3 p, in vec3 n, in float k )
-{
-    // project+fetch
-	vec4 x = texture( s, p.yz );
-	vec4 y = texture( s, p.zx );
-	vec4 z = texture( s, p.xy );
-    
-    // and blend
-  vec3 m = pow( abs(n), vec3(k) );
-	return (x*m.x + y*m.y + z*m.z) / (m.x + m.y + m.z);
-}
 
 struct RM{
   float z;
@@ -164,7 +141,7 @@ void mainImage(out vec4 O, in vec2 I){
 
 
 
-  float zMax = 50.;
+  float zMax = 30.;
 
   RM rm = rayMarch(ro, rd, 0.1, zMax);
   bool hit = rm.hit;
