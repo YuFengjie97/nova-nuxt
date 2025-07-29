@@ -56,16 +56,16 @@ Surface map(vec3 p) {
     float size = .4;
     float thickness = .04;
     float d1 = sdBox(q, vec3(thickness, size, size))-.004;
-    float d2 = sdBox(q, vec3(thickness+1.,size-.04,size-.04))-.004;
+    float d2 = sdBox(q, vec3(thickness+1.,size-.1,size-.1))-.004;
     d1 = max(d1, -d2);
-    d = d1*.2;
+    d = d1;
   }
 
   col = sin(vec3(3,2,1)+id)*.5+.5;
 
   float n = abs(sin(id*.3+T*.8));
   if(n<.2){
-    glowCol += getGlow(d, .008, 2.)*.1 * col;
+    glowCol += getGlow(d, .6, 1.8)*.001 * col;   // 不同的参数,会出现伪影,可能是重复距离场导致的
   }
 
   return Surface(d, col);
@@ -191,7 +191,7 @@ void mainImage(out vec4 O, in vec2 I){
 
     vec3 l_dir = normalize(vec3(0,5,-5));
     float diff = max(0., dot(l_dir, nor));
-    col += objCol * diff * 2.;
+    col += objCol * diff;
 
     float spe = pow(max(0., dot(normalize(l_dir-rd), nor)), 90.);
     col += col * spe * 3.;
