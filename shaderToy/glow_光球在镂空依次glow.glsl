@@ -202,7 +202,7 @@ void mainImage(out vec4 O, in vec2 I){
     col *= calcAO(p, nor);
   }
 
-  glowCol = 1.-exp(-glowCol);
+  // glowCol = 1.-exp(-glowCol);
 
   col += glowCol;
   tot += col;
