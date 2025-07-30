@@ -158,18 +158,16 @@ void mainImage(out vec4 O, in vec2 I){
 
     // float spe = pow(max(0., dot(reflect(-l_dir, nor), -rd)), 5.);
     float spe = pow(max(0., dot(normalize(l_dir-rd), nor)), 30.);
-    vec3 speCol = vec3(0,0,1);
-    col += objCol * spe * speCol;
+    col += objCol * spe;
 
     float fre = pow(max(1.-dot(nor, -rd),0.),3.);
-    vec3 freCol = vec3(1,1,0);
-    col += objCol * fre * freCol;
+    col += objCol * fre;
 
     // col *= calcAO(p, nor);
   }
 
   // col *= exp(-1e-4*z*z*z);
-  // col = pow(col, vec3(.5));
+  col = pow(col, vec3(.4545));
   O.rgb = col;
 
 }
