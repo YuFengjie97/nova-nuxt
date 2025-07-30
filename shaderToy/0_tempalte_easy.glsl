@@ -131,7 +131,7 @@ void mainImage(out vec4 O, in vec2 I){
   // ro.xz = vec2(cos(T), sin(T))*10.;
 
   vec3 rd = normalize(vec3(uv, 1.));
-  // vec3 rd = normalize(setCamera(ro, vec3(0), 0.)*vec3(uv, 1.));
+  // vec3 rd = setCamera(ro, vec3(0), 0.)*normalize(vec3(uv, 1.));
 
   float zMax = 50.;
 
