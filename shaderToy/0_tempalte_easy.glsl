@@ -6,6 +6,7 @@
 #define T iTime
 #define PI 3.141596
 #define S smoothstep
+const float EPSILON = 1e-6;
 
 
 
@@ -108,7 +109,7 @@ RM rayMarch(vec3 ro, vec3 rd, float zMin, float zMax){
   for(float i=0.;i<100.;i++){
     vec3 p = ro + rd * z;
     float d = map(p).d;
-    if(d<1e-3 ){
+    if(d<EPSILON ){
       hit = true;
       break;
     }
