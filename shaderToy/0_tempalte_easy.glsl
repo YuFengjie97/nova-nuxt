@@ -30,7 +30,7 @@ struct Surface{
 Surface map(vec3 p) {
   p.xz *= rotate(T*.5);
   float d = length(p)- 4.;
-  vec3 col = sin(vec3(3,2,1)+(p.x+p.y+p.z)*.4);
+  vec3 col = sin(vec3(3,2,1)+(p.x+p.y+p.z)*.4)*.5+.5;
   // vec3 col = vec3(.5);
   return Surface(d, col);
 }
@@ -148,21 +148,14 @@ void mainImage(out vec4 O, in vec2 I){
     vec3 objCol = map(p).col;
     // vec3 objCol = vec3(1,0,0);
 
-    float amb = .5;
-    vec3 ambCol = vec3(1);
-    col += objCol * amb * ambCol;
-
     vec3 l_dir = normalize(vec3(4,4,-4)-p);
     float diff = max(0., dot(l_dir, nor));
-    vec3 diffCol = vec3(0,1,0);
-    col += objCol * diff * diffCol;
 
     // float spe = pow(max(0., dot(reflect(-l_dir, nor), -rd)), 5.);
     float spe = pow(max(0., dot(normalize(l_dir-rd), nor)), 30.);
-    col += objCol * spe;
 
     float fre = pow(max(1.-dot(nor, -rd),0.),3.);
-    col += objCol * fre;
+    col = objCol * diff + spe + fre*.1;
 
     // col *= calcAO(p, nor);
   }
