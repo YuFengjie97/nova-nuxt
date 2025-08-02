@@ -245,8 +245,8 @@ vec3 render(vec2 uv){
 
   // col *= exp(-1e-5*z*z*z);
 
-  float isGlow = step(.1, hash(T));
-  col += isGlow * glow * (sin(vec3(3,2,1)+T)*.5+.5);
+  float flash = step(.1, hash(T));
+  col += flash * glow * (sin(vec3(3,2,1)+T)*.5+.5);
 
   col = pow(col, vec3(.4545));
 
