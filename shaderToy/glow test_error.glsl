@@ -3,6 +3,11 @@
 // #iChannel0 "file://D:/workspace/nova-nuxt/public/img/noise/shaderToy/texture3.jpg"
 #iChannel0 "file://D:/workspace/nova-nuxt/public/img/noise/shaderToy/texture4.jpg"
 
+/**
+reflect and union obj: https://www.shadertoy.com/view/W3cXDl
+Separation AA function: https://www.shadertoy.com/view/tcjXDW
+*/
+
 #define T iTime
 #define PI 3.141596
 #define S smoothstep
