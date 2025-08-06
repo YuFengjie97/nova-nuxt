@@ -3,6 +3,12 @@
 // #iChannel0 "file://D:/workspace/nova-nuxt/public/img/noise/shaderToy/texture3.jpg"
 #iChannel0 "file://D:/workspace/nova-nuxt/public/img/noise/shaderToy/texture4.jpg"
 
+/*
+camera path:  https://www.shadertoy.com/view/tcjXDW
+hash:  https://www.shadertoy.com/view/4djSRW
+Using hash noise reduction artifacts:  https://www.shadertoy.com/view/tlGfzd
+*/
+
 #define T iTime
 #define PI 3.141596
 #define S smoothstep
