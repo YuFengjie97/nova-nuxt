@@ -16,23 +16,27 @@ mat2 rotate(float a){
   return mat2(c,-s,s,c);
 }
 
+struct Obj{
+  float d;
+  float id;
+};
+
+Obj obj_union(Obj o1, Obj o2){
+  if(o1.d < o2.d)return o1;
+  return o2;
+}
+
 float sdBox( vec3 p, vec3 b )
 {
   vec3 q = abs(p) - b;
   return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0);
 }
 
-struct Surface{
-  float d;
-  vec3 col;
-};
 
-Surface map(vec3 p) {
+Obj map(vec3 p) {
   p.xz *= rotate(T*.5);
   float d = length(p)- 4.;
-  vec3 col = sin(vec3(3,2,1)+(p.x+p.y+p.z)*.4)*.5+.5;
-  // vec3 col = vec3(.5);
-  return Surface(d, col);
+  return Obj(d, 1.);
 }
 
 // https://www.shadertoy.com/view/lsKcDD
@@ -145,8 +149,11 @@ void mainImage(out vec4 O, in vec2 I){
     vec3 p = ro + rd * z;
     vec3 nor = calcNormal(p);
     // vec3 objCol = boxmap(iChannel0, p*.1, nor, 7.).rgb;
-    vec3 objCol = map(p).col;
+    Obj obj = map(p);
     // vec3 objCol = vec3(1,0,0);
+    if(obj.id == 1.){
+      col = vec3(1,0,0);
+    }
 
     vec3 l_dir = normalize(vec3(4,4,-4)-p);
     float diff = max(0., dot(l_dir, nor));
@@ -155,7 +162,7 @@ void mainImage(out vec4 O, in vec2 I){
     float spe = pow(max(0., dot(normalize(l_dir-rd), nor)), 30.);
 
     float fre = pow(max(1.-dot(nor, -rd),0.),3.);
-    col = objCol * diff + spe + fre*.1;
+    col = col * diff + spe + fre*.1;
 
     // col *= calcAO(p, nor);
   }
