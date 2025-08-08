@@ -32,8 +32,13 @@ vec2 rep(vec2 p, float n){
   return p.xy;
 }
 
+float length2(vec2 p){
+  p = p*p*p*p;
+  return pow(p.x+p.y, 1./4.);
+}
+
 float sdRing(vec3 p, float r, float thick){
-  return length(vec2(length(p.xy) - r, p.z)) - thick;
+  return length2(vec2(length2(p.xy) - r, p.z)) - thick;
 }
 
 float sdCapsule( vec3 p, vec3 a, vec3 b, float r )
