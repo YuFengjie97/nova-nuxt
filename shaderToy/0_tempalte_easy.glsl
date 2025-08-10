@@ -29,7 +29,7 @@ float fbm(vec3 p){
 void mainImage(out vec4 O, in vec2 I){
   vec2 R = iResolution.xy;
   vec2 uv = (I*2.-R)/R.y;
-  vec2 m = (iMouse.xy-R)/R * PI * 2.;
+  vec2 m = (iMouse.xy*2.-R)/R * PI * 2.;
 
   O.rgb *= 0.;
   O.a = 1.;
