@@ -191,7 +191,6 @@ if(hit){
     col *= diff + spe + fre*.1;
 
     col *= calcAO(p, nor);
-}
     vec3 q = p;
     // q -= round(q / 4.)*4.;
 
@@ -204,6 +203,7 @@ if(hit){
 
     float glow = pow(.04 / d, 1.2);
     col += glow * vec3(1,0,0);
+}
 
   // col *= exp(-1e-4*z*z*z);
   col = pow(col, vec3(.4545));
