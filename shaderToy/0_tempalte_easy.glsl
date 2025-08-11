@@ -5,6 +5,7 @@
 
 #define T iTime
 #define PI 3.141596
+#define TAU 6.283185
 #define S smoothstep
 const float EPSILON = 1e-6;
 
