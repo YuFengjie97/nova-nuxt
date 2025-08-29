@@ -76,6 +76,11 @@ void mainImage(out vec4 O, in vec2 I){
   O.a = 1.;
 
   float size = 0.3;
+
+  // 体素化
+  // float s = .02;
+  // uv = (floor(uv / s) + 0.5) * s;
+  
   float d = length(uv);
   float d2 = sdOrientedVesica(uv, vec2(0.,size), vec2(0.,-size),0.06);
   d2 = clamp(d2, 0.,1.);
