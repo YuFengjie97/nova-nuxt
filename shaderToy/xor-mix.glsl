@@ -31,11 +31,10 @@ void mainImage(out vec4 O, in vec2 I){
   vec2 R = iResolution.xy;
   vec2 uv = (I*2.-R)/R.y;
   vec2 m = (iMouse.xy*2.-R)/R * PI * 2.;
-  float pix = 1./R.y;
 
   O.rgb *= 0.;
   O.a = 1.;
-
+  // float pix = 1./R.y;
   // float s = 10.*pix;
   // uv = (floor(uv/s)-.5)*s;
 
