@@ -17,29 +17,6 @@ mat2 rotate(float a){
   return mat2(c,-s,s,c);
 }
 
-float fbm(vec3 p){
-  float amp = 1.;
-  float fre = 1.;
-  float n = 0.;
-  for(float i =0.;i<4.;i++){
-    n += abs(dot(cos(p), vec3(.1)));
-    amp *= .5;
-    fre *= 2.;
-  }
-  return n;
-}
-
-float hash11(float p)
-{
-    p = fract(p * .1031);
-    p *= p + 33.33;
-    p *= p + p;
-    return fract(p);
-}
-float hash112(float p){
-  return abs(sin(p*112.33));
-}
-
 float smin( float a, float b, float k )
 {
     k *= 1.0/(1.0-sqrt(0.5));
@@ -102,37 +79,6 @@ void mainImage(out vec4 O, in vec2 I){
     col += c * pow(.01/d,2.);
     
     
-    // float a = atan(p.y,p.x);
-    // float s = TAU / 8.;
-    // float id = round(a/s);
-
-    // float d = 1e4;
-
-
-    // float sz = 2.;
-    
-
-    // for(float l=0.;l<5.;l++){
-    //   float idz = round((p.z-l)/sz);
-    //   float idd = idz;
-    //   p.z -= idz * sz;
-
-    //   float sdz = .5+.5;
-    //   float r = sdz*1.+.01;
-    //   vec3 offset = vec3(sdz*4.+2.,0,0);
-
-    //   vec3 q = p;
-    //   q.xy = rotate(s*id)*q.xy;
-    //   q -= offset;
-    //   float d1 = length(q) - r;
-    //   d = min(d, d1);
-
-    //   vec3 c = sin(vec3(3,2,1)+p.x)+1.;
-    //   col += c * pow(.1/d,2.);
-    // }
-    
-
-
     if(d<EPSILON || z>zMax) break;
     z += d;
   }
