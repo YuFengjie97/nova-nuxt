@@ -32,13 +32,14 @@ void mainImage(out vec4 O, in vec2 I){
   float y = idy*sy;
   p.y -= y;
 
+  p.x *= y;   // 角度按照距离来缩放
+
   // 极坐标角度重复
-  float sx = TAU / (20. + idy*4.);       // 重复分段尺寸
+  float sx = TAU / (30.);       // 重复分段尺寸
   float idx = round(p.x/sx);
   float x = idx*sx;
   p.x -= x;
 
-  p.x *= y;   // 角度按照距离来缩放
 
   float maxR = min(sx*y,sy) / 2.;
 
