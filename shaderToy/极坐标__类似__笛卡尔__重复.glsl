@@ -24,7 +24,8 @@ void mainImage(out vec4 O, in vec2 I){
   O.rgb *= 0.;
   O.a = 1.;
 
-  vec2 p = vec2(atan(uv.y, uv.x), length(uv));
+  vec2 p = vec2(abs(atan(uv.y, uv.x)), length(uv));  // 这里abs的原因是atan的角度在-PI-PI处断裂
+
   // 极坐标R分段重复
   float sy = .1;              // 重复分段尺寸
   float idy = round(p.y/sy);
