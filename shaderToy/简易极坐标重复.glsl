@@ -14,26 +14,7 @@
 #define PI 3.141596
 #define TAU 6.283185
 #define S smoothstep
-#define s1(v) (sin(v)*.5+.5)
-const float EPSILON = 1e-6;
 
-mat2 rotate(float a){
-  float s = sin(a);
-  float c = cos(a);
-  return mat2(c,-s,s,c);
-}
-
-float fbm(vec3 p){
-  float amp = 1.;
-  float fre = 1.;
-  float n = 0.;
-  for(float i =0.;i<4.;i++){
-    n += abs(dot(cos(p), vec3(.1)));
-    amp *= .5;
-    fre *= 2.;
-  }
-  return n;
-}
 
 void mainImage(out vec4 O, in vec2 I){
   vec2 R = iResolution.xy;
@@ -46,19 +27,24 @@ void mainImage(out vec4 O, in vec2 I){
   vec2 p = vec2(atan(uv.y, uv.x), length(uv));
   // 极坐标R分段重复
   float sy = .1;              // 重复分段尺寸
-  float y = round(p.y/sy)*sy;
+  float idy = round(p.y/sy);
+  float y = idy*sy;
   p.y -= y;
 
   // 极坐标角度重复
-  float sx = TAU / 20.;       // 重复分段尺寸
-  float x = round(p.x/sx)*sx;
+  float sx = TAU / (20. + idy*4.);       // 重复分段尺寸
+  float idx = round(p.x/sx);
+  float x = idx*sx;
   p.x -= x;
+
   p.x *= y;   // 角度按照距离来缩放
 
   float maxR = min(sx*y,sy) / 2.;
 
 
-  float d = length(p) - maxR * .45;
+  float d = length(p) - maxR * .8;
+  d = d < 0. ? 0. : d;
+  vec3 c = 1.1+sin(vec3(3,2,1) + idx + idy);
   d = S(0.01,0.,d);
-  O.rgb += d;
+  O.rgb += d*c;
 }
