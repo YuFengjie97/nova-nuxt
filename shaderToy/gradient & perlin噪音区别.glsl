@@ -70,6 +70,8 @@ float gradientNoise(vec2 p){
 
 
     vec2 u = f*f*(3.0-2.0*f); // 另一种平滑函数
+    // vec2 u = fade(f);
+    // vec2 u = smoothstep(0.,1.,f);
     return mix(mix(v00,v10,u.x), mix(v01,v11,u.x), u.y);
 }
 
