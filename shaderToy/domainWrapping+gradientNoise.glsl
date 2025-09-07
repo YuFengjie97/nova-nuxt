@@ -30,7 +30,7 @@ float hash(vec2 p){
 
 vec2 randomGradient(vec2 p){
   float a = hash(p)*TAU;
-  a += T;
+  a += T*.4;
   return vec2(cos(a), sin(a));
 }
 
@@ -59,26 +59,20 @@ float fbm(vec2 p){
   float n = 0.;
   for(float i =0.;i<6.;i++){
     n += noise(fre*p)*amp;
-    p *= rotate(2.+T*.01);
+    // p *= rotate(2.+T*.01);
     amp *= .5;
     fre *= 2.;
   }
   return n;
 }
-float pattern( in vec2 p )
+
+float pattern( in vec2 p, out vec2 r )
 {
     vec2 q = vec2( fbm( p + vec2(0.0,0.0) ),
                    fbm( p + vec2(5.2,1.3) ) );
 
-    return fbm( p + 4.0*q );
-}
-float pattern2( in vec2 p )
-{
-    vec2 q = vec2( fbm( p + vec2(0.0,0.0) ),
-                   fbm( p + vec2(5.2,1.3) ) );
-
-    vec2 r = vec2( fbm( p + 4.0*q + vec2(1.7,9.2) ),
-                   fbm( p + 4.0*q + vec2(8.3,2.8) ) );
+    r = vec2( fbm( p + 4.0*q + vec2(1.7,9.2) ),
+              fbm( p + 4.0*q + vec2(8.3,2.8) ) );
 
     return fbm( p + 4.0*r );
 }
@@ -91,9 +85,9 @@ void mainImage(out vec4 O, in vec2 I){
   O.rgb *= 0.;
   O.a = 1.;
 
-  float n = pattern(abs(uv))+.5;
-  vec3 c = s1(vec3(4,2,1)+n*10.+T) * 1.8;
-  // vec3 c = palette(n*2.+T)*2.;
-
+  vec2 cr = vec2(0);
+  float n = pattern(abs(uv)*.5, cr)+.5;
+  // vec3 c = s1(vec3(4,2,1)+(cr.x+cr.y)*3.);
+  vec3 c = palette((cr.x+cr.y)*.8)*1.5;
   O.rgb = c * n;
 }
