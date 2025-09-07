@@ -45,6 +45,7 @@ float hash(vec2 p){
 
 vec2 randomGradient(vec2 p){
     float a = hash(p) * 6.2831853; // 随机角度
+    // a += T;
     return vec2(cos(a), sin(a));
 }
 
@@ -62,6 +63,11 @@ float gradientNoise(vec2 p){
     float v10 = dot(g10, f-vec2(1,0));
     float v01 = dot(g01, f-vec2(0,1));
     float v11 = dot(g11, f-vec2(1,1));
+    // float v00 = dot(f-vec2(0,0), g00);
+    // float v10 = dot(f-vec2(1,0), g10);
+    // float v01 = dot(f-vec2(0,1), g01);
+    // float v11 = dot(f-vec2(1,1), g11);
+
 
     vec2 u = f*f*(3.0-2.0*f); // 另一种平滑函数
     return mix(mix(v00,v10,u.x), mix(v01,v11,u.x), u.y);
