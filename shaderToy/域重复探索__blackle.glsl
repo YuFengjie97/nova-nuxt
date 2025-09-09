@@ -31,14 +31,19 @@ Obj obj_union(Obj o1, Obj o2){
 float sdBox( vec3 p, vec3 b )
 {
   vec3 q = abs(p) - b;
-  return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0);
+  return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0)-.01;
 }
 
 
-float hash12(vec2 v){
+float hash122(vec2 v){
   return fract(sin(dot(v, vec2(5645.455,633.233)))*124.544);
 }
-
+float hash12(vec2 p)
+{
+	vec3 p3  = fract(vec3(p.xyx) * .1031);
+    p3 += dot(p3, p3.yzx + 33.33);
+    return fract((p3.x + p3.y) * p3.z);
+}
 vec2 edge(vec2 p) {
     vec2 p2 = abs(p);
     if (p2.x > p2.y) return vec2((p.x < 0.) ? -1. : 1., 0.);
@@ -67,11 +72,11 @@ Obj map(vec3 p) {
     p.yz*=rotate(m.y);
   }
 
-  #define useEdge
-
   vec2 id = floor(p.xz);
-  float size = .4;
+  id = clamp(id, -3., 3.);
+  float size = .48;
   float h = sin(id.x+id.y*2.+T)*2.+2.;
+  #define useEdge
 
   #ifdef useEdge
   vec2 cen = id + .5;
@@ -208,7 +213,7 @@ void mainImage(out vec4 O, in vec2 I){
     Obj obj = map(p);
     col = s1(vec3(3,2,1)+obj.id);;
 
-    vec3 l_dir = normalize(vec3(4,10,-4)-p);
+    vec3 l_dir = normalize(vec3(4,10,-4));
     float diff = max(0., dot(l_dir, nor));
 
     // float spe = pow(max(0., dot(reflect(-l_dir, nor), -rd)), 5.);
