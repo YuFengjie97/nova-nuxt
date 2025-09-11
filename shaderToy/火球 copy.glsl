@@ -33,49 +33,6 @@ float hash12(vec2 p)
 }
 
 
-float hash(vec2 p){
-  return fract(sin(dot(p, vec2(456.456,7897.7536)))*741.25639);
-}
-
-vec2 randomGradient(vec2 p){
-  float a = hash(p)*TAU;
-  a += T;
-  return vec2(cos(a), sin(a));
-}
-
-float noise(vec2 p){
-  vec2 i = floor(p);
-  vec2 f = fract(p);
-
-  vec2 g00 = randomGradient(i+vec2(0,0));
-  vec2 g10 = randomGradient(i+vec2(1,0));
-  vec2 g01 = randomGradient(i+vec2(0,1));
-  vec2 g11 = randomGradient(i+vec2(1,1));
-
-  float v00 = dot(g00, f-vec2(0,0));
-  float v10 = dot(g10, f-vec2(1,0));
-  float v01 = dot(g01, f-vec2(0,1));
-  float v11 = dot(g11, f-vec2(1,1));
-
-  vec2 u = smoothstep(0.,1.,f);
-
-  return mix(mix(v00,v10,u.x), mix(v01,v11,u.x), u.y);
-}
-
-float fbm(vec2 p){
-  float amp = 1.;
-  float fre = 1.;
-  float n = 0.;
-  for(float i =0.;i<6.;i++){
-    n += noise(fre*p)*amp;
-    p *= rotate(2.+T*.01);
-    amp *= .5;
-    fre *= 2.;
-  }
-  return n;
-}
-
-
 vec3 col = vec3(0);
 float fbm(vec3 p){
   vec3 q = p;
@@ -89,11 +46,13 @@ float fbm(vec3 p){
     n += abs(dot(cos(p*fre), vec3(.1,.2,.3))) * amp;
     amp *= .9;
     fre *= 1.3;
-    p.xz *= rotate(p.y*.3-T*.2);
-    p.y += T;
-
-    col = s1(vec3(3,2,1)+p.x+p.z+T);
+    p.xz *= rotate(T*.2);
+    p.yz *= rotate(T*.2);
+    p.xy *= rotate(T*.2);
   }
+  
+  col = s1(vec3(3,2,1)+(p.x+p.z+p.y)+T);
+
   return n;
 }
 float sdVerticalCapsule( vec3 p, float h, float r )
@@ -129,22 +88,22 @@ void mainImage(out vec4 O, in vec2 I){
 
     vec3 q = p;
 
-    float n = fbm(q)*2.;
+    vec3 s = s1(vec3(3,2,1)+T)*2.+1.;
 
-    float s = .4;
-    // q = floor(q/s)*s;
-    float d = length(q) - 4. + n;
+    float n = fbm(vec3(fbm(q*s)));
+
+    float d = length(p) - 3. + n*.3;
 
     d = abs(d)*.1+.01;
 
     // col += s1(vec3(3,2,1)+dot(p,p)*.2+T)*.5;
-    col *= pow(2./d,2.);
+    col *= pow(2./d,1.);
 
     if(d<EPSILON || z>zMax) break;
     z += d;
   }
 
-  col = tanh(col / 1e4);
+  col = tanh(col / 1e2);
 
   O.rgb = col;
 }
