@@ -75,16 +75,24 @@ float fbm(vec2 p){
   return n;
 }
 
+
+vec3 col = vec3(0);
 float fbm(vec3 p){
   vec3 q = p;
   float amp = 1.;
   float fre = 1.;
   float n = 0.;
+  float s = .1;
+  // p = round(p/s)*s;
+  
   for(float i = 0.;i<4.;i++){
     n += abs(dot(cos(p*fre), vec3(.1,.2,.3))) * amp;
     amp *= .9;
     fre *= 1.3;
-    p.xz *= rotate(p.y*.1-T*.2);
+    p.xz *= rotate(p.y*.3-T*.2);
+    p.y += T;
+
+    col = s1(vec3(3,2,1)+p.x+p.z+T);
   }
   return n;
 }
@@ -111,7 +119,6 @@ void mainImage(out vec4 O, in vec2 I){
   float z = .1;
 
   vec3 p;
-  vec3 col;
   for(float i=0.;i<100.;i++){
     p = ro + rd * z;
 
@@ -124,11 +131,13 @@ void mainImage(out vec4 O, in vec2 I){
 
     float n = fbm(q)*2.;
 
+    float s = .4;
+    // q = floor(q/s)*s;
     float d = length(q) - 4. + n;
 
-    d = abs(d)*.2+.001;
+    d = abs(d)*.1+.01;
 
-    col = s1(vec3(3,2,1)+dot(p,p)*.2+T);
+    // col += s1(vec3(3,2,1)+dot(p,p)*.2+T)*.5;
     col *= pow(2./d,2.);
 
     if(d<EPSILON || z>zMax) break;
