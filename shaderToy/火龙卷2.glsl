@@ -48,9 +48,9 @@ float sdFireBall(vec3 p){
 
   float h = 4.;
   float ang = atan(q.z, q.x);
-  float r_inc = sin(ang*.5);
-  float n = noise(vec2(r_inc, q.y*.1)*.1 + vec2(0.,-T)*.08)*1.6;
-  // float n = fbm(vec2(r_inc, q.y*.1)*.1 + vec2(0.,-T)*.08)*1.6;
+  float r_inc = sin(ang);
+  float n = noise(vec2(r_inc*.6, q.y*.1)*.1 + vec2(0.,-T)*.08)*1.6;
+  // float n = fbm(vec2(r_inc*.6, q.y*.1)*.1 + vec2(0.,-T)*.08)*1.6;
 
   float r = S(0., 7., abs(q.y+1.))*4. + 1. + n;
 
