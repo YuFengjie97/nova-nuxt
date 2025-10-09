@@ -15,40 +15,24 @@ mat2 rotate(float a){
   float c = cos(a);
   return mat2(c,-s,s,c);
 }
-float hash11(float p)
-{
-    p = fract(p * .1031);
-    p *= p + 33.33;
-    p *= p + p;
-    return fract(p);
-}
 
-vec3 palette( in float t )
-{
-  vec3 a = vec3(0.5, 0.5, 0.5);
-  vec3 b = vec3(0.5, 0.5, 0.5);
-  vec3 c = vec3(1.0, 1.0, 1.0);
-  vec3 d = vec3(0.0, 0.1, 0.2);
-  return a + b*cos( 6.283185*(c*t+d) );
-}
 
 float noise(vec2 p){
   return texture(iChannel0, p).r;
 }
 
-float fbm(vec3 p){
+float fbm(vec2 p){
+  float n = 0.;
   float amp = 1.;
   float fre = 1.;
-  float n = 0.;
-  for(float i = 0.;i<4.;i++){
-    n += abs(dot(cos(p*fre), vec3(.1,.2,.3))) * amp;
-    amp *= .9;
-    fre *= 1.3;
-    p.xz *= rotate(p.y*.1+T*.3);
-    p.y -= T*4.;
+  for(float i=0.;i<5.;i++){
+    n += noise(p*fre)*amp;
+    fre *= 2.;
+    amp *= .5;
   }
   return n;
 }
+
 
 
 float sdCappedCylinder( vec3 p, float h, float r )
@@ -64,19 +48,17 @@ float sdFireBall(vec3 p){
 
   float h = 4.;
   float ang = atan(q.z, q.x);
-  float r_inc = sin(ang*2.);
-  float n = noise(vec2(q.y*.1, r_inc)*.1 + vec2(-T)*.08)*1.6;
+  float r_inc = sin(ang*.5);
+  float n = noise(vec2(r_inc, q.y*.1)*.1 + vec2(0.,-T)*.08)*1.6;
+  // float n = fbm(vec2(r_inc, q.y*.1)*.1 + vec2(0.,-T)*.08)*1.6;
 
   float r = S(0., 7., abs(q.y+1.))*4. + 1. + n;
 
 
   float d = sdCappedCylinder(q, 4., r);
-  float d1 = sdCappedCylinder(q, 5., r-.3);
+  float d1 = sdCappedCylinder(q, 5., r-.4);
   d = max(d, -d1);
   
-  // d += fbm(p*1.)*.4;
-  // d += fbm(vec3(r_inc,q.y,1.))*.4;
-
   d = abs(d)*.1 + .02;
 
   vec3 c = s1(vec3(3,2,1)+(q.y+q.z)*.5-T*2.);
@@ -116,7 +98,7 @@ void mainImage(out vec4 O, in vec2 I){
     z += d;
   }
 
-  col = tanh(col / 4e5);
+  col = tanh(col / 1e6);
 
   O.rgb = col;
 }
