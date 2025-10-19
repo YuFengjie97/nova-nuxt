@@ -7,7 +7,7 @@
 #define PI 3.141596
 #define TAU 6.283185
 #define S smoothstep
-const float EPSILON = 1e-6;
+const float EPSILON = 1e-4;
 
 
 
