@@ -165,13 +165,18 @@ void mainImage(out vec4 O, in vec2 I){
     }
 
     vec3 l_dir = normalize(vec3(4,4,-4)-p);
-    float diff = max(0., dot(l_dir, nor));
+    // float diff = max(0., dot(l_dir, nor));
+
+    //https://iquilezles.org/articles/derivative/
+    float diff = max(0., (map(p+l_dir*.01).d-obj.d)/.01);
 
     // float spe = pow(max(0., dot(reflect(-l_dir, nor), -rd)), 5.);
-    float spe = pow(max(0., dot(normalize(l_dir-rd), nor)), 30.);
+    // float spe = pow(max(0., dot(normalize(l_dir-rd), nor)), 30.);
+    
+    // float fre = pow(max(1.-dot(nor, -rd),0.),3.);
 
-    float fre = pow(max(1.-dot(nor, -rd),0.),3.);
-    col = col * diff + spe + fre*.1;
+    // col = col * diff + spe + fre*.1;
+    col = col * diff;
 
     // col *= calcAO(p, nor);
   }
