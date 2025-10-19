@@ -70,12 +70,11 @@ void mainImage(out vec4 O, in vec2 I){
   vec2 b = vec2(0);
   vec2 d = voronoi(uv, a, b);
 
-  float edge = d.y - d.x  - .6;  // 减去值配合发光半径,营造出立体感
+  float edge = d.y - d.x;  // 减去值配合发光半径,营造出立体感
   // float edge = dot(.5*(a+b),normalize(b-a));  // iq文章倒数第二步,我不理解,图案是破碎的,不是这么用?
-  edge = pow(.2/edge,2.);
 
 
   vec3 c = s1(vec3(3,2,1)+a.x*20.);
 
-  O.rgb += edge * c;
+  O.rgb += edge*c*2.+pow(.1/(edge-.5),2.)*c;
 }
