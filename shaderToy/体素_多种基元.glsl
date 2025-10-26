@@ -163,7 +163,7 @@ void mainImage(out vec4 O, in vec2 I){
   bool hit = false;
   float shape_seed = hash13(vox);
   vec3 p;
-  for(float i=0.;i<100.;i++){
+  for(float i=0.;i<20.;i++){
     p = ro + rd * z;
     p -= vox + .5;
     float d = map_el(p,shape_seed);
@@ -189,7 +189,7 @@ void mainImage(out vec4 O, in vec2 I){
     float spe = pow(max(0., dot(reflect(-l_dir, nor), -rd)), 5.);
     col = diff*col*1.6 + spe;
 
-    vec3 sky = nor.y*vec3(.2,.6,.2);
+    vec3 sky = nor.y*vec3(.2,.2,.2);
     O.rgb += col+sky;
   }
 
