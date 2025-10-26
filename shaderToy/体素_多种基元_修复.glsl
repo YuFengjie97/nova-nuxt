@@ -136,9 +136,6 @@ bool map_voxel(vec3 ro, vec3 rd, inout vec3 vox,
         if(z>50.) break;
       }
 
-      if(hit) {
-        break;
-      }
     }
     if(hit){
       return hit;
@@ -146,6 +143,7 @@ bool map_voxel(vec3 ro, vec3 rd, inout vec3 vox,
 
     //Increment steps
     steps++;
+    dep_z = steps / voxel_step_max;
     
     //Select the closest voxel face axis
     axi = dep.x<dep.z? 
@@ -158,7 +156,6 @@ bool map_voxel(vec3 ro, vec3 rd, inout vec3 vox,
     dep += stp * axi;
   }
 
-  dep_z = steps / voxel_step_max;
 
   return hit;
 }
@@ -185,41 +182,39 @@ void mainImage(out vec4 O, in vec2 I){
   O.a = 1.;
 
   vec3 ro = vec3(0.,5.,-12.);
-  ro.xz = rotate(T*.3)*ro.xz;
-  ro.yz = rotate(T*.3)*ro.yz;
+  
   if(iMouse.z>0.){
     vec2 m = (iMouse.xy*2.-R)/R;
     ro.xz = rotate(m.x*2.)*ro.xz;
     ro.yz = rotate(m.y*2.)*ro.yz;
+  }else{
+    ro.xz = rotate(T*.3)*ro.xz;
+    ro.yz = rotate(T*.3)*ro.yz;
   }
   vec3 rd = setCamera(ro, vec3(0)) * normalize(vec3(uv, 1.));
   vec3 vox = floor(ro);
 
-  float shape_val = 0.;
-  float dep_z = 0.;
-  vec3 p;
+  float shape_val = 0.;  // 体素形状
+  float dep_z = 0.;      // 场景z轴的深度
+  vec3 p;                // 体素单元raymarch命中点位置
   bool hit = map_voxel(ro, rd, vox, p, shape_val, dep_z);
 
-  float z = 0.;
-
-  vec3 l_pos = vec3(-10,10,-10);
+  vec3 l_pos = ro;
 
   vec3 col = vec3(0);
   if(hit){
     col = s1(vec3(3,2,1)+hash13(vox)*10.);
 
-    // vec3 l_dir = normalize(vec3(4,4,-4)-p);
     vec3 l_dir = normalize(l_pos-p);
     vec3 nor = calcNormal(p, shape_val);
 
     float diff = max(0., dot(l_dir, nor));
     float spe = pow(max(0., dot(reflect(-l_dir, nor), -rd)), 5.);
-    col = diff*col*1.6 + spe;
+    col = diff*col*1.2 + spe;
 
-    vec3 sky = nor.y*vec3(.2,.2,.2);
-    O.rgb += col + sky;
+    O.rgb += col;
   }
 
   // 雾,场景深度渐变,击中的体素背景隐藏
-  O.rgb *= exp(-10.*dep_z*dep_z*dep_z);
+  O.rgb *= exp(-3e1*dep_z*dep_z*dep_z);
 }
