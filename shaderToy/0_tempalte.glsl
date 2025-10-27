@@ -79,10 +79,10 @@ vec3 calcNormal( in vec3 pos )
     vec2 e = vec2(1.0,-1.0);
     const float eps = 0.0005;
     return normalize( 
-            e.xyy*map( pos + e.xyy*eps ).d + 
-					  e.yyx*map( pos + e.yyx*eps ).d + 
-					  e.yxy*map( pos + e.yxy*eps ).d + 
-					  e.xxx*map( pos + e.xxx*eps ).d );
+              e.xyy*map( pos + e.xyy*eps ).d + 
+              e.yyx*map( pos + e.yyx*eps ).d + 
+              e.yxy*map( pos + e.yxy*eps ).d + 
+              e.xxx*map( pos + e.xxx*eps ).d );
 }
 
 vec3 calcNormal2(vec3 pos){
