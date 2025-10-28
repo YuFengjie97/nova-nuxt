@@ -8,7 +8,7 @@
 #define TAU 6.283185
 #define S smoothstep
 #define s1(v) (sin(v)*.5+.5)
-const float EPSILON = 1e-6;
+const float EPSILON = 1e-3;
 
 mat2 rotate(float a){
   float s = sin(a);
