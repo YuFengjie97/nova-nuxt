@@ -10,21 +10,16 @@
 const float EPSILON = 1e-3;
 
 
-
 mat2 rotate(float a){
   float s = sin(a);
   float c = cos(a);
   return mat2(c,-s,s,c);
 }
 
-struct Obj{
-  float d;
-  float id;
-};
 
-Obj obj_union(Obj o1, Obj o2){
-  if(o1.d < o2.d)return o1;
-  return o2;
+float sdf_union(float d1, float d2){
+  if(d1 < d2)return d1;
+  return d2;
 }
 
 
@@ -35,15 +30,14 @@ float sdRoundBox( vec3 p, vec3 b, float r )
 }
 
 
-Obj map(vec3 p) {
+float map(vec3 p) {
   vec2 m = (iMouse.xy*2.-iResolution.xy)/iResolution.xy*6.;
   if(iMouse.z>0.){
     p.xz*=rotate(m.x);
     p.yz*=rotate(m.y);
   }
-  float d1 = sdRoundBox(p, vec3(4, 1., 1.), .1);
-  float d = d1;
-  return Obj(d, 1.);
+  float d = sdRoundBox(p, vec3(4, 1., 1.), .1);
+  return d;
 }
 
 // https://www.shadertoy.com/view/lsKcDD
@@ -64,7 +58,7 @@ float calcAO( in vec3 pos, in vec3 nor )
     for( int i=0; i<5; i++ )
     {
         float h = 0.001 + 0.15*float(i)/4.0;
-        float d = map( pos + h*nor ).d;
+        float d = map( pos + h*nor );
         occ += (h-d)*sca;
         sca *= 0.95;
     }
@@ -79,20 +73,20 @@ vec3 calcNormal( in vec3 pos )
     vec2 e = vec2(1.0,-1.0);
     const float eps = 0.0005;
     return normalize( 
-              e.xyy*map( pos + e.xyy*eps ).d + 
-              e.yyx*map( pos + e.yyx*eps ).d + 
-              e.yxy*map( pos + e.yxy*eps ).d + 
-              e.xxx*map( pos + e.xxx*eps ).d );
+              e.xyy*map( pos + e.xyy*eps ) + 
+              e.yyx*map( pos + e.yyx*eps ) + 
+              e.yxy*map( pos + e.yxy*eps ) + 
+              e.xxx*map( pos + e.xxx*eps ) );
 }
 
 vec3 calcNormal2(vec3 pos){
   vec2 e = vec2(0.0005,0);
   return normalize(
     vec3(
-      map(pos+e.xyy).d,
-      map(pos+e.yxy).d,
-      map(pos+e.yyx).d
-    )-map(pos).d
+      map(pos+e.xyy),
+      map(pos+e.yxy),
+      map(pos+e.yyx)
+    )-map(pos)
   );
 }
 
@@ -110,8 +104,8 @@ vec4 boxmap( in sampler2D s, in vec3 p, in vec3 n, in float k )
 }
 
 struct RM{
-  float z;
   bool hit;
+  float z;
 };
 
 RM rayMarch(vec3 ro, vec3 rd, float zMin, float zMax){
@@ -119,7 +113,7 @@ RM rayMarch(vec3 ro, vec3 rd, float zMin, float zMax){
   bool hit = false;
   for(float i=0.;i<100.;i++){
     vec3 p = ro + rd * z;
-    float d = map(p).d;
+    float d = map(p);
     if(d<EPSILON ){
       hit = true;
       break;
@@ -127,8 +121,7 @@ RM rayMarch(vec3 ro, vec3 rd, float zMin, float zMax){
     if(z>zMax) break;
     z += d;
   }
-
-  return RM(z, hit);
+  return RM(hit, z);
 }
 
 
@@ -141,47 +134,36 @@ void mainImage(out vec4 O, in vec2 I){
   O.a = 1.;
 
   vec3 ro = vec3(0.,0.,-10.);
-  // ro.xz = vec2(cos(T), sin(T))*10.;
 
-  vec3 rd = normalize(vec3(uv, 1.));
-  // vec3 rd = setCamera(ro, vec3(0), 0.)*normalize(vec3(uv, 1.));
+  // vec3 rd = normalize(vec3(uv, 1.));
+  vec3 rd = setCamera(ro, vec3(0), 0.)*normalize(vec3(uv, 1.));
 
   float zMax = 50.;
 
   RM rm = rayMarch(ro, rd, 0.1, zMax);
-  bool hit = rm.hit;
-  float z = rm.z;
-
-  vec3 col = vec3(0);
-  if(hit) {
-    vec3 p = ro + rd * z;
-
+  vec3 col = vec3(0,0,0);
+  if(rm.hit) {
+    col = vec3(1,0,0);
+    vec3 p = ro + rd * rm.z;
     vec3 nor = calcNormal(p);
-    // vec3 objCol = boxmap(iChannel0, p*.1, nor, 7.).rgb;
-    
-    Obj obj = map(p);
-    if(obj.id == 1.){
-      col = vec3(1,0,0);
-    }
 
     vec3 l_dir = normalize(vec3(4,4,-4)-p);
-    // float diff = max(0., dot(l_dir, nor));
-
+    float diff = max(0., dot(l_dir, nor));
     //https://iquilezles.org/articles/derivative/
-    float diff = max(0., (map(p+l_dir*.01).d-obj.d)/.01);
+    // float diff = max(0., (map(p+l_dir*.01)-map(p))/.01);
 
-    // float spe = pow(max(0., dot(reflect(-l_dir, nor), -rd)), 5.);
+    float spe = pow(max(0., dot(reflect(-l_dir, nor), -rd)), 5.);
     // float spe = pow(max(0., dot(normalize(l_dir-rd), nor)), 30.);
     
-    // float fre = pow(max(1.-dot(nor, -rd),0.),3.);
+    float fre = pow(max(1.-dot(nor, -rd),0.),3.);
 
-    // col = col * diff + spe + fre*.1;
-    col = col * diff;
+    col = col * diff + spe + fre*.1;
+    // col = col * diff;
 
     // col *= calcAO(p, nor);
   }
 
-  // col *= exp(-1e-4*z*z*z);
+  col *= exp(-1e-4*rm.z*rm.z);
   col = pow(col, vec3(.4545));
   O.rgb = col;
 
