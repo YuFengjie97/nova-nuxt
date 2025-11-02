@@ -31,7 +31,6 @@ float hash(vec2 p){
 
 vec2 randomGradient(vec2 p){
   float a = hash(p)*TAU;
-  a += T;
   return vec2(cos(a), sin(a));
 }
 
@@ -56,13 +55,11 @@ float noise(vec2 p){
 
 float fbm(vec2 p){
   float amp = 1.;
-  float fre = 1.;
   float n = 0.;
   for(float i =0.;i<6.;i++){
-    n += noise(fre*p)*amp;
-    p *= rotate(2.+T*.01);
+    n += noise(p)*amp;
     amp *= .5;
-    fre *= 2.;
+    p *= 2.;
   }
   return n;
 }
