@@ -108,18 +108,21 @@ void mainImage(out vec4 O, in vec2 I){
   // uv = fract(uv);
 
   uv = vec2((atan(uv.y,uv.x)+PI)/TAU, length(uv));
+  // uv.y = log(uv.y);
 
   float n = noise(uv*1.-T);
-  vec2 uv2 = mix(uv, vec2(n), vec2(.0,.06));
+  vec2 uv2 = mix(uv, vec2(n), vec2(0.,.4));
 
   // 主形状,一个扭曲的噪音
-  float d = noise(uv2*3. + vec2(0, -T*1.));
+  float d = noise(uv2*vec2(2.,.4) + vec2(0, -T*.4));
 
   vec3 col = s1(vec3(3,2,1)+d*6.);
   // vec3 col = palette(d);
-  
-  d -= uv.y-.4;
-  col = pow(col+1., vec3(2.));
 
-  O.rgb = d*col;
+  float mask = S(.5,.0,uv.y);
+  col = pow(col*2., vec3(2.));
+  d = d * mask;
+  d *= 6.;
+
+  O.rgb = col*d;
 }
