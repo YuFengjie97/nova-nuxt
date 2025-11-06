@@ -44,7 +44,7 @@ vec2 randomGradient(vec2 p){
 }
 
 float noise(vec2 p){
-  vec2 tileSize = vec2(8);
+  vec2 tileSize = vec2(3);
   p *= tileSize;
   vec2 i = floor(p);
   vec2 f = fract(p);
@@ -100,7 +100,6 @@ float shape(vec2 p){
 void mainImage(out vec4 O, in vec2 I){
   vec2 R = iResolution.xy;
   vec2 uv = (I-vec2(R.x/2.,R.y/2.))/R.y;
-  vec2 m = (iMouse.xy*2.-R)/R * PI * 2.;
 
   O.rgb *= 0.;
   O.a = 1.;
@@ -109,20 +108,21 @@ void mainImage(out vec4 O, in vec2 I){
 
   uv = vec2((atan(uv.y,uv.x)+PI)/TAU, length(uv));
   // uv.y = log(uv.y);
+  // uv.y *= 3.;
 
-  float n = noise(uv*1.-T);
+  float n = noise(uv*3.-T);
   vec2 uv2 = mix(uv, vec2(n), vec2(0.,.4));
 
   // 主形状,一个扭曲的噪音
-  float d = noise(uv2*vec2(2.,.4) + vec2(0, -T*.4));
+  float d = fbmWrap(uv2*vec2(2.,.2) + vec2(0, -T*.4));
+  d = S(-.5,2.,d);
+  d = pow(.1/d, 2.);
 
-  vec3 col = s1(vec3(3,2,1)+d*6.);
-  // vec3 col = palette(d);
+  vec3 col = s1(vec3(3,2,1)+S(0.,1.,d)*10.+T);
 
-  float mask = S(.5,.0,uv.y);
-  col = pow(col*2., vec3(2.));
-  d = d * mask;
-  d *= 6.;
-
+  float mask = S(.4,.1,uv.y);
+  // d *= mask;
+  
   O.rgb = col*d;
+  O.rgb = tanh(O.rgb);
 }
