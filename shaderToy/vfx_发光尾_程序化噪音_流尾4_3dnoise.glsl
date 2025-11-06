@@ -226,6 +226,7 @@ void mainImage(out vec4 O, in vec2 I){
   vec3 col = s1(vec3(3,2,1)+d*10.);
   d -= uv.x-.6;
 
+  // 通过加法来发光,pow来增强特征
   col = pow(col+.6, vec3(2.1));
 
   O.rgb += d*col;
