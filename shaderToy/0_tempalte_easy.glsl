@@ -76,6 +76,20 @@ float fbm(vec3 p){
   return n;
 }
 
+
+// Hexagonal prism, circumcircle variant
+float fHexagonCircumcircle(vec3 p, vec2 h) {
+	vec3 q = abs(p);
+	return max(q.y - h.y, max(q.x*sqrt(3.)*0.5 + q.z*0.5, q.z) - h.x);
+	//this is mathematically equivalent to this line, but less efficient:
+	//return max(q.y - h.y, max(dot(vec2(cos(PI/3), sin(PI/3)), q.zx), q.z) - h.x);
+}
+
+// Hexagonal prism, incircle variant
+float fHexagonIncircle(vec3 p, vec2 h) {
+	return fHexagonCircumcircle(p, vec2(h.x*sqrt(3.)*0.5, h.y));
+}
+
 void mainImage(out vec4 O, in vec2 I){
   vec2 R = iResolution.xy;
   vec2 uv = (I*2.-R)/R.y;
@@ -100,19 +114,22 @@ void mainImage(out vec4 O, in vec2 I){
       p.yz *= rotate(m.y);
     }
 
-    float d = length(p) - 2.;
-    d += fbm(p*2.);
+    // p = mix(p, vec3(fbm(p*2.+vec3(0,T*10.,0))), vec3(.1));
 
-    d = abs(d) + .1;
+    float d = length(p) - 3.;
+    d += fbm(p*5.)*.1;
+
+    // d = abs(d)*.8 + .1;
+    d = max(EPSILON,d);
 
     
-    col += (1.1+sin(vec3(3,2,1)+p.x))/d;
+    col += s1(vec3(3,2,1)+d*2.-T)*pow(1./d,2.);
     
     if(d<EPSILON || z>zMax) break;
     z += d;
   }
 
-  col = tanh(col / 1e2);
+  col = tanh(col / 2e1);
 
   O.rgb = col;
 }
