@@ -223,11 +223,13 @@ void mainImage(out vec4 O, in vec2 I){
   float d = fbmWrap(vec3(uv2*vec2(.5)*vec2(1.,7.)+vec2(-T*.5,0), T*.5));
 
   // vec3 col = palette(d);
-  vec3 col = s1(vec3(3,2,1)+d*10.);
   d -= uv.x-.6;
+  vec3 col = s1(vec3(3,2,1)+d*4.);
 
   // 通过加法来发光,pow来增强特征
-  col = pow(col+.6, vec3(2.1));
+  // col = pow(col+.6, vec3(2.1));
 
-  O.rgb += d*col;
+  col *= d*4.;
+
+  O.rgb += col;
 }
