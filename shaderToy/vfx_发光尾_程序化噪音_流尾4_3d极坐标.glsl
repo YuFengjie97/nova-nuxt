@@ -144,7 +144,11 @@ void mainImage(out vec4 O, in vec2 I){
   vec2 uv2 = mix(uv, vec2(n), .2);
 
 
-  float d = fbmWrap(vec3(uv2*vec2(1.5)+vec2(0.,-T*.5), T*.5));
+  //float d = fbmWrap(vec3(uv2*vec2(1.5)+vec2(0.,-T*.5), T*.5));
+  // Suggestion from Dray
+  // 用sin和cos分别处理uv.x,形成两个不同的连续,然后"混合",产生没有重复的连续
+  float k = .8;
+  float d = fbmWrap( vec3( k*sin(uv.x), k*cos(uv.x), uv.y - T*1.2 ) ); 
 
   // vec3 col = palette(d);
   vec3 col = s1(vec3(3,2,1)+d*10.);
