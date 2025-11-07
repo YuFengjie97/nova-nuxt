@@ -7,7 +7,7 @@
 #iChannel0 "file://D:/workspace/nova-nuxt/public/img/texture/vfx_tail/tail_2.png"
 
 // #define T sin(iTime*0.1)/0.1
-#define T iTime
+#define T mod(iTime,10.)
 #define PI 3.141596
 #define TAU 6.283185
 #define S smoothstep
