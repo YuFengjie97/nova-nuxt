@@ -117,10 +117,13 @@ float map(vec3 p){
 
   p*=1.3;
 
-  // float t = .5+.5*tanh(sin(T)*3.);
+  float t = .5+.5*tanh(sin(T)*3.);
   // float s = mix(1.,2.6,t);
   // p*=s;
   // p.xz *= rotate(p.y*.3+t);
+
+  // float n = abs(dot(cos(p.zxy), vec3(.1)));
+  // p = mix(p,vec3(n)*2.,t);
 
   float d_gyroid = dot(cos(p),sin(p.yzx))-1.1;
   d = max(d, -d_gyroid);
