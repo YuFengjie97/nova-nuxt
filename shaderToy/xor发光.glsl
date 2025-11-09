@@ -85,10 +85,10 @@ void mainImage(out vec4 O, in vec2 I){
   O.rgb *= 0.;
   O.a = 1.;
 
-  uv.y -= R.y/R.x*.35;
-
-  uv *= 4.;
-  vec2 id = floor(uv);
+  float s = 3.;
+  uv *= s;
+  vec2 xy = floor(uv);
+  float id = xy.y * s + xy.x;
   uv = fract(uv)-.5;
   
   float d = abs(length(uv)-.2);
@@ -97,19 +97,20 @@ void mainImage(out vec4 O, in vec2 I){
   vec3 col = vec3(0);
   vec3 c = s1(vec3(3,2,1)+T);
   float l = 0.;
-  if(id.y==0.){
-    if(id.x==0.){
-      l = r/d;
-    }
-    else if(id.x==1.){
-      l = max(1.0 - d*(1./r), 0.0);
-    }
-    else if(id.x==2.){
-      l = pow(max(1.0 - d*(1./r), 0.0), 2.0);
-    }
-    else if(id.x==3.){
-      l = pow(r/d,2.);
-    }
+  if(id == 0.){
+    l = d;
+  }
+  else if(id==1.){
+    l = r/d;
+  }
+  else if(id==2.){
+    l = max(1.0 - d*(1./r), 0.0);
+  }
+  else if(id==3.){
+    l = pow(max(1.0 - d*(1./r), 0.0), 2.0);
+  }
+  else if(id==4.){
+    l = pow(r/d,2.);
   }
 
   O.rgb = col + c*l;
