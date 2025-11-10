@@ -72,13 +72,12 @@ float voronoi(vec2 uv){
   vec2 uvi = floor(uv2);
   vec2 uvf = fract(uv2);
 
-  // x分量代表当前像素距离特征点的最小距离,y代表次小距离
   vec2 min_d = vec2(10.);
 
   for(int x=-1;x<2;x++){
   for(int y=-1;y<2;y++){
     vec2 nei = vec2(x,y);
-    vec2 pos = sin(hash22(uvi+nei)*10.)*.3+.3;
+    vec2 pos = sin(hash22(uvi+nei)*10.+T*1.)*.3+.3;
     float d1 = length(nei+pos-uvf);
     if(d1<min_d.x){
       min_d.y = min_d.x;
