@@ -28,6 +28,7 @@ float smax(float a, float b, float k) {
 }
 
 
+
 float sdBox( vec3 p, vec3 b )
 {
   vec3 q = abs(p) - b;
