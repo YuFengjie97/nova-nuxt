@@ -66,7 +66,7 @@ vec2 hash22(vec2 p)
     p3 += dot(p3, p3.yzx+33.33);
     return fract((p3.xx+p3.yz)*p3.zy);
 }
-vec2 voronoi(vec2 uv){
+float voronoi(vec2 uv){
   
   vec2 uv2 = uv;
   vec2 uvi = floor(uv2);
@@ -89,16 +89,16 @@ vec2 voronoi(vec2 uv){
   }
   }
 
-  return min_d;
+  return min_d.y-min_d.x;
 }
 
 vec2 vor;
 float map(vec3 p) {
-  vec2 m = (iMouse.xy*2.-iResolution.xy)/iResolution.xy*6.;
-  if(iMouse.z>0.){
-    p.xz*=rotate(m.x);
-    p.yz*=rotate(m.y);
-  }
+  // vec2 m = (iMouse.xy*2.-iResolution.xy)/iResolution.xy*6.;
+  // if(iMouse.z>0.){
+  //   p.xz*=rotate(m.x);
+  //   p.yz*=rotate(m.y);
+  // }
   float d = length(p)-5.;
   {
     vec3 q = p;
@@ -121,7 +121,9 @@ float map(vec3 p) {
     d = smax(d1, d, .2);
   }
   
-  vor = voronoi(p.xy*1.6);
+  // 如果让网格噪声附着在transform's物体上,应该写在这里
+  // 但是计算normal和raymarch会额外计算
+  // vor = voronoi(p.xy*1.6);
 
   return d;
 }
@@ -217,6 +219,7 @@ vec3 Tonemap_ACES(vec3 x)
 float sRGB(float t) { return mix(1.055*pow(t, 1./2.4) - 0.055, 12.92*t, step(t, 0.0031308)); }
 vec3 sRGB(in vec3 c) { return vec3 (sRGB(c.x), sRGB(c.y), sRGB(c.z)); }
 
+
 void mainImage(out vec4 O, in vec2 I){
   vec2 R = iResolution.xy;
   vec2 uv = (I*2.-R)/R.y;
@@ -226,6 +229,10 @@ void mainImage(out vec4 O, in vec2 I){
   O.a = 1.;
 
   vec3 ro = vec3(0.,0.,-8.);
+  if(iMouse.z>0.){
+    ro.x += m.x;
+    ro.y += m.y;
+  }
 
   // vec3 rd = normalize(vec3(uv, 1.));
   vec3 rd = setCamera(ro, vec3(0), 0.)*normalize(vec3(uv, 1.));
@@ -243,10 +250,18 @@ void mainImage(out vec4 O, in vec2 I){
     
     float fre = pow(max(1.-dot(nor, -rd),0.),2.);
     
-    Light l = getLight(normalize(l_dir), nor, rd, .3);
-    col += obj_col * (l.amb*.1 + l.diff*.6 + l.spe*10.);
+    float diff = max(0., dot(l_dir, nor));
+    float spe = pow(max(0., dot(reflect(-l_dir, nor), -rd)), 20.);
+    col += obj_col * diff*.6 + spe*2. + pow(spe,2.)*10.;
 
-    col += .02/(vor.x-vor.y)*vec3(.4,.6,0);
+    // https://www.shadertoy.com/view/MtsGWH boxmap
+    float vorx = voronoi(p.yz*1.4);
+    float vory = voronoi(p.xz*1.4);
+    float vorz = voronoi(p.xy*1.4);
+    vec3 m = pow( abs(nor), vec3(2.));
+	  float vor = (vorx*m.x + vory*m.y + vorz*m.z) / (m.x + m.y + m.z);
+
+    col += pow(.1/(vor), 2.)*vec3(.4,.6,0);
   }
 
   // col *= exp(-1e-4*rm.z*rm.z);
