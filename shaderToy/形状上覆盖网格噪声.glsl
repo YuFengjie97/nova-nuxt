@@ -17,32 +17,12 @@ mat2 rotate(float a){
 }
 
 
-float sdf_union(float d1, float d2){
-  if(d1 < d2)return d1;
-  return d2;
-}
-
-
-float sdRoundBox( vec3 p, vec3 b, float r )
-{
-  vec3 q = abs(p) - b + r;
-  return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0) - r;
-}
-
-
 float smin( float d1, float d2, float k )
 {
     k *= 4.0;
     float h = max(k-abs(d1-d2),0.0);
     return min(d1, d2) - h*h*0.25/k;
 }
-
-// float smax( float d1, float d2, float k )
-// {
-//     k *= 4.0;
-//     float h = max(k-abs(d1-d2),0.0);
-//     return max(d1, d2) - h*h*0.25/k;
-// }
 
 float smax( float d1, float d2, float k )
 {
