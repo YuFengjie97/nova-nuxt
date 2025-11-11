@@ -94,7 +94,7 @@ float map(vec3 p) {
       float off = s*2.2;
       vec3 q = p*s-off;
       float d2 = dot(cos(q.zxy)/s, sin(q)/s);
-      d1 = mix(d1, d2, tanh(sin(T*PI)*3.)*.5+.5);
+      // d1 = mix(d1, d2, tanh(sin(T*PI)*3.)*.5+.5);
     }
 
     d = smax(d1, d, .2);
@@ -202,15 +202,17 @@ vec3 sRGB(in vec3 c) { return vec3 (sRGB(c.x), sRGB(c.y), sRGB(c.z)); }
 void mainImage(out vec4 O, in vec2 I){
   vec2 R = iResolution.xy;
   vec2 uv = (I*2.-R)/R.y;
-  vec2 m = (iMouse.xy*2.-R)/R*6.;
+  vec2 m = (iMouse.xy*2.-R)/R.y*PI;
 
   O.rgb *= 0.;
   O.a = 1.;
 
   vec3 ro = vec3(0.,0.,-8.);
   if(iMouse.z>0.){
-    ro.x += m.x;
-    ro.y += m.y;
+    // ro.x += m.x;
+    // ro.y += m.y;
+    // ro.xz = vec2(cos(m.x), sin(m.x))*8.;
+    // ro.yz = vec2(cos(m.y), sin(m.y))*8.;
   }
 
   // vec3 rd = normalize(vec3(uv, 1.));
