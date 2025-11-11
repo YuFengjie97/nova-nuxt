@@ -17,11 +17,7 @@ mat2 rotate(float a){
 }
 
 
-float sdRoundBox( vec3 p, vec3 b, float r )
-{
-  vec3 q = abs(p) - b + r;
-  return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0) - r;
-}
+// https://iquilezles.org/articles/intersectors/
 vec2 sphIntersect( in vec3 ro, in vec3 rd, in vec3 ce, float ra )
 {
     vec3 oc = ro - ce;
