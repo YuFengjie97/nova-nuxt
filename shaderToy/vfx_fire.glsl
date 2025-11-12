@@ -124,7 +124,7 @@ void mainImage(out vec4 O, in vec2 I){
   O.rgb *= 0.;
   O.a = 1.;
 
-  vec3 ro = vec3(0.,2.,-8.);
+  vec3 ro = vec3(0.,2.,-7.);
 
   vec3 rd = normalize(vec3(uv, 1.));
 
@@ -142,28 +142,27 @@ void mainImage(out vec4 O, in vec2 I){
 
     // p = mix(p, vec3(fbm(p*2.+vec3(0,T*10.,0))), vec3(.1));
 
-    float n = fbm(p*vec3(1,.2,1)*.6+vec3(0,-T*2.,0));
+    float n = fbm(p*vec3(1,.7,1)*.6+vec3(0,-T*3.,T));
 
-    vec3 q = mix(p, vec3(n), .2);
+    vec3 q = p;
+    // q.xz *= rotate(q.y*4.);
+    q = mix(q, vec3(n), .2);
     // n = clamp(n,0.,1.);
     // vec3 q = p;
     // q += n;
-
-    float d = length(q-vec3(0,0,0)) - 3.;
-    {
-      float d1 = p.y;
-      d = max(d, -d1);
-    }
+    float d = length(q*vec3(1,.7,1)-vec3(0,1.5,0)) - 2.4;
     d += n*1.1;
 
-    d = abs(d)*.6 + .01;
+    d = abs(d)*.5 + .01;
     // d = max(EPSILON,d);
 
     
     float glow = pow(.6/d,2.);
-    // col += s1(vec3(3,2,1)+4.)*glow;
-    float gradient_range = S(0.,20.,length(p));
+    
+    float gradient_range = S(0.,15.,length(q));
     vec3 c = mix(vec3(2,0,0), vec3(4,4,0), gradient_range);
+    //vec3 c = s1(vec3(3,2,1)+T);
+
     col += c * glow;
 
     if(d<EPSILON || z>zMax) break;
