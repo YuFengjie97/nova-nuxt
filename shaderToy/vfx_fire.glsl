@@ -161,7 +161,8 @@ void mainImage(out vec4 O, in vec2 I){
     
     float gradient_range = S(0.,15.,length(q));
     vec3 c = mix(vec3(2,0,0), vec3(4,4,0), gradient_range);
-    //vec3 c = s1(vec3(3,2,1)+T);
+    // vec3 c = mix(s1(vec3(3,2,1)+T), s1(vec3(2,4,8)+T), gradient_range);
+
 
     col += c * glow;
 
