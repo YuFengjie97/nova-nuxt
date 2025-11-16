@@ -112,6 +112,8 @@ void mainImage(out vec4 O, in vec2 I){
   float z = .1;
 
   vec3 col = vec3(0);
+  float t = iTime*5.;
+  float t1 = t + 1.;
   for(float i=0.;i<100.;i++){
     vec3 p = ro + rd * z;
     // p.z += T*2.;
@@ -122,35 +124,35 @@ void mainImage(out vec4 O, in vec2 I){
     }
 
     float v = 0.;
+    float v1 = 0.;
     vec3 q = p;
     // float n = 0.;
-    for(float s=1.;s<4.;s++){
-      // q += T;
-      q.xz = rotate(.4)*q.xz;
-      q.yz = rotate(.4)*q.yz;
-      v += (asin(sin(q.x*s)) + asin(sin(q.y*s)) + asin(sin(q.z*s)))/s;
-      // v += (abs(fract(q.x*s)-.5) + abs(fract(q.y*s)-.5) + abs(fract(q.z*s)-.5))/10.;
-      // v += abs(dot(cos(q), vec3(.1)));
+    for(float s=1.;s<5.;s++){
+      q.xz = rotate(.5)*q.xz;
+      v += (asin(sin(q.y*s +t))  + asin(sin(q.z*s+t)))/s;
+      v1 += (asin(sin(q.y*s+t1)) + asin(sin(q.z*s+t1)))/s;
+      // n += abs(dot(cos(q), vec3(.1)));
     }
+
+    v = mix(v, v1, s1(t));
 
     // v = mix(v, n, tanh(sin(T*3.)*3.)*.3+.3);
     // float d = length(p) - 4.;
-    p = mix(p, vec3(v), .2);
-    float d = fBoxCheap(p, vec3(3));
-    // float d = length(p)-4.;
+    float d = fBoxCheap(p, vec3(4));
+    // float d = length(p.xy)-5.;
     // d = max(v, -d);
-    // d = smax(d, -v, .5);
-    d = abs(d)+.02;
+    d = smax(d, -v, .3);
+    d = abs(d)+.03;
     // d = max(0.01, d);
 
-    col += (1.1+sin(vec3(3,2,1)+cos(p*.5)))/d;
+    col += (1.1+sin(vec3(3,2,1)+cos(p*.3)))/d;
     
     if(d<EPSILON || z>zMax) break;
-    z += d*.3;
+    z += d*.2;
   }
   // col *= exp(2e-3*z*z*z);
   // col *= z*z*z;
-  col = tanh(col / 2e3);
+  col = tanh(col / 9e2);
 
   O.rgb = col;
 }
