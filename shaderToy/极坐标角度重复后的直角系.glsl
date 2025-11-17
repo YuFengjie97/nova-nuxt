@@ -90,7 +90,10 @@ void mainImage(out vec4 O, in vec2 I){
   uv *= 3.; // 基础缩放
 
   vec2 uv2 = vec2(atan(uv.y,uv.x), length(uv));
+  // uv2.x += uv2.y;
+  uv2.x += log(uv2.y);
   uv2.x *= 2.; // 极坐标角度缩放
+  uv2.x = sin(uv2.x*3.);
 
   // 极坐标网格查看
   #if 0
@@ -101,14 +104,22 @@ void mainImage(out vec4 O, in vec2 I){
 
   // 极坐标角度缩放后再转直角系
   vec2 uv3 = vec2(cos(uv2.x), sin(uv2.x))*uv2.y;
+  #if 0
   vec2 grid2 = abs(fract(uv3)-.5);
   float g2 = min(grid2.x, grid2.y);
   col += S(30./R.y, 0., g2);
+  #endif
 
+
+  vec2 id = floor(uv3);
+  vec3 c = s1(vec3(3,2,1)+id.x+id.y);
 
   float d = length(fract(uv3)-.5);
-  col += S(30./R.y,0.,d-.2);
-  // col += pow(.2/d,2.);
+  // col += S(30./R.y,0.,d-.2);
+  col += pow(.2/d,2.)*c;
+
+  col = tanh(col);
+
 
   O.rgb = col;
 }
