@@ -106,10 +106,10 @@ void mainImage(out vec4 O, in vec2 I){
   // n *= mask_gradient;
 
   // float d = abs(length(uv-.5) - .2);
-  vec2 uv4 = s1(uv*20.+n*7.);
+  vec2 uv4 = s1(uv*TAU*4.+n*7.);
   float d = min(uv4.x, uv4.y);
 
-  col += pow(.1/d,1.);
+  col += pow(.1/d,1.4);
 
   // col += S(4./R.y,0.,d);
 
