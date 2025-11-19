@@ -95,9 +95,9 @@ void mainImage(out vec4 O, in vec2 I){
   float n1 = noise(uv*2.+vec2(0, mod(t*.6, 100.)));
   vec2 uv2 = uv + n1;
 
-  vec2 uv3 = mix(uv, uv2, .1)*10.;
+  vec2 uv3 = mix(uv, uv2, .1)*6.;
 
-  float n = fbm(uv3*vec2(3.,.4)+vec2(0, -mod(t*3., 100.)));
+  float n = fbm(uv3*vec2(3.2,.5)+vec2(0, -mod(t*3., 100.)));
 
   float mask_gradient = S(.04,.2,uv.y) * S(.5,.35, uv.y);
   n *= 2.5;
@@ -107,7 +107,7 @@ void mainImage(out vec4 O, in vec2 I){
   n *= gradient;
   // vec3 c = mix(vec3(1,2,3), vec3(6,3,1), n);
   vec3 c1 = palette(s1(T+2.3))*10.;
-  vec3 c2 = palette(s1(T+9.5))*10.;
+  vec3 c2 = palette(s1(T+3.5))*10.;
   // vec3 c = mix(c1,c2,clamp(n*.4, 0., 1.));
   vec3 c = mix(c1,c2,n);
 
