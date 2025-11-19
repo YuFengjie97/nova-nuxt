@@ -100,7 +100,8 @@ void mainImage(out vec4 O, in vec2 I){
 
   float mask_gradient = S(.1,.4,uv.y);
   n *= 2.5;
-  n += S(.8,1.,uv.y);
+  // n += S(.8,1.,uv.y);
+  n += pow(.1/abs(uv.y-1.), 1.);
   n *= mask_gradient;
 
   col += n;
