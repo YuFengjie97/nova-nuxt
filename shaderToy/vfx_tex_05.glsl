@@ -64,18 +64,6 @@ float fbm(vec2 p){
   return n;
 }
 
-float fbm(vec3 p){
-  float amp = 1.;
-  float fre = 1.;
-  float n = 0.;
-  for(float i =0.;i<4.;i++){
-    n += abs(dot(cos(p), vec3(.1)));
-    amp *= .5;
-    fre *= 2.;
-  }
-  return n;
-}
-
 
 void mainImage(out vec4 O, in vec2 I){
   vec2 R = iResolution.xy;
@@ -98,22 +86,25 @@ void mainImage(out vec4 O, in vec2 I){
   vec2 uv3 = mix(uv, uv2, .1)*6.;
 
   float n = fbm(uv3*vec2(3.2,.5)+vec2(0, -mod(t*3., 100.)));
+  // float n = fbm(vec2(cos(uv3.x*4.)+sin(uv3.y*4.))+vec2(0, -mod(t*3., 100.)));
+  n = pow(n+1., 5.);
+  // n *= 100.;
 
   float mask_gradient = S(.04,.2,uv.y) * S(.5,.35, uv.y);
-  n *= 2.5;
   n *= mask_gradient;
 
 
   n *= gradient;
-  // vec3 c = mix(vec3(1,2,3), vec3(6,3,1), n);
-  vec3 c1 = palette(s1(T+2.3))*10.;
-  vec3 c2 = palette(s1(T+3.5))*10.;
+  vec3 c = mix(vec3(1,0,0), vec3(0,1,0), n);
+  // c = mix(c, vec3(0,0,1), n-.2);
+  // vec3 c1 = palette(s1(T+2.3))*1.;
+  // vec3 c2 = palette(s1(T+3.5))*1.;
+  // vec3 c = mix(c1,c2,n);
   // vec3 c = mix(c1,c2,clamp(n*.4, 0., 1.));
-  vec3 c = mix(c1,c2,n);
 
-  col = n*c;
+  col += n*c;
 
-  col = tanh(col/2.);
+  // col = tanh(col/2.);
 
   O.rgb = col;
 }
