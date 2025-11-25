@@ -90,12 +90,20 @@ void mainImage(out vec4 O, in vec2 I){
 
   vec3 col = vec3(0);
 
+  // 噪音, 加值为溶解值
   //float n = noise(uv*2.);
   float n = fbm(uv*3.)+sin(T*.5);
 
+  // 烧毁部分,取反得到
   float burn = -n;
+
+  // 限制为烧毁部分渐变
   n = S(0.,0.1,n);
+
+  // 未烧毁部分纹理颜色
   col += n * texture(iChannel0, uv).rgb;
+
+  // 烧毁边缘发光
   float glow = pow(.002/burn, 2.);
   col += glow*vec3(10,1,0);
 
