@@ -89,7 +89,9 @@ void mainImage(out vec4 O, in vec2 I){
   vec3 col = vec3(0);
 
   float n = noise(uv*2.);
+  
   float burn = -n;
+  n = S(0.,0.1,n);
   col += n * texture(iChannel0, uv).rgb;
   float glow = pow(.002/burn, 2.);
   col += glow*vec3(10,1,0);
