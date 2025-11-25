@@ -26,7 +26,9 @@ vec3 palette( in float t )
 }
 
 float hash(vec2 p){
-  return fract(sin(dot(p, vec2(456.456,7897.7536)))*741.25639);
+  // return fract(sin(dot(p, vec2(456.456,7897.7536)))*741.25639);
+  float n = fract(sin(dot(p, vec2(456.456,7897.7536)))*741.25639);
+  return s1(n+T*.2);
 }
 
 vec2 randomGradient(vec2 p){
@@ -88,8 +90,9 @@ void mainImage(out vec4 O, in vec2 I){
 
   vec3 col = vec3(0);
 
-  float n = noise(uv*2.);
-  
+  //float n = noise(uv*2.);
+  float n = fbm(uv*3.)+sin(T*.5);
+
   float burn = -n;
   n = S(0.,0.1,n);
   col += n * texture(iChannel0, uv).rgb;
