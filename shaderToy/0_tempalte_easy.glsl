@@ -92,14 +92,20 @@ void mainImage(out vec4 O, in vec2 I){
   float zMax = 50.;
   float z = .1;
 
+  mat2 mx = rotate(T);
+  mat2 my = rotate(T);
+  if(iMouse.z>0.){
+    mx = rotate(m.x);
+    my = rotate(m.y);
+  }
+
+
   vec3 col = vec3(0);
   for(float i=0.;i<100.;i++){
     vec3 p = ro + rd * z;
 
-    if(iMouse.z>0.){
-      p.xz *= rotate(m.x);
-      p.yz *= rotate(m.y);
-    }
+    p.xz *= mx;
+    p.yz *= my;
 
     // p = mix(p, vec3(fbm(p*2.+vec3(0,T*10.,0))), vec3(.1));
 
