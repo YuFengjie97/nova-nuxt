@@ -93,12 +93,13 @@ void mainImage(out vec4 O, in vec2 I){
     // col += (1.1+sin(vec3(3,2,1)+dot(p,vec3(1.))+T))/d;
     // col += mix(vec3(1,0,0), vec3(0,1,0), dot(p,vec3(1)))/d;
     // col += palette(dot(p,vec3(1.)))/d;
-    col += vec3(1.)/d;
+    col += dot(p,vec3(3,2,1))/d;
+    // col += 1./d;
 
     if(d<EPSILON || z>zMax) break;
     z += d;
   }
   // col *= exp(-1e-5*z*z);
-  col = tanh(col / 2e3);
+  col = tanh(col / 2e5);
   O.rgb = col;
 }
