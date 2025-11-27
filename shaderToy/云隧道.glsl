@@ -91,7 +91,9 @@ void mainImage(out vec4 O, in vec2 I){
     d = abs(d)*.1 + .01;
 
     col += (1.1+sin(vec3(3,2,1)+dot(p,vec3(1.))+T))/d;
-    
+    // col += mix(vec3(1,0,0), vec3(0,1,0), dot(p,vec3(1)))/d;
+    // col += palette(dot(p,vec3(1.)))/d;
+
     if(d<EPSILON || z>zMax) break;
     z += d;
   }
