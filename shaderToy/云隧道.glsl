@@ -100,6 +100,6 @@ void mainImage(out vec4 O, in vec2 I){
     z += d;
   }
   // col *= exp(-1e-5*z*z);
-  col = tanh(col / 2e5);
+  col = tanh(col / 5e5);
   O.rgb = col;
 }
