@@ -16,15 +16,6 @@ mat2 rotate(float a){
   return mat2(c,-s,s,c);
 }
 
-vec3 palette( in float t )
-{
-  vec3 a = vec3(0.5, 0.5, 0.5);
-  vec3 b = vec3(0.5, 0.5, 0.5);
-  vec3 c = vec3(1.0, 1.0, 1.0);
-  vec3 d = vec3(0.0, 0.1, 0.2);
-  return a + b*cos( 6.283185*(c*t+d) );
-}
-
 float hash(vec2 p){
   return fract(sin(dot(p, vec2(456.456,7897.7536)))*741.25639);
 }
