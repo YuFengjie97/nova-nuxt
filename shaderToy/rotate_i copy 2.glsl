@@ -121,9 +121,10 @@ void mainImage(out vec4 O, in vec2 I){
       q.xy *= rotate(T+i*3.);
       q.xz *= rotate(T+i*2.);
       q.yz *= rotate(T+i*1.);
-      // d1 = q.y+fbm(q*.2+T)*1.;
-      // d1 = length(sin(q*.1))-.1;
-      d1 = length(cos(q.xy*2.)/2.*.6)-.02;
+      float d11 = length(sin(q*.1))-.1;
+      float d12 = length(cos(q.xy*2.)/2.*.6)-.02;
+      d1 = mix(d11, d12, tanh(sin(T)*4.));
+      // d1 = mix(d11, d12, .4);
       d1 = max(0.001, d1);
       // d1 = abs(d1)*.6+.001;
       d1 = max(d, d1);
