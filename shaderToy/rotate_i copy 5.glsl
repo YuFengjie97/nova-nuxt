@@ -133,14 +133,16 @@ void mainImage(out vec4 O, in vec2 I){
 
     vec3 q = p;
     // float d = q.y+4.;
-    float d = sdBoxFrame(q, vec3(4), .4);
+    // float d = sdBoxFrame(q, vec3(4), .4);
+    float d = length(q) - 4.;
     // d += fbm(q);
     q.xz *= rotate(i+T*.5);
     q.yz *= rotate(i+T*.5);
-    d += fbm(q*1.);
-    d = abs(d)*.2+.01;
+    float n = fbm(q*2.);
+    d += n;
+    d = abs(d)*.6+.01;
 
-    col += s1(vec3(3,2,1)+p.y)/d;
+    col += s1(vec3(3,2,1)+n*20.)/d;
 
     if(d<EPSILON || z>zMax) break;
     z += d;
