@@ -60,14 +60,21 @@ float fbm(vec3 p){
   float fre = 1.;
   float n = 0.;
   for(float i =0.;i<4.;i++){
-    // n += amp*abs(dot(cos(p*fre), vec3(.1)));
-    n += abs(dot(cos(p), vec3(.1)));
+    n += amp*abs(dot(cos(p*fre), vec3(.1)));
     amp *= .5;
     fre *= 2.;
   }
   return n;
 }
-
+float sdBoxFrame( vec3 p, vec3 b, float e )
+{
+       p = abs(p  )-b;
+  vec3 q = abs(p+e)-e;
+  return min(min(
+      length(max(vec3(p.x,q.y,q.z),0.0))+min(max(p.x,max(q.y,q.z)),0.0),
+      length(max(vec3(q.x,p.y,q.z),0.0))+min(max(q.x,max(p.y,q.z)),0.0)),
+      length(max(vec3(q.x,q.y,p.z),0.0))+min(max(q.x,max(q.y,p.z)),0.0));
+}
 float smin( float d1, float d2, float k )
 {
     k *= 4.0;
@@ -97,10 +104,10 @@ void mainImage(out vec4 O, in vec2 I){
   O.rgb *= 0.;
   O.a = 1.;
 
-  vec3 ro = vec3(-.1,-.1,-0.);
+  vec3 ro = vec3(-.0,-.0,-10.);
 
-  // vec3 rd = normalize(vec3(uv, 1.));
-  vec3 rd = setCamera(ro, vec3(0,0,-10), 0.)*normalize(vec3(uv, 1.));
+  vec3 rd = normalize(vec3(uv, 1.));
+  // vec3 rd = setCamera(ro, vec3(0,0,-10), 0.)*normalize(vec3(uv, 1.));
 
   float zMax = 50.;
   float z = .1;
@@ -123,40 +130,22 @@ void mainImage(out vec4 O, in vec2 I){
 
     // p.xz *= mx;
     // p.yz *= my;
-    float d = 1e4;
-    {
-      vec3 q = p;
-      q.xz = rotate(radians(-40.))*q.xz;
-      q.yz = rotate(radians(20.))*q.yz;
-      float d1 = length(q.xy) - 2.;
-      
-      // 云
-      vec3 q2 = q;
-      q2.z -= T;
-      q2.xz *= rotate(i);
-      q2.yz *= rotate(i);
-      // q.xy *= rotate(i+T);
-      float n = fbm(q2*4.+T);
-      d1 += n;
-      d1 = abs(d1)*.2 + .01;
-      d = min(d, d1);
 
-      // 光
-      float d2 = fbm(q2+T*.1);
-      d2 = max(d1,d2);
-      col += vec3(.1,.1,.0)*pow(1./d2,2.);
-      // d2 = abs(d2)*.1+.01;
-    }
+    vec3 q = p;
+    // float d = q.y+4.;
+    float d = sdBoxFrame(q, vec3(4), .4);
+    // d += fbm(q);
+    q.xz *= rotate(i+T*.5);
+    q.yz *= rotate(i+T*.5);
+    d += fbm(q*1.);
+    d = abs(d)*.2+.01;
 
-    
-    // col += s1(vec3(3,2,1)+dot(p,vec3(2.1)))/d;
-    vec3 c = mix(vec3(6,.1,4), vec3(.7,.0,.0), S(zMax,0.,z));
-    col += c / d;
+    col += s1(vec3(3,2,1)+p.y)/d;
+
     if(d<EPSILON || z>zMax) break;
     z += d;
   }
-  col = tanh(col / 2e3);
-  col = pow(col, vec3(1.4));
+  col = tanh(col / 2e2);
 
 
 
