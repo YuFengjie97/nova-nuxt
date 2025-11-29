@@ -36,7 +36,7 @@ float fbm(vec3 p){
   float fre = 1.;
   float n = 0.;
   for(float i =0.;i<4.;i++){
-    n += abs(dot(cos(p), vec3(.1)));
+    n += amp*abs(dot(cos(p*fre), vec3(.1)));
     amp *= .5;
     fre *= 2.;
   }
