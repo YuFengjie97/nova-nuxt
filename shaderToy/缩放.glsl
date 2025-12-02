@@ -100,9 +100,12 @@ void mainImage(out vec4 O, in vec2 I){
 
 
   float md = length(uv - m);
-  float scl = S(.0,1.4,md)*.4+1.;
+  float scl = S(.0,2.4,md);
   // float scl = remap01(md, 0., .2)*.4;
+  uv -= m ;
   uv *= scl;
+  uv += m;
+  // uv *= length(uv);
 
   vec2 grid = abs(fract(uv)-.5);
   float d = min(grid.x, grid.y);
