@@ -99,6 +99,12 @@
     <a :href="runtimePath('/html/raymarching3D2.html')">
       rayMarching 3D
     </a>
+    <div class="border">
+      three.js
+    </div>
+    <nuxt-link to="three/test">
+      test
+    </nuxt-link>
   </div>
 </template>
 
