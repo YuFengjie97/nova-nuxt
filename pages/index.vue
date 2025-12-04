@@ -105,6 +105,12 @@
     <nuxt-link to="three/test">
       test
     </nuxt-link>
+    <nuxt-link to="three/plane">
+      plane
+    </nuxt-link>
+    <nuxt-link to="three/plane2">
+      plane2
+    </nuxt-link>
   </div>
 </template>
 
