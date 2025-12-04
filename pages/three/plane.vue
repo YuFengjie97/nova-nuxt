@@ -1,3 +1,4 @@
+<!-- 定义顶点,cpu计算,定义三角形顶点索引,好像算错了 -->
 <script lang="ts" setup>
 import { createNoise2D } from 'simplex-noise'
 // import model from '@/assets/models/character.fbx'

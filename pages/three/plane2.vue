@@ -1,3 +1,4 @@
+<!-- cpu控制顶点偏移和设置顶点颜色,第二版,直接使用初始的geometry,不需要重新设置三角形顶点索引 -->
 <script lang="ts" setup>
 import { createNoise3D } from 'simplex-noise'
 // import model from '@/assets/models/character.fbx'
