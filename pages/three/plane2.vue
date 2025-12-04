@@ -44,6 +44,7 @@ onMounted(() => {
   const planeSize = { x: 100, y: 100 }
   const sampleSize = { x: 50, y: 50 }
 
+  // cube
   {
     const geo = new THREE.BoxGeometry(8, 8, 8)
     // const mat = new THREE.MeshBasicMaterial({ color: 'rgb(255,0,0)' })
@@ -52,35 +53,43 @@ onMounted(() => {
     scene.add(mesh)
   }
 
+  // Plane
   {
     const geo = new THREE.PlaneGeometry(planeSize.x, planeSize.y, sampleSize.x, sampleSize.y)
-    const mat = new THREE.MeshPhongMaterial({ color: 0xFF00FF, shininess: 100, specular: 0xFFFFFF, side: THREE.DoubleSide })
+    const mat = new THREE.MeshPhongMaterial({ color: 0xFF00FF, shininess: 100, specular: 0xFFFFFF, side: THREE.DoubleSide, vertexColors: true })
     const mesh = new THREE.Mesh(geo, mat)
-    // const mesh = new THREE.Plane(geo, mat)
-    // const helper = new THREE.PlaneHelper(mesh, 1, 0xFFFF00)
-    // scene.add(helper)
+
+    mesh.rotation.x = -Math.PI / 2.0
+    mesh.position.y = -2.0
+    scene.add(mesh)
 
     const positions = geo.attributes.position.array
     const total = positions.length / 3
+    const colors = new Float32Array(positions.length)
+    mesh.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
 
     function updatePositions() {
       const time = Date.now() * 0.001
       for (let i = 0; i < total; i++) {
+        // 噪音波浪
         const x = positions[i * 3]
         const y = positions[i * 3 + 1]
         // const z = positions[i*3+2]
         const zOff = noise3D(x * 0.1, y * 0.1, time % 60) * 4
-
         positions[i * 3 + 2] = zOff
+
+        // 顶点颜色
+        const colOff = new THREE.Vector3(3, 2, 1)
+        colOff.add(new THREE.Vector3(x * 0.1, y * 0.1, zOff))
+
+        colors[i * 3] = Math.sin(colOff.x) * 0.5 + 0.5
+        colors[i * 3 + 1] = Math.sin(colOff.y) * 0.5 + 0.5
+        colors[i * 3 + 2] = Math.sin(colOff.z) * 0.5 + 0.5
       }
       mesh.geometry.attributes.position.needsUpdate = true
+      mesh.geometry.attributes.color.needsUpdate = true
       mesh.geometry.computeVertexNormals()
     }
-
-    mesh.rotation.x = -Math.PI / 2.0
-    mesh.position.y = -2.0
-
-    scene.add(mesh)
 
     function animate() {
       updatePositions()
