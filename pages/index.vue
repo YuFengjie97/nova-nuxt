@@ -106,10 +106,13 @@
       test
     </nuxt-link>
     <nuxt-link to="three/plane">
-      plane
+      plane 自定义顶点,三角形索引算错了
     </nuxt-link>
     <nuxt-link to="three/plane2">
-      plane2
+      plane2 使用planeGeometry来修改顶点,无需设置索引
+    </nuxt-link>
+    <nuxt-link to="three/plane3">
+      plane3 直接使用顶点着色器来顶点偏移
     </nuxt-link>
   </div>
 </template>
