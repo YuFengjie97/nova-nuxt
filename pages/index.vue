@@ -115,7 +115,10 @@
       plane3 直接使用顶点着色器来顶点偏移
     </nuxt-link>
     <nuxt-link to="three/sample">
-      sample 几何体取样
+      sample 几何体表面取样
+    </nuxt-link>
+    <nuxt-link to="three/texture">
+      texture
     </nuxt-link>
   </div>
 </template>
