@@ -114,6 +114,9 @@
     <nuxt-link to="three/plane3">
       plane3 直接使用顶点着色器来顶点偏移
     </nuxt-link>
+    <nuxt-link to="three/plane4">
+      plane4 几何体取样
+    </nuxt-link>
   </div>
 </template>
 
