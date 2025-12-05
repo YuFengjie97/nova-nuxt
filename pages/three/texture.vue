@@ -4,6 +4,8 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/Addons.js'
 
+const baseUrl = useRuntimeConfig().public.baseURL || ''
+
 const threeContainer = ref<HTMLElement>()
 // const noise2D = createNoise2D()
 // const noise3D = createNoise3D()
@@ -64,7 +66,7 @@ onMounted(() => {
 
   let map_grid_opengl: THREE.Texture
   {
-    const map = new THREE.TextureLoader().load('/img/texture/uv_grid_opengl.jpg')
+    const map = new THREE.TextureLoader().load(`${baseUrl}img/texture/uv_grid_opengl.jpg`)
     map_grid_opengl = map
     map.wrapS = map.wrapT = THREE.RepeatWrapping
     map.anisotropy = 16
