@@ -120,6 +120,9 @@
     <nuxt-link to="three/texture">
       texture
     </nuxt-link>
+    <nuxt-link to="three/points">
+      points点云+纹理
+    </nuxt-link>
   </div>
 </template>
 
