@@ -34,7 +34,7 @@ onMounted(() => {
   cameraTankPov.position.z = -3.0
   // 目标球第一视角
   const cameraTarPov = new THREE.PerspectiveCamera(75, resolution.x / resolution.y, 4, 1000)
-  let cameraActive: THREE.PerspectiveCamera = cameraTarPov
+  let cameraActive: THREE.PerspectiveCamera = camera
 
   const tankPos = new THREE.Vector3() // 坦克位置
   const tankLook = new THREE.Vector3() // 坦克朝向
