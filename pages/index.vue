@@ -123,6 +123,9 @@
     <nuxt-link to="three/points">
       points点云+纹理
     </nuxt-link>
+    <nuxt-link to="three/solarSystem">
+      太阳系
+    </nuxt-link>
   </div>
 </template>
 
