@@ -126,6 +126,9 @@
     <nuxt-link to="three/solarSystem">
       太阳系
     </nuxt-link>
+    <nuxt-link to="three/tank">
+      坦克
+    </nuxt-link>
   </div>
 </template>
 
