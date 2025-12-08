@@ -5,6 +5,7 @@ export default antfu(
   {
     rules: {
       'no-console': 'off',
+      'no-lone-blocks': 'off',
       // 'max-len': ['error', { code: 200 }],
     },
   },
