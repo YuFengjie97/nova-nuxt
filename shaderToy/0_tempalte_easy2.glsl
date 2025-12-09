@@ -76,6 +76,32 @@ float fbm(vec3 p){
   return n;
 }
 
+vec3 path(float t){
+  // return vec3(
+  //   cos(t+sin(t))*2.,
+  //   sin(t+cos(t))*2.,
+  //   t
+  // );
+
+  float v = t;
+  return vec3(cos(v*.2+sin(v*.1)*2.)*3.,
+              sin(v*.2+cos(v*.3)   )*3., v);
+}
+
+// https://www.shadertoy.com/view/lsKcDD
+mat3 setCamera( in vec3 ro, in vec3 ta, float cr )
+{
+	// vec3 cw = normalize(ta-ro);            // 相机前
+	// vec3 cp = vec3(sin(cr), cos(cr),0.0);  // 滚角
+	// vec3 cu = normalize( cross(cw,cp) );   // 相机右
+	// vec3 cv = normalize( cross(cu,cw) );   // 相机上
+  // return mat3( cu, cv, cw );
+
+  vec3 front = normalize(ta - ro);
+  vec3 up = vec3(0,1,0);
+  vec3 right = normalize(cross(front, up));
+  return mat3(right, up, front);
+}
 
 void mainImage(out vec4 O, in vec2 I){
   vec2 R = iResolution.xy;
@@ -85,9 +111,11 @@ void mainImage(out vec4 O, in vec2 I){
   O.rgb *= 0.;
   O.a = 1.;
 
-  vec3 ro = vec3(0.,0.,0.);
+  float t_path = mod(T, 60.);
+  vec3 ro = path(t_path);
+  vec3 tar = path(t_path + .01);
 
-  vec3 rd = normalize(vec3(uv, 1.));
+  vec3 rd = setCamera(ro, tar, 0.) * normalize(vec3(uv, 1.));
 
   float zMax = 50.;
   float z = .1;
@@ -113,8 +141,15 @@ void mainImage(out vec4 O, in vec2 I){
     {
       vec3 q = p;
       d = length(cos(q))-.1;
+      d = max(d*.5, 0.01);
     }
-    d = max(d*.5, 0.01);
+    {
+      vec3 q = p;
+      float d1 = length(q.xy-path(p.z).xy)-3.;
+      d1 = abs(d1);
+      d1 = max(d1, 0.01);
+      d = min(d, d1);
+    }
     
     col += s1(vec3(3,2,1)+dot(p, vec3(.1))) / d;
 
