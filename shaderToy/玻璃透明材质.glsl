@@ -145,7 +145,7 @@ float rayMarch(vec3 ro, vec3 rd, float offset){
 
     float d = map(p);
 
-    acc += 1./d * s1(i*.3 + offset*5.);
+    acc += 1./d * s1(i*.3 + offset);
     z+=d;
   }
   return acc;
@@ -170,9 +170,9 @@ void mainImage(out vec4 O, in vec2 I){
   vec3 col = vec3(0);
   float i = 0.;
 
-  col.r = rayMarch(ro, rd, 1.);
-  col.g = rayMarch(ro, rd, 2.);
-  col.b = rayMarch(ro, rd, 3.);
+  col.r = rayMarch(ro, rd, .1 * 10.);
+  col.g = rayMarch(ro, rd, .2 * 10.);
+  col.b = rayMarch(ro, rd, .3 * 10.);
   
   col = tanh(col/1e3);
   
