@@ -141,6 +141,7 @@ void mainImage(out vec4 O, in vec2 I){
   float i = 0.;
   while(i++<80.){
     vec3 p = ro + rd * z;
+    vec3 p0;
 
     p.xz *= mx;
     p.yz *= my;
@@ -172,7 +173,7 @@ void mainImage(out vec4 O, in vec2 I){
 
     // 去掉镜头前的部分,防止形状遮挡
     {
-      float d2 = length(p-ro)-3.;
+      float d2 = length(p0-ro)-3.;
       d = max(d, -d2);
     }
 
