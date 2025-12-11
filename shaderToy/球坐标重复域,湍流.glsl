@@ -160,7 +160,9 @@ void mainImage(out vec4 O, in vec2 I){
 
     // 根据距离来形成的1D噪音,配合湍流扭曲形状
     float nt = noise(r*.1);
-    q += cos(q.zxy*2.+nt*10.-T*1.);
+    q += cos(q.zxy*1.+nt*10.+T);
+    q += cos(q.zxy*5.)*.5;
+    q += cos(q.zxy*10.)*.2;
 
     // 使用极角和方位角绘制的线条
     float d = length(q.xy)-.1;
@@ -173,7 +175,7 @@ void mainImage(out vec4 O, in vec2 I){
 
     // 去掉镜头前的部分,防止形状遮挡
     {
-      float d2 = length(p0-ro)-3.;
+      float d2 = length(p0-ro)-5.;
       d = max(d, -d2);
     }
 
