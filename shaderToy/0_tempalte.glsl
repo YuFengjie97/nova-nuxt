@@ -4,7 +4,7 @@
 #iChannel0 "file://D:/workspace/nova-nuxt/public/img/noise/shaderToy/texture4.jpg"
 
 #define T iTime
-#define PI 3.141596
+#define PI 3.1415926
 #define TAU 6.283185
 #define S smoothstep
 const float EPSILON = 1e-3;
