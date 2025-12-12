@@ -96,10 +96,8 @@ void mainImage(out vec4 O, in vec2 I){
   O.a = 1.;
 
   vec3 ro = vec3(0.,0.,-10.);
-
   vec3 rd = normalize(vec3(uv, 1.));
 
-  float zMax = 50.;
   float z = .1;
 
   mat2 mx = rotate(T);
@@ -111,7 +109,8 @@ void mainImage(out vec4 O, in vec2 I){
 
 
   vec3 col = vec3(0);
-  for(float i=0.;i<100.;i++){
+  float i=0.;
+  while(i++<80.){
     vec3 p = ro + rd * z;
 
     p.xz *= mx;
@@ -125,7 +124,6 @@ void mainImage(out vec4 O, in vec2 I){
     
     col += s1(vec3(3,2,1)+i*.1-T)/d;
     
-    if(d<EPSILON || z>zMax) break;
     z += d;
   }
 
