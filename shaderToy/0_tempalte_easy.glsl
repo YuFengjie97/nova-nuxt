@@ -1,7 +1,9 @@
 // #iChannel0 "file://D:/workspace/nova-nuxt/public/img/noise/shaderToy/texture1.jpg"
 // #iChannel0 "file://D:/workspace/nova-nuxt/public/img/noise/shaderToy/texture2.jpg"
 // #iChannel0 "file://D:/workspace/nova-nuxt/public/img/noise/shaderToy/texture3.jpg"
-#iChannel0 "file://D:/workspace/nova-nuxt/public/img/noise/shaderToy/texture4.jpg"
+// #iChannel0 "file://D:/workspace/nova-nuxt/public/img/noise/shaderToy/texture4.jpg"
+#iChannel0 "file://D:/workspace/nova-nuxt/public/sound/shaderToy_1.mp3"
+
 
 #define T iTime
 #define PI 3.141596
@@ -75,7 +77,15 @@ float fbm(vec3 p){
   }
   return n;
 }
-
+float sdBoxFrame( vec3 p, vec3 b, float e )
+{
+       p = abs(p  )-b;
+  vec3 q = abs(p+e)-e;
+  return min(min(
+      length(max(vec3(p.x,q.y,q.z),0.0))+min(max(p.x,max(q.y,q.z)),0.0),
+      length(max(vec3(q.x,p.y,q.z),0.0))+min(max(q.x,max(p.y,q.z)),0.0)),
+      length(max(vec3(q.x,q.y,p.z),0.0))+min(max(q.x,max(q.y,p.z)),0.0));
+}
 
 void mainImage(out vec4 O, in vec2 I){
   vec2 R = iResolution.xy;
@@ -107,22 +117,19 @@ void mainImage(out vec4 O, in vec2 I){
     p.xz *= mx;
     p.yz *= my;
 
-    // p = mix(p, vec3(fbm(p*2.+vec3(0,T*10.,0))), vec3(.1));
 
-    float d = length(p) - 3.;
-    d += fbm(p*5.)*.1;
-
-    // d = abs(d)*.8 + .1;
-    d = max(EPSILON,d);
+    float d = sdBoxFrame(p, vec3(4.), .5);
+    d = abs(d)*.3 + .01;
+    // d = max(EPSILON,d);
 
     
-    col += s1(vec3(3,2,1)+d*2.-T)*pow(1./d,2.);
+    col += s1(vec3(3,2,1)+i*.1-T)/d;
     
     if(d<EPSILON || z>zMax) break;
     z += d;
   }
 
-  col = tanh(col / 2e1);
+  col = tanh(col / 2e3);
 
   O.rgb = col;
 }
