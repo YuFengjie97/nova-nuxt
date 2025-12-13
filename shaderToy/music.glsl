@@ -2,8 +2,8 @@
 // #iChannel0 "file://D:/workspace/nova-nuxt/public/img/noise/shaderToy/texture2.jpg"
 // #iChannel0 "file://D:/workspace/nova-nuxt/public/img/noise/shaderToy/texture3.jpg"
 // #iChannel0 "file://D:/workspace/nova-nuxt/public/img/noise/shaderToy/texture4.jpg"
-// #iChannel0 "file://D:/workspace/nova-nuxt/public/sound/shaderToy_1.mp3"
-#iChannel0 "file://D:/workspace/nova-nuxt/public/sound/savageLove.aac"
+#iChannel0 "file://D:/workspace/nova-nuxt/public/sound/shaderToy_1.mp3"
+// #iChannel0 "file://D:/workspace/nova-nuxt/public/sound/savageLove.aac"
 
 
 #define T iTime
