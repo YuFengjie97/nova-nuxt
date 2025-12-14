@@ -128,11 +128,12 @@ void mainImage(out vec4 O, in vec2 I){
     q.z -= T;
 
     q.xy = cos(q.xy*4.);
+
     q += cos(p.yzx*2.)*.2;
     q.xy += asin(sin(q.yx+T*.4));
     // q.xy += asin(sin(q.yx*2.+T*.4))*.5;
 
-    q.z = mod(q.z, 2.)-1.;
+    q.z = mod(q.z, 4.)-2.;
 
 
     float radius = 0.;
@@ -154,10 +155,10 @@ void mainImage(out vec4 O, in vec2 I){
       d = max(d, -d1);
     }
 
-    // d = max(d*.3, 0.01);
-    d = abs(d)*.3+.01;
+    // d = max(d*.6, 0.01);
+    d = abs(d)*.5 + .01;
     
-    col += s1(C+r)/d;
+    col += s1(C+r+i*.1)/d;
     
     if(d<EPSILON || z>zMax) break;
     z += d;
