@@ -127,10 +127,10 @@ void mainImage(out vec4 O, in vec2 I){
 
     q.z -= T;
 
-    q.xy = cos(q.xy*4.);
+    q.xy = cos(q.xy*3.);
 
     q += cos(p.yzx*2.)*.2;
-    q.xy += asin(sin(q.yx+T*.4));
+    q.xy += asin(sin(q.yx*2.))*.2;
     // q.xy += asin(sin(q.yx*2.+T*.4))*.5;
 
     q.z = mod(q.z, 4.)-2.;
