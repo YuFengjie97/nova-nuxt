@@ -7,10 +7,19 @@ const threeContainer = ref<HTMLElement>()
 
 let scene: THREE.Scene
 let renderer: THREE.WebGLRenderer
+let controls: OrbitControls
+let camera: THREE.PerspectiveCamera
 
 const loops: Array<() => void> = []
 
 let pane: Pane
+
+function handleResize() {
+  const { width, height } = threeContainer.value!.getBoundingClientRect()
+  camera.aspect = width / height
+  camera.updateProjectionMatrix()
+  renderer.setSize(width, height)
+}
 
 onMounted(() => {
   if (!threeContainer.value) {
@@ -19,7 +28,7 @@ onMounted(() => {
 
   const { width, height } = threeContainer.value?.getBoundingClientRect()
   const resolution = { x: width, y: height }
-  const camera = new THREE.PerspectiveCamera(75, resolution.x / resolution.y, 0.1, 1000)
+  camera = new THREE.PerspectiveCamera(75, resolution.x / resolution.y, 0.1, 1000)
   camera.position.set(0, 40, -40)
   camera.lookAt(new THREE.Vector3(0, 0, 0))
   scene = new THREE.Scene()
@@ -58,7 +67,7 @@ onMounted(() => {
   pane = new Pane()
   pane.addBlade({
     view: 'list',
-    label: 'scene',
+    label: '相机视角',
     options: [
       { text: '普通相机', value: camera },
       { text: '坦克POV', value: cameraTankPov },
@@ -241,15 +250,10 @@ onMounted(() => {
   }
 
   {
-    const control = new OrbitControls(camera, threeContainer.value)
+    controls = new OrbitControls(camera, threeContainer.value)
   }
 
-  window.onresize = () => {
-    const { width, height } = threeContainer.value!.getBoundingClientRect()
-    camera.aspect = width / height
-    camera.updateProjectionMatrix()
-    renderer.setSize(width, height)
-  }
+  window.addEventListener('resize', handleResize)
 
   function animate() {
     loops.forEach(fn => fn())
@@ -261,6 +265,14 @@ onMounted(() => {
 onUnmounted(() => {
   pane.dispose()
   renderer.dispose()
+  renderer.forceContextLoss()
+  controls.dispose()
+
+  window.removeEventListener('resize', handleResize)
+
+  threeContainer.value!.removeChild(renderer.domElement)
+  window.onresize = null
+  disposeScene(scene)
 })
 </script>
 
