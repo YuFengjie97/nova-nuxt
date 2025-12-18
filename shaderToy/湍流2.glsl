@@ -126,12 +126,13 @@ void mainImage(out vec4 O, in vec2 I){
     // p.yz *= my;
 
     float d = abs(p.y)-1.;
+    C += dot(p,vec3(.01));
 
     {
       vec3 q = p;
       q.y += T;
       q.z += T*.5;
-      q += cos(q.zxy*1.+T*2.)*.6;
+      q += cos(q.zxy*1.+T)*.6;
       q += cos(q.zxy*2.)*.3;
       q.xz *= 2.;
       q = cos(q*2.)/2.;
