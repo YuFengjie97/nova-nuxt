@@ -129,6 +129,12 @@
     <nuxt-link to="three/tank">
       坦克
     </nuxt-link>
+    <nuxt-link to="three/light">
+      光源
+    </nuxt-link>
+    <nuxt-link to="three/lightRectArea">
+      区域光
+    </nuxt-link>
   </div>
 </template>
 

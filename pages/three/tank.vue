@@ -271,7 +271,6 @@ onUnmounted(() => {
   window.removeEventListener('resize', handleResize)
 
   threeContainer.value!.removeChild(renderer.domElement)
-  window.onresize = null
   disposeScene(scene)
 })
 </script>
