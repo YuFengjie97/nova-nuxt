@@ -135,6 +135,9 @@
     <nuxt-link to="three/lightRectArea">
       区域光
     </nuxt-link>
+    <nuxt-link to="three/earthBar">
+      地球柱子
+    </nuxt-link>
   </div>
 </template>
 
