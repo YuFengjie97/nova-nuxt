@@ -107,8 +107,8 @@ void mainImage(out vec4 O, in vec2 I){
     my = rotate(m.y);
   }
 
-
   vec3 col = vec3(0);
+  vec3 C = vec3(3,2,1);
   float i=0.;
   while(i++<80.){
     vec3 p = ro + rd * z;
@@ -119,10 +119,10 @@ void mainImage(out vec4 O, in vec2 I){
 
     float d = sdBoxFrame(p, vec3(4.), .5);
     d = abs(d)*.3 + .01;
-    // d = max(EPSILON,d);
 
+    if(d<EPSILON) break;
     
-    col += s1(vec3(3,2,1)+i*.1-T)/d;
+    col += s1(C+i*.1-T)/d;
     
     z += d;
   }
