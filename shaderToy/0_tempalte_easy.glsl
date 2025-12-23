@@ -77,6 +77,20 @@ float fbm(vec3 p){
   }
   return n;
 }
+// https://www.shadertoy.com/view/lsKcDD
+mat3 setCamera( in vec3 ro, in vec3 ta, float cr )
+{
+	// vec3 cw = normalize(ta-ro);            // 相机前
+	// vec3 cp = vec3(sin(cr), cos(cr),0.0);  // 滚角
+	// vec3 cu = normalize( cross(cw,cp) );   // 相机右
+	// vec3 cv = normalize( cross(cu,cw) );   // 相机上
+  // return mat3( cu, cv, cw );
+
+  vec3 front = normalize(ta - ro);
+  vec3 up = vec3(0,1,0);
+  vec3 right = normalize(cross(front, up));
+  return mat3(right, up, front);
+}
 float sdBoxFrame( vec3 p, vec3 b, float e )
 {
        p = abs(p  )-b;
