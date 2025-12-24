@@ -46,12 +46,12 @@ onMounted(() => {
   }
 
   {
-    const light = new THREE.AmbientLight(0xFFFFFF)
-    // scene.add(light)
+    const light = new THREE.AmbientLight(0xFFFFFF, 0.1)
+    scene.add(light)
   }
 
   {
-    const light = new THREE.HemisphereLight(0xFFFFFF, 0x666666, 1)
+    const light = new THREE.HemisphereLight(0xFFFFFF, 0x666666, 2)
     scene.add(light)
   }
 
@@ -66,11 +66,10 @@ onMounted(() => {
     rotYHelper.add(posHelper)
     posHelper.add(oriHelper)
     scene.add(rotXHelper)
-    const numX = 29
-    const numY = 33
-    const geos: THREE.BoxGeometry[] = []
+    const numX = 9
+    const numY = 17
+    const geos: Array<THREE.BoxGeometry | THREE.SphereGeometry> = []
     const colors: number[] = []
-    let count = 0
     for (let i = 0; i < numX; i++) {
       for (let j = 0; j < numY; j++) {
         const angX = i / numX * Math.PI * 2
@@ -85,15 +84,33 @@ onMounted(() => {
         oriHelper.updateWorldMatrix(true, false)
         geo.applyMatrix4(oriHelper.matrixWorld)
         geos.push(geo)
-        count++
 
         const vertNum = geo.getAttribute('position').count
         const v = Math.random()
         const H = v
-        const L = v * 0.5 + 0.5
         const col = new THREE.Color().setHSL(H, 1, 0.5)
         for (let i = 0; i < vertNum; i++) {
           colors.push(...col.toArray())
+        }
+
+        // 追加顶部球体
+        {
+          const gap = 0.1
+          const r = 0.03
+          const geo = new THREE.SphereGeometry(r, 4, 2)
+
+          oriHelper.position.z += zHeight / 2 + gap
+          oriHelper.updateWorldMatrix(true, false)
+          geo.applyMatrix4(oriHelper.matrixWorld)
+          geos.push(geo)
+
+          {
+            const vertNum = geo.getAttribute('position').count
+            const col = new THREE.Color().setHSL(H, 1.0, 0.5)
+            for (let i = 0; i < vertNum; i++) {
+              colors.push(...col.toArray())
+            }
+          }
         }
       }
     }
@@ -106,7 +123,7 @@ onMounted(() => {
     scene.add(mesh)
 
     {
-      const geo = new THREE.SphereGeometry(r, numX, numY)
+      const geo = new THREE.SphereGeometry(r)
       const mat = new THREE.MeshBasicMaterial({ wireframe: true })
       const mesh1 = new THREE.Mesh(geo, mat)
       mesh.add(mesh1)
