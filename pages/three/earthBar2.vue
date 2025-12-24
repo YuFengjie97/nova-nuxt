@@ -47,12 +47,12 @@ onMounted(() => {
 
   {
     const light = new THREE.AmbientLight(0xFFFFFF)
-    scene.add(light)
+    // scene.add(light)
   }
 
   {
     const light = new THREE.HemisphereLight(0xFFFFFF, 0x666666, 1)
-    // scene.add(light)
+    scene.add(light)
   }
 
   {
@@ -66,8 +66,8 @@ onMounted(() => {
     rotYHelper.add(posHelper)
     posHelper.add(oriHelper)
     scene.add(rotXHelper)
-    const numX = 9
-    const numY = 10
+    const numX = 29
+    const numY = 33
     const geos: THREE.BoxGeometry[] = []
     const colors: number[] = []
     let count = 0
