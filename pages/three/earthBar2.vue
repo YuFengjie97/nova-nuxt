@@ -13,9 +13,17 @@ const loops: Array<() => void> = []
 function handleResize() {
   const width = containerRef.value!.clientWidth
   const height = containerRef.value!.clientHeight
-  camera.aspect = width / height
-  camera.updateProjectionMatrix()
-  renderer.setSize(width, height)
+
+  const canvas = renderer.domElement
+  const needResize = width !== canvas.width || height !== canvas.height
+
+  if (needResize) {
+    camera.aspect = width / height
+    camera.updateProjectionMatrix()
+    renderer.setSize(width, height)
+  }
+
+  return needResize
 }
 
 onMounted(() => {
@@ -32,11 +40,17 @@ onMounted(() => {
   controls = new OrbitControls(camera, renderer.domElement)
   handleResize()
 
-  function animate() {
-    loops.forEach(fn => fn())
+  // function animate() {
+  //   loops.forEach(fn => fn())
+  //   renderer.render(scene, camera)
+  // }
+  // renderer.setAnimationLoop(animate)
+
+  // 按需渲染
+  function render() {
     renderer.render(scene, camera)
   }
-  renderer.setAnimationLoop(animate)
+  controls.addEventListener('change', render) // 控制器鼠标事件后的 事件渲染
 
   window.addEventListener('resize', handleResize)
 
@@ -128,6 +142,8 @@ onMounted(() => {
       const mesh1 = new THREE.Mesh(geo, mat)
       mesh.add(mesh1)
     }
+
+    render() // 按需渲染,创建完所有mesh后的第一次渲染
   }
 })
 onUnmounted(() => {
