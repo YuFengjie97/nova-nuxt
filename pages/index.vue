@@ -138,6 +138,9 @@
     <nuxt-link to="three/earthBar">
       地球柱子
     </nuxt-link>
+    <nuxt-link to="three/earthBar2">
+      地球柱子2 使用Object3D组合生成世界矩阵来获取geo位置
+    </nuxt-link>
   </div>
 </template>
 
