@@ -27,11 +27,13 @@ onMounted(() => {
     return
   scene = new THREE.Scene()
   camera = new THREE.PerspectiveCamera(75, 2, 0.1, 1000)
+  scene.add(camera)
   renderer = new THREE.WebGLRenderer()
   containerRef.value.appendChild(renderer.domElement)
   controls = new OrbitControls(camera, renderer.domElement)
 
-  camera.position.z = -10
+  // camera.position.y = 2
+  camera.position.z = 15
   controls.update()
 
   {
@@ -42,19 +44,21 @@ onMounted(() => {
     const light = new THREE.AmbientLight()
     scene.add(light)
   }
-  if (false) {
+  if (true) {
     const group = new THREE.Group()
     const light = new THREE.PointLight(0xFFFFFF, 100)
-    light.position.z = 10
+    light.position.z = 7
     const helper = new THREE.PointLightHelper(light)
     group.add(light)
     group.add(helper)
     scene.add(group)
 
     loops.push(() => {
-      group.rotation.x += 0.01
+      // const time = Date.now() * 0.0008
+      // group.position.x = Math.sin(time) * 8.0
       group.rotation.y += 0.01
-      group.rotation.z += 0.01
+      // group.rotation.y += 0.01
+      // group.rotation.z += 0.01
     })
   }
   async function getData() {
@@ -84,7 +88,7 @@ onMounted(() => {
       const p3 = new THREE.Vector3(p_nex[0], p_nex[1], 0)
       const p4 = new THREE.Vector3(p_nex[0], p_nex[1], zHeight)
       position.push(...p1.toArray(), ...p2.toArray(), ...p3.toArray(), ...p4.toArray())
-      index.push(ndx, ndx + 1, ndx + 2, ndx + 3, ndx + 2, ndx + 1)
+      index.push(ndx, ndx + 1, ndx + 2, ndx + 1, ndx + 2, ndx + 3)
       ndx += 4
     }
 
@@ -111,8 +115,8 @@ onMounted(() => {
 
     const geoMerge = mergeGeometries([geo, faceGeo, faceGeo2], false)
 
-    // geoMerge.computeVertexNormals()
-    const mat = new THREE.MeshBasicMaterial({ color, side: THREE.DoubleSide })
+    geoMerge.computeVertexNormals()
+    const mat = new THREE.MeshPhongMaterial({ color, side: THREE.DoubleSide })
     const mesh = new THREE.Mesh(geoMerge, mat)
     return mesh
   }
@@ -152,22 +156,18 @@ onMounted(() => {
       const provinceMesh = drawProvince(coordss)
       group.add(provinceMesh)
 
-      const zOff = Math.random() * 2 + 1
-      const speed = Math.random() * 10 + 1.0
+      const zOff = Math.random() * 4 + 2
       loops.push(() => {
-        const time = Date.now() * 0.001 * speed
-        provinceMesh.position.z = (zOff + Math.sin(time))
+        const time = Date.now() * 0.005
+        provinceMesh.position.z = Math.sin(time + zOff)
       })
     })
-    group.rotation.y = Math.PI
+    // group.rotation.y = Math.PI
     group.scale.set(0.4, 0.4, 1)
   }
   getData()
     .then((res) => {
       res = JSON.parse(res)
-
-      // @ts-ignore
-      // const p = res.features[4].geometry.coordinates as Coords[]
       drawChina(res)
     })
 
