@@ -104,7 +104,7 @@ float sdBoxFrame( vec3 p, vec3 b, float e )
 void mainImage(out vec4 O, in vec2 I){
   vec2 R = iResolution.xy;
   vec2 uv = (I*2.-R)/R.y;
-  vec2 m = (iMouse.xy*2.-R)/R * PI * 2.;
+  vec2 m = (iMouse.xy*2.-R)/R;
 
   O.rgb *= 0.;
   O.a = 1.;
@@ -117,8 +117,8 @@ void mainImage(out vec4 O, in vec2 I){
   mat2 mx = rotate(T*.0);
   mat2 my = rotate(T*.0);
   if(iMouse.z>0.){
-    mx = rotate(m.x);
-    my = rotate(m.y);
+    mx = rotate(m.x*.001);
+    my = rotate(m.y*.001);
   }
 
   vec3 col = vec3(0);
