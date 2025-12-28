@@ -1,7 +1,7 @@
 // #iChannel0 "file://D:/workspace/nova-nuxt/public/img/shaderToy/texture1.jpg"
 // #iChannel0 "file://D:/workspace/nova-nuxt/public/img/shaderToy/texture2.jpg"
 // #iChannel0 "file://D:/workspace/nova-nuxt/public/img/shaderToy/texture3.jpg"
-#iChannel0 "file://D:/workspace/nova-nuxt/public/img/shaderToy/texture5.jpg"
+#iChannel0 "file://D:/workspace/nova-nuxt/public/img/shaderToy/texture1.jpg"
 
 /*
     This code is from @Shane's "Offworld Storage Facility",
@@ -63,35 +63,6 @@ vec3 texBump( sampler2D tx, in vec3 p, in vec3 n, float bf){
 	
 } 
 
-// @Shane
-// Commutative smooth minimum function. Provided by Tomkh, and taken 
-// from Alex Evans's (aka Statix) talk: 
-// http://media.lolrus.mediamolecule.com/AlexEvans_SIGGRAPH-2015.pdf
-// Credited to Dave Smith @media molecule.
-float smin(float a, float b, float k){
-
-   float f = max(0., 1. - abs(b - a)/k);
-   return min(a, b) - k*.25*f*f;
-}
-
-// 2D vector version.
-vec2 smin(vec2 a, vec2 b, float k){
-
-   vec2 f = max(vec2(0), 1. - abs(b - a)/k);
-   return min(a, b) - k*.25*f*f;
-}
-
-// Commutative smooth maximum function. Provided by Tomkh, and taken 
-// from Alex Evans's (aka Statix) talk: 
-// http://media.lolrus.mediamolecule.com/AlexEvans_SIGGRAPH-2015.pdf
-// Credited to Dave Smith @media molecule.
-float smax(float a, float b, float k){
-    
-   float f = max(0., 1. - abs(b - a)/k);
-   return max(a, b) + k*.25*f*f;
-}
-
-
 
 #define T iTime
 #define PI 3.1415926
@@ -105,39 +76,51 @@ mat2 rotate(float a){
   float c = cos(a);
   return mat2(c,-s,s,c);
 }
+float hash12(vec2 p)
+{
+	vec3 p3  = fract(vec3(p.xyx) * .1031);
+    p3 += dot(p3, p3.yzx + 33.33);
+    return fract((p3.x + p3.y) * p3.z);
+}
 
+float sdBoxFrame( vec3 p, vec3 b, float e )
+{
+       p = abs(p  )-b;
+  vec3 q = abs(p+e)-e;
+  return min(min(
+      length(max(vec3(p.x,q.y,q.z),0.0))+min(max(p.x,max(q.y,q.z)),0.0),
+      length(max(vec3(q.x,p.y,q.z),0.0))+min(max(q.x,max(p.y,q.z)),0.0)),
+      length(max(vec3(q.x,q.y,p.z),0.0))+min(max(q.x,max(q.y,p.z)),0.0));
+}
 
-vec3 col = vec3(0,0,0);
+float smin( float d1, float d2, float k )
+{
+    k *= 4.0;
+    float h = max(k-abs(d1-d2),0.0);
+    return min(d1, d2) - h*h*0.25/k;
+}
 
-float map(vec3 p) {
-  // p.xz *= rotate(T);
-  float height = 4.;
-  float d = abs(abs(p.y)-4.);
+float smax( float d1, float d2, float k )
+{
+    return -smin(-d1,-d2,k);
+}
+
+float map(vec3 p){
+  float d = -abs(p.y) + 4.;
   {
     vec3 q = p;
-    q.xz += cos(q.zx*1.)*1.;
-    q.xz += cos(q.zx*2.)*.5;
-    float s = 2.;
+    q.xz += cos(q.xz*2.)*.2;
+    float s = 4.;
     vec2 id = floor(q.xz / s);
-    q.xz = (q.xz - id*s)/s - .5;
-
-    vec3 pos = vec3(0,fract(-T*.4)*12. - 6.,0);
-    float d1 = length(q-pos) - .3;
-    d = smin(d, d1, .4);
+    q.xz = (q.xz-id*s)/s - .5;
+    float r = abs(dot(cos(id), vec2(.2))) * .3 + .1;
+    float d1 = length(q.xz) - r;
+    d1 += abs(dot(cos(p), vec3(.2,.8,1.5)))*.1;
+    d = smin(d, d1, .1);
   }
+
   return d;
 }
-
-// https://www.shadertoy.com/view/lsKcDD
-mat3 setCamera( in vec3 ro, in vec3 ta, float cr )
-{
-	vec3 cw = normalize(ta-ro);            // 相机前
-	vec3 cp = vec3(sin(cr), cos(cr),0.0);  // 滚角
-	vec3 cu = normalize( cross(cw,cp) );   // 相机右
-	vec3 cv = normalize( cross(cu,cw) );   // 相机上
-  return mat3( cu, cv, cw );
-}
-
 
 // https://iquilezles.org/articles/normalsSDF/
 vec3 calcNormal( in vec3 pos )
@@ -151,42 +134,11 @@ vec3 calcNormal( in vec3 pos )
               e.xxx*map( pos + e.xxx*eps ) );
 }
 
-// https://www.shadertoy.com/view/MtsGWH
-vec4 boxmap( in sampler2D s, in vec3 p, in vec3 n, in float k )
-{
-    // project+fetch
-	vec4 x = texture( s, p.yz );
-	vec4 y = texture( s, p.zx );
-	vec4 z = texture( s, p.xy );
-    
-    // and blend
-  vec3 m = pow( abs(n), vec3(k) );
-	return (x*m.x + y*m.y + z*m.z) / (m.x + m.y + m.z);
+vec4 fire(vec3 p) {
+  // float d = cos(p.y*2.);
+  float d = dot(cos(p.xz),vec2(.13));
+  return (vec4(7,2,1,1) * d * d );
 }
-
-struct RM{
-  bool hit;
-  float z;
-};
-
-
-RM rayMarch(vec3 ro, vec3 rd, float zMin, float zMax){
-  float z = zMin;
-  bool hit = false;
-  for(float i=0.;i<100.;i++){
-    vec3 p = ro + rd * z;
-    float d = map(p);
-    if(d<EPSILON ){
-      hit = true;
-      break;
-    }
-    if(z>zMax) break;
-    z += d;
-    col += vec3(7,2,1)/10.;
-  }
-  return RM(hit, z);
-}
-
 
 void mainImage(out vec4 O, in vec2 I){
   vec2 R = iResolution.xy;
@@ -196,38 +148,40 @@ void mainImage(out vec4 O, in vec2 I){
   O.rgb *= 0.;
   O.a = 1.;
 
-  vec3 ro = vec3(0.,0.,-10.);
+  vec4 col = vec4(0);
 
-  vec3 rd = setCamera(ro, vec3(0), 0.)*normalize(vec3(uv, 1.));
+  vec3 ro = vec3(0,0,T);
+  vec3 rd = normalize(vec3(uv, 1.));
 
-  float zMax = 50.;
-
-  RM rm = rayMarch(ro, rd, 0.1, zMax);
-  if(rm.hit) {
-    vec3 p = ro + rd * rm.z;
-
-    // 普通法线
-    vec3 nor = calcNormal(p);
-
-    // col = tex3D(iChannel0, p*.1, nor).rgb;
-    // col = vec3(1,0,0);
-
-    // bump扰动后的法线
-    nor = texBump(iChannel0, p*.1, nor, .03);
-
-    vec3 l_dir = normalize(ro-p);
-    float diff = max(.1, dot(l_dir, nor));
-
-    float spe = pow(max(0., dot(reflect(-l_dir, nor), -rd)), 5.);
-    // float spe = pow(max(0., dot(normalize(l_dir-rd), nor)), 30.);
-    
-    col = col * diff + spe;
-
-    // col *= calcAO(p, nor);
+  vec3 p;
+  float i = 0.;
+  float z = 0.1;
+  while(i++<80.){
+    p = ro + rd * z;
+    float d = map(p);
+    z += d;
+    col += fire(p);
   }
+  // p = POS;
 
-  col *= exp(-1e-2*rm.z*rm.z);
-  col = pow(col, vec3(.4545));
-  O.rgb = col;
+  // 普通法线
+  vec3 nor = calcNormal(p);
 
+  // col = vec3(1,0,0);
+
+  // bump扰动后的法线
+  vec3 nor2 = texBump(iChannel0, p*.1, nor, .04);
+  col.rgb *= tex3D(iChannel0, p*.3, nor2).rgb;
+
+  vec3 l_dir = normalize(ro+vec3(0,0,0)-p);
+  float diff = max(.1, dot(l_dir, nor2));
+
+  // float spe = pow(max(0., dot(reflect(-l_dir, nor), -rd)), 5.);
+  float spe = pow(max(0., dot(normalize(l_dir-rd), nor2)), 30.);
+  
+  col = col * diff + spe;
+
+  col *= exp(-1e-2*z*z);
+  // col = tanh(col / 20.);
+  O = col;
 }
