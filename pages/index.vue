@@ -147,6 +147,9 @@
     <nuxt-link to="three/texture2">
       texture2 多种属性材质 loaderManager
     </nuxt-link>
+    <nuxt-link to="three/textGeo">
+      文字Geo
+    </nuxt-link>
   </div>
 </template>
 
