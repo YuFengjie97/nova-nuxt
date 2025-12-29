@@ -144,6 +144,9 @@
     <nuxt-link to="three/geoJson">
       地图geo几何体
     </nuxt-link>
+    <nuxt-link to="three/texture2">
+      texture2 多种属性材质 loaderManager
+    </nuxt-link>
   </div>
 </template>
 
