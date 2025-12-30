@@ -44,6 +44,7 @@ onMounted(() => {
   const dpr = window.devicePixelRatio
   renderer.setPixelRatio(Math.min(dpr, 2))
   renderer.shadowMap.enabled = true
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap
 
   handleResize()
   window.addEventListener('resize', handleResize)
@@ -68,6 +69,7 @@ onMounted(() => {
     light.position.set(3, 3, 0)
     light.shadow.mapSize.width = 1024
     light.shadow.mapSize.height = 1024
+    light.shadow.radius = 20 // 阴影边缘模糊
 
     scene.add(light)
     scene.add(light.target)
@@ -101,6 +103,9 @@ onMounted(() => {
 
   const mat = new THREE.MeshStandardMaterial()
   mat.roughness = 0.7
+  mat.metalness = 0.1
+  pane.addBinding(mat, 'roughness', { min: 0, max: 1.0, step: 0.1 })
+  pane.addBinding(mat, 'metalness', { min: 0, max: 1.0, step: 0.1 })
 
   {
     const geo = new THREE.PlaneGeometry(10, 10)
