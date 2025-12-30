@@ -153,6 +153,9 @@
     <nuxt-link to="three/lightCamera">
       光源camera -> shadowMap
     </nuxt-link>
+    <nuxt-link to="three/ghostHouse">
+      鬼屋
+    </nuxt-link>
   </div>
 </template>
 
