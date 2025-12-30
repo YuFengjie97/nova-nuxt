@@ -66,7 +66,8 @@ onMounted(() => {
     const light = new THREE.DirectionalLight()
     light.castShadow = true
     light.position.set(3, 3, 0)
-    light.shadow.map?.setSize(1024, 1024)
+    light.shadow.mapSize.width = 1024
+    light.shadow.mapSize.height = 1024
 
     scene.add(light)
     scene.add(light.target)
