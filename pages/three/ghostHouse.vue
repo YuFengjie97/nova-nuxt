@@ -1,3 +1,11 @@
+/**
+shadow优化
+- renderer.shadowMap.type = THREE.PCFSoftShadowMap
+- light.shadow.mapSize.width = 256
+  light.shadow.mapSize.height = 256
+  light.shadow.camera.far = 7
+*/
+
 <script lang="ts" setup>
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/Addons.js'
