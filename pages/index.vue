@@ -150,6 +150,9 @@
     <nuxt-link to="three/textGeo">
       文字Geo
     </nuxt-link>
+    <nuxt-link to="three/lightCamera">
+      光源camera -> shadowMap
+    </nuxt-link>
   </div>
 </template>
 
