@@ -24,7 +24,6 @@ function handleResize() {
   camera.updateProjectionMatrix()
 
   renderer.setSize(width, height)
-  console.log('resize')
 }
 
 onMounted(() => {
@@ -58,34 +57,41 @@ onMounted(() => {
   }
   renderer.setAnimationLoop(animate)
 
-  const loadingManager = new THREE.LoadingManager()
-  const textureLoader = new THREE.TextureLoader(loadingManager)
-  const tex_gradient = textureLoader.load(`${baseUrl}img/texture/gradient/gradient_3.png`)
-  tex_gradient.generateMipmaps = false
-  tex_gradient.magFilter = THREE.NearestFilter
-
   {
     const light = new THREE.DirectionalLight()
     scene.add(light)
     light.position.set(1, 1, 0)
   }
 
+  const loadingManager = new THREE.LoadingManager()
+  const textureLoader = new THREE.TextureLoader(loadingManager)
+  const tex_gradient = textureLoader.load(`${baseUrl}img/texture/gradient/gradient_3.png`)
+  tex_gradient.generateMipmaps = false
+  tex_gradient.magFilter = THREE.NearestFilter
+
   // const mat = new THREE.MeshNormalMaterial()
   const mat = new THREE.MeshToonMaterial({
     gradientMap: tex_gradient,
   })
 
+  const tex_matcap_1 = textureLoader.load(`${baseUrl}img/texture/matcap/3E2335_D36A1B_8E4A2E_2842A5.png`)
+  const tex_matcap_2 = textureLoader.load(`${baseUrl}img/texture/matcap/3B6E10_E3F2C3_88AC2E_99CE51.png`)
+  const tex_matcap_3 = textureLoader.load(`${baseUrl}img/texture/matcap/8A6565_2E214D_D48A5F_ADA59C.png`)
+  const mat1 = new THREE.MeshMatcapMaterial({ matcap: tex_matcap_1 })
+  const mat2 = new THREE.MeshMatcapMaterial({ matcap: tex_matcap_2 })
+  const mat3 = new THREE.MeshMatcapMaterial({ matcap: tex_matcap_3 })
+
   const objDistance = 4
 
-  const mesh1 = new THREE.Mesh(new THREE.TorusGeometry(0.5, 0.2), mat)
+  const mesh1 = new THREE.Mesh(new THREE.TorusGeometry(0.5, 0.2), mat1)
   mesh1.position.x = 1
   scene.add(mesh1)
 
-  const mesh2 = new THREE.Mesh(new THREE.TorusKnotGeometry(0.5, 0.2), mat)
+  const mesh2 = new THREE.Mesh(new THREE.TorusKnotGeometry(0.5, 0.2), mat2)
   mesh2.position.x = -1
   scene.add(mesh2)
 
-  const mesh3 = new THREE.Mesh(new THREE.ConeGeometry(0.5, 1, 6), mat)
+  const mesh3 = new THREE.Mesh(new THREE.ConeGeometry(0.5, 1, 6), mat3)
   mesh3.position.x = 1
   scene.add(mesh3)
 
@@ -139,7 +145,6 @@ onMounted(() => {
     const newSection = Math.round(scrollY / window.innerHeight) // 用round而不是floor,可以将判定标准移动到section中心
     if (currentSection !== newSection) {
       currentSection = newSection
-      console.log(currentSection, meshs[currentSection])
       gsap.to(meshs[currentSection].rotation, {
         duration: 1.5,
         ease: 'power1.inOut',
