@@ -156,6 +156,9 @@
     <nuxt-link to="three/ghostHouse">
       鬼屋
     </nuxt-link>
+    <nuxt-link to="three/particle">
+      粒子
+    </nuxt-link>
   </div>
 </template>
 
