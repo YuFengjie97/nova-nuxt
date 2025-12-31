@@ -162,6 +162,9 @@
     <nuxt-link to="three/galaxy">
       粒子银河
     </nuxt-link>
+    <nuxt-link to="three/profile">
+      html 结合 three 视差滚动
+    </nuxt-link>
   </div>
 </template>
 
