@@ -159,6 +159,9 @@
     <nuxt-link to="three/particle">
       粒子
     </nuxt-link>
+    <nuxt-link to="three/galaxy">
+      粒子银河
+    </nuxt-link>
   </div>
 </template>
 
