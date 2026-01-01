@@ -171,6 +171,9 @@
     <nuxt-link to="three/sea">
       海洋 shaderMat
     </nuxt-link>
+    <nuxt-link to="three/textTransform">
+      字体点云变换
+    </nuxt-link>
   </div>
 </template>
 
