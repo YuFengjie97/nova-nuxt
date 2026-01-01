@@ -1,4 +1,5 @@
 uniform float uTime;
+uniform float uDPR;
 // varying vec2 vUv;
 
 // attribute vec3 position;
@@ -22,5 +23,6 @@ void main(){
 
   gl_Position = projectionPos;
 
-  gl_PointSize = 3.;
+  gl_PointSize = uDPR * 2.5;
+  gl_PointSize *= 1. / -viewPos.z;
 }

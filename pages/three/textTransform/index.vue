@@ -143,6 +143,9 @@ onMounted(() => {
         fragmentShader: fragment,
         uniforms: {
           uTime,
+          uDPR: {
+            value: renderer.getPixelRatio(),
+          },
         },
       })
       const points = new THREE.Points(pointsGeo, pointsMat)
