@@ -165,6 +165,9 @@
     <nuxt-link to="three/profile">
       html 结合 three 视差滚动
     </nuxt-link>
+    <nuxt-link to="three/rawShaderMatTest">
+      rawShaderMat test
+    </nuxt-link>
   </div>
 </template>
 
