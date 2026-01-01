@@ -168,6 +168,9 @@
     <nuxt-link to="three/rawShaderMatTest">
       rawShaderMat test
     </nuxt-link>
+    <nuxt-link to="three/sea">
+      海洋 shaderMat
+    </nuxt-link>
   </div>
 </template>
 
