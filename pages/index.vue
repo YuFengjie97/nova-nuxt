@@ -174,6 +174,9 @@
     <nuxt-link to="three/textTransform">
       字体点云变换
     </nuxt-link>
+    <nuxt-link to="three/smoke">
+      smoke 噪音材质
+    </nuxt-link>
   </div>
 </template>
 
