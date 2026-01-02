@@ -1,14 +1,12 @@
+
 uniform sampler2D texNoise;
 uniform float uTime;
 
 varying vec2 vUv;
 
 
-mat2 rotate2D(float a){
-  float c = cos(a);
-  float s = sin(a);
-  return mat2(c,-s,s,c);
-}
+#include ../../shaderUtils/rotate.glsl
+
 
 void main(){
   vec4 pos = vec4(position, 1.);
