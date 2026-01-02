@@ -14,9 +14,9 @@ void main(){
 
   vec2 uv = gl_PointCoord-.5;
   float d = length(uv);
-  float glow = pow(.3/d, 2.);
+  float glow = pow(.06/d, 2.);
 
   col *= glow;
 
-  gl_FragColor = vec4(col, 1.);
+  gl_FragColor = vec4(col, glow);
 }

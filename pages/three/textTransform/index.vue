@@ -147,6 +147,8 @@ onMounted(() => {
             value: renderer.getPixelRatio(),
           },
         },
+        depthWrite: false,
+        transparent: true,
       })
       const points = new THREE.Points(pointsGeo, pointsMat)
       scene.add(points)
