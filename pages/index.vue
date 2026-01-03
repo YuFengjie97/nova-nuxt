@@ -180,6 +180,9 @@
     <nuxt-link to="three/hologram">
       全息效果模型
     </nuxt-link>
+    <nuxt-link to="three/flowParticle">
+      flow 粒子
+    </nuxt-link>
   </div>
 </template>
 
