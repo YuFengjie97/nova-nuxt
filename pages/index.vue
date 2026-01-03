@@ -177,6 +177,9 @@
     <nuxt-link to="three/smoke">
       smoke 噪音材质
     </nuxt-link>
+    <nuxt-link to="three/hologram">
+      全息效果模型
+    </nuxt-link>
   </div>
 </template>
 
