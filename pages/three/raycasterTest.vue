@@ -187,11 +187,8 @@ useEffect(() => {
   }
 
   return () => {
+    disposeScene(scene, renderer)
     controls.dispose()
-
-    renderer.dispose()
-    renderer.forceContextLoss()
-    disposeScene(scene)
     pane.dispose()
     window.removeEventListener('resize', handleResize)
   }

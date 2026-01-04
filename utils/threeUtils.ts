@@ -91,5 +91,8 @@ export function disposeScene(
   if (renderer) {
     renderer.renderLists.dispose()
     renderer.info.reset()
+
+    renderer.dispose()
+    renderer.forceContextLoss()
   }
 }
