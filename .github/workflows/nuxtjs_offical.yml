@@ -29,7 +29,14 @@ jobs:
           corepack prepare pnpm@10.2.1 --activate
           pnpm --version
 
-      - run: pnpm install
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm nuxi build --preset github_pages
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./.output/public
 
   deploy:
     needs: build
