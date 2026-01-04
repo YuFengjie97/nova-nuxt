@@ -1,6 +1,6 @@
-import type * as THREE from 'three'
+import * as THREE from 'three'
 
-export function disposeScene(scene: THREE.Scene) {
+export function disposeScene1(scene: THREE.Scene) {
   scene.traverse((object: THREE.Object3D) => {
     // 只处理真正占用 GPU 资源的对象
     if (
@@ -36,4 +36,60 @@ export function disposeScene(scene: THREE.Scene) {
 
   // 5️⃣ 移除所有对象
   scene.clear()
+}
+
+export function disposeScene(
+  scene: THREE.Scene,
+  renderer?: THREE.WebGLRenderer,
+) {
+  // 1. 停止 scene 中的动画 / 回调（如果你有自定义 loop）
+  scene.traverse((object) => {
+    // ===== Mesh / Line / Points =====
+    if (
+      object instanceof THREE.Mesh
+      || object instanceof THREE.Line
+      || object instanceof THREE.Points
+    ) {
+      // geometry
+      if (object.geometry) {
+        object.geometry.dispose()
+      }
+
+      // material（可能是数组）
+      const materials = Array.isArray(object.material)
+        ? object.material
+        : [object.material]
+
+      materials.forEach((material) => {
+        if (!material)
+          return
+
+        // 释放 material 上的所有 texture
+        for (const key in material) {
+          const value = (material as any)[key]
+          if (value instanceof THREE.Texture) {
+            value.dispose()
+          }
+        }
+
+        material.dispose()
+      })
+    }
+
+    // ===== SkinnedMesh =====
+    if (object instanceof THREE.SkinnedMesh) {
+      if (object.skeleton) {
+        object.skeleton.dispose?.()
+      }
+    }
+  })
+
+  // 2. 清空 scene
+  scene.clear()
+
+  // 3. 释放 renderer 相关缓存
+  if (renderer) {
+    renderer.renderLists.dispose()
+    renderer.info.reset()
+  }
 }

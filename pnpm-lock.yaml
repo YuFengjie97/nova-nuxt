@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@gsimone/three-raycaster-helper':
+        specifier: ^0.1.0
+        version: 0.1.0(three@0.181.2)
       animejs:
         specifier: ^3.2.2
         version: 3.2.2
@@ -546,6 +549,11 @@ packages:
   '@eslint/plugin-kit@0.2.7':
     resolution: {integrity: sha512-JubJ5B2pJ4k4yGxaNLdbjrnk9d/iDz6/q8wOilpIowd6PJPgaxCuHBnBszq7Ce2TyMrywm5r4PnKm6V3iiZF+g==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@gsimone/three-raycaster-helper@0.1.0':
+    resolution: {integrity: sha512-6ap3/vNdLwdHbz9ZDefIVogU8RFDr2AZF7+GcGjscLU5PToq2KxmnqcnTo8/pbO/AhFQsOZV+TssfNj/7f25Tw==}
+    peerDependencies:
+      three: ^0.139.2
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -5027,6 +5035,10 @@ snapshots:
     dependencies:
       '@eslint/core': 0.12.0
       levn: 0.4.1
+
+  '@gsimone/three-raycaster-helper@0.1.0(three@0.181.2)':
+    dependencies:
+      three: 0.181.2
 
   '@humanfs/core@0.19.1': {}
 
