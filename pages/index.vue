@@ -183,6 +183,9 @@
     <nuxt-link to="three/flowParticle">
       flow 粒子
     </nuxt-link>
+    <nuxt-link to="three/flowParticle2">
+      flow 粒子 利用noise
+    </nuxt-link>
     <nuxt-link to="three/raycasterTest">
       raycaster test
     </nuxt-link>
