@@ -112,6 +112,9 @@ onMounted(() => {
     const geo2 = new THREE.SphereGeometry(3, 100, 100)
     const geo3 = new THREE.TorusKnotGeometry(3, 0.3, 200, 50)
     const geo4 = new THREE.BoxGeometry(3, 3, 3, 40, 40, 40)
+    geo2.setIndex(null)
+    geo3.setIndex(null)
+    geo4.setIndex(null)
 
     let geo: THREE.BufferGeometry = geo1
     let points: THREE.Points

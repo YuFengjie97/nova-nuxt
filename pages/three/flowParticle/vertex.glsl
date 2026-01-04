@@ -39,6 +39,6 @@ void main(){
 
   gl_Position = projectionPos;
 
-  gl_PointSize = 40. * uDPR;
+  gl_PointSize = 50. * uDPR;
   gl_PointSize *= 1./-viewPos.z;
 }
