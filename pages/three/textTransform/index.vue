@@ -149,6 +149,7 @@ onMounted(() => {
         },
         depthWrite: false,
         transparent: true,
+        blending: THREE.AdditiveBlending,
       })
       const points = new THREE.Points(pointsGeo, pointsMat)
       scene.add(points)
