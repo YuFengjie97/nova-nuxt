@@ -5,7 +5,7 @@ uniform float uTime;
 varying vec2 vUv;
 
 
-#include ../../shaderUtils/rotate.glsl
+#include ../../../shaderUtils/rotate.glsl
 
 
 void main(){
