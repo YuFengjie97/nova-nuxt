@@ -189,6 +189,9 @@
     <nuxt-link to="three/raycasterTest">
       raycaster test
     </nuxt-link>
+    <nuxt-link to="three/gpgpuFlowField">
+      gpgpu -> flow field
+    </nuxt-link>
   </div>
 </template>
 

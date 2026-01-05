@@ -1,5 +1,5 @@
-#include ../../shaderUtils/glsl-noise/simplex/3d.glsl
-#include ../../shaderUtils/rotate.glsl
+#include ../../../shaderUtils/glsl-noise/simplex/3d.glsl
+#include ../../../shaderUtils/rotate.glsl
 
 uniform float uDPR;
 uniform sampler2D uNoise;
