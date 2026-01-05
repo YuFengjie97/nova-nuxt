@@ -42,9 +42,9 @@ void main(){
     flowField = normalize(flowField);
 
     // vec3 flowField = vec3(
-    //   noise(vec2(pos.yz*.2 + 1.1 + t*1.1)),
-    //   noise(vec2(pos.xz*.2 + 2.2 + t*1.1)),
-    //   noise(vec2(pos.xy*.2 + 3.3 + t*1.1))
+    //   noise(vec2((pos.yz + vec2(.1, .4))*2.1 + t*1.1)),
+    //   noise(vec2((pos.xz + vec2(.2, .5))*2.1 + t*1.1)),
+    //   noise(vec2((pos.xy + vec2(.3, .6))*2.1 + t*1.1))
     // );
     // flowField = normalize(flowField);
 
