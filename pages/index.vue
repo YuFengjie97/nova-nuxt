@@ -192,6 +192,9 @@
     <nuxt-link to="three/gpgpuFlowField">
       gpgpu -> flow field
     </nuxt-link>
+    <nuxt-link to="three/gpgpuFlowField2">
+      gpgpu -> flow field 代码整理
+    </nuxt-link>
   </div>
 </template>
 
