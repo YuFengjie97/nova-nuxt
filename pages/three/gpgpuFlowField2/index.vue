@@ -31,7 +31,7 @@ useEffect(async () => {
   const camera = new THREE.PerspectiveCamera(75, 2, 0.1, 100)
   const renderer = new THREE.WebGLRenderer()
   const loops: Array<(delta: number, elapsed: number) => void> = []
-  const pane: Pane = new Pane()
+  const pane: Pane = new Pane({ container: containerRef.value })
   const controls: OrbitControls = new OrbitControls(camera, renderer.domElement)
 
   function handleResize() {
@@ -155,6 +155,14 @@ useEffect(async () => {
       this.particleVar.material.uniforms.uDeltaTime = uDeltaTime
       this.particleVar.material.uniforms.uParticleDefault = new THREE.Uniform(this.particleTex)
       this.particleVar.material.uniforms.uNoise = new THREE.Uniform(texNoise)
+
+      // 自定义空间控制
+      this.particleVar.material.uniforms.uFlowFieldStrength = new THREE.Uniform(2)
+      pane.addBinding(
+        this.particleVar.material.uniforms.uFlowFieldStrength,
+        'value',
+        { min: 0.1, max: 10.0, step: 0.1, label: 'FlowFieldStrength' },
+      )
     }
 
     getComputeTex() {
@@ -215,6 +223,7 @@ useEffect(async () => {
     mat.uniforms.uDeltaTime = uDeltaTime
     mat.uniforms.uParticleTex = new THREE.Uniform(gpgpu.getComputeTex())
     mat.uniforms.uDPR = new THREE.Uniform(renderer.getPixelRatio())
+    mat.uniforms.uParticleSize = new THREE.Uniform(10)
 
     const points = new THREE.Points(geo, mat)
     scene.add(points)
@@ -224,6 +233,11 @@ useEffect(async () => {
       helper.material.map = gpgpu.getComputeTex()
       mat.uniforms.uParticleTex.value = gpgpu.getComputeTex()
     })
+
+    pane.addBinding(helper, 'visible', { label: 'helper' })
+
+    pane.addBinding(mat.uniforms.uParticleSize, 'value', { min: 1, max: 40, step: 1, label: 'particleSize' })
+    pane.addBinding(mat.uniforms.uFlowFieldStrength, 'value', { min: 0.1, max: 4, step: 0.1, label: 'uFlowFieldStrength' })
   }
 
   return () => {
@@ -236,8 +250,16 @@ useEffect(async () => {
 </script>
 
 <template>
-  <div ref="containerRef" class="w-full h-100vh" @mousemove="upadteMouse" />
+  <div ref="containerRef" class="w-full h-100vh relative three-con" @mousemove="upadteMouse" />
 </template>
 
 <style lang='less' scoped>
+  .three-con{
+    ::v-deep .tp-rotv{
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 300px;
+    }
+  }
 </style>

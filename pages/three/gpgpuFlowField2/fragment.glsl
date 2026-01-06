@@ -10,5 +10,5 @@ void main(){
   // vec3 col = vec3(1,0,0) * d;
 
   // gl_FragColor = vec4(vCol.rgb, d * vCol.a);
-  gl_FragColor = vec4(vCol.rgb, d);
+  gl_FragColor = vec4(vCol.rgb, d * vCol.a);
 }

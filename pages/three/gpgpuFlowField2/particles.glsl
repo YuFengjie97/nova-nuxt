@@ -4,6 +4,10 @@ uniform float uTime;
 uniform float uDeltaTime;
 uniform sampler2D uParticleDefault;
 
+// 一些自定义控件控制
+uniform float uFlowFieldStrength;
+
+
 void main(){
   vec2 uv = gl_FragCoord.xy / resolution.xy;
   vec4 particle = texture2D(uParticle, uv);
@@ -20,19 +24,19 @@ void main(){
   }else{
   
     vec3 flowFieldDir = vec3(
-      snoise(vec4(pos+1., t)),
-      snoise(vec4(pos+2., t)),
-      snoise(vec4(pos+3., t))
+      snoise(vec4(pos+1., t*2.)),
+      snoise(vec4(pos+2., t*2.)),
+      snoise(vec4(pos+3., t*2.))
     );
 
     float flowFieldStrength = snoise(vec4(pos+4., t));
-    flowFieldStrength = smoothstep(-.4, 1., flowFieldStrength) * 2.;
+    flowFieldStrength = smoothstep(-.4, 1., flowFieldStrength) * uFlowFieldStrength;
 
     pos += flowFieldStrength * flowFieldDir * dt;
   }
 
 
-  life += 2.1 * dt;
+  life += 1. * dt;
 
   // gl_FragColor = vec4(uv, 0,1);
   gl_FragColor = vec4(pos, life);

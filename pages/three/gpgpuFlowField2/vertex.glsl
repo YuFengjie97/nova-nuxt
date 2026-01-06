@@ -3,6 +3,8 @@ uniform float uTime;
 uniform float uDeltaTime;
 uniform float uDPR;
 
+uniform float uParticleSize;
+
 attribute vec2 aParticleUV;
 varying vec4 vCol;
 
@@ -21,7 +23,7 @@ void main(){
 
 
   gl_Position = projectionPos;
-  gl_PointSize = 10. * uDPR;
+  gl_PointSize = uParticleSize * uDPR;
   gl_PointSize *= 2./ -viewPos.z;
   // gl_PointSize *= life;
 
@@ -29,5 +31,7 @@ void main(){
   // 计算颜色部分
   vec4 col = vec4(0);
   col.rgb = sin(vec3(3,2,1) + dot(cos(position*2.1), vec3(1.1)));
+  col.a = 1.-life;
+  
   vCol = col;
 }
