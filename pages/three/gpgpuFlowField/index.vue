@@ -104,22 +104,6 @@ useEffect(() => {
     }
     // geo.setDrawRange(0, );
 
-    // const mat = new THREE.PointsMaterial({ size: 0.1 })
-    const mat = new THREE.ShaderMaterial({
-      vertexShader: vertex,
-      fragmentShader: fragment,
-      uniforms: {
-        uTime,
-        uResolution: new THREE.Uniform(new THREE.Vector2(size.x * dpr, size.y * dpr)),
-        uDPR: new THREE.Uniform(renderer.getPixelRatio()),
-      },
-      transparent: true,
-      depthWrite: false,
-      // blending: THREE.AdditiveBlending
-    })
-    const points = new THREE.Points(particles.geo, mat)
-    scene.add(points)
-
     /**
      * size * size >= particles.count
      */
@@ -187,9 +171,24 @@ useEffect(() => {
       mat.map = gpuCompute.getCurrentRenderTarget(posVar).texture
     }
 
+    const mat = new THREE.ShaderMaterial({
+      vertexShader: vertex,
+      fragmentShader: fragment,
+      uniforms: {
+        uTime,
+        uResolution: new THREE.Uniform(new THREE.Vector2(size.x * dpr, size.y * dpr)),
+        uDPR: new THREE.Uniform(renderer.getPixelRatio()),
+      },
+      transparent: true,
+      depthWrite: false,
+      // blending: THREE.AdditiveBlending
+    })
+    const points = new THREE.Points(particles.geo, mat)
+    scene.add(points)
+
     loops.push(() => {
       gpuCompute.compute()
-      // mat.uniforms.uPosTex.value = gpuCompute.getCurrentRenderTarget(posVar).texture
+      // points.material.uniforms.uPosTex = new THREE.Uniform(gpuCompute.getCurrentRenderTarget(posVar).texture)
     })
   }
 
