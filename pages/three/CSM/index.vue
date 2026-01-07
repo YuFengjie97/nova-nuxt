@@ -193,7 +193,7 @@ useEffect(async () => {
     pane.addBinding(mat, 'wireframe')
     pane.addBinding(mat, 'metalness', { min: 0, max: 1, step: 0.1 })
     pane.addBinding(mat, 'roughness', { min: 0, max: 1, step: 0.1 })
-    pane.addBinding(mat, 'transparent')
+    // pane.addBinding(mat, 'transparent')
     pane.addBinding(mat, 'transmission', { min: 0, max: 1, step: 0.1 })
     pane.addBinding(mat, 'thickness', { min: 0, max: 4, step: 0.1 })
     pane.addBinding(mat, 'ior', { min: 0, max: 2.3, step: 0.1 })
