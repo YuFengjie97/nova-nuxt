@@ -24,19 +24,19 @@ void main(){
   }else{
   
     vec3 flowFieldDir = vec3(
-      snoise(vec4(pos+1., t*2.)),
-      snoise(vec4(pos+2., t*2.)),
-      snoise(vec4(pos+3., t*2.))
+      snoise(vec4(pos+1., t*.1)),
+      snoise(vec4(pos+2., t*.1)),
+      snoise(vec4(pos+3., t*.1))
     );
 
     float flowFieldStrength = snoise(vec4(pos+4., t));
-    flowFieldStrength = smoothstep(-.4, 1., flowFieldStrength) * uFlowFieldStrength;
+    flowFieldStrength = smoothstep(-.0, 1., flowFieldStrength) * uFlowFieldStrength;
 
     pos += flowFieldStrength * flowFieldDir * dt;
   }
 
 
-  life += 1. * dt;
+  life += .1 * dt;
 
   // gl_FragColor = vec4(uv, 0,1);
   gl_FragColor = vec4(pos, life);
