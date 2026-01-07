@@ -82,6 +82,10 @@ export function disposeScene(
         object.skeleton.dispose?.()
       }
     }
+
+    if (object instanceof THREE.Light) {
+      object.dispose()
+    }
   })
 
   // 2. 清空 scene

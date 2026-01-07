@@ -195,6 +195,9 @@
     <nuxt-link to="three/gpgpuFlowField2">
       gpgpu -> flow field 代码整理
     </nuxt-link>
+    <nuxt-link to="three/realisticRender">
+      逼真的渲染
+    </nuxt-link>
   </div>
 </template>
 

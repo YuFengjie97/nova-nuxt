@@ -87,6 +87,12 @@ onMounted(() => {
     const cameraHelper = new THREE.CameraHelper(shadowCamera)
     scene.add(cameraHelper)
 
+    loops.push(() => {
+      const t = Date.now() * 0.001
+      light.position.x = Math.sin(t) * 3
+      helper.update()
+    })
+
     pane.addBinding(light, 'intensity', { min: 0, max: 10, step: 0.1, label: '平行光强度' })
     pane.addBinding(helper, 'visible', { label: '光源helper' })
     pane.addBinding(cameraHelper, 'visible', { label: '光源相机helper' })
