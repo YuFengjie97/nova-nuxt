@@ -2,7 +2,7 @@
 </script>
 
 <template>
-  <div class="flex gap-10px flex-wrap p-10px">
+  <div class="flex gap-10px flex-wrap p-100px">
     <div class="border">
       css
     </div>
@@ -197,6 +197,9 @@
     </nuxt-link>
     <nuxt-link to="three/realisticRender">
       逼真的渲染
+    </nuxt-link>
+    <nuxt-link to="three/CSM">
+      CSM
     </nuxt-link>
   </div>
 </template>

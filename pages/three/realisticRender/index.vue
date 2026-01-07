@@ -136,7 +136,7 @@ useEffect(async () => {
     也就是阴影和mesh表面重叠
     这个属性相当于将阴影沿着法线做细微偏移,让阴影贴图不再跟表面重叠,或者说是阴影不会在该表面产生阴影
     */
-    light.shadow.normalBias = 0.005
+    light.shadow.normalBias = 0.05
     scene.add(light)
 
     const shadowCamera = light.shadow.camera
