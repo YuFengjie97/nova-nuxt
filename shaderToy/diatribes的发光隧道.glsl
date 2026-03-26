@@ -146,7 +146,7 @@ void mainImage(out vec4 O, in vec2 I){
     p_ref = p + ref * z;
     float d = map(p_ref);
     z += d*.6;
-    col_ref += col_glow/10. + 1./max(d*.2, 3.);
+    col_ref += col_glow/10. + 1./max(d, .01);
   }
   // col_ref += col_glow/10.;
   // col_ref = tanh(col_ref);
@@ -154,5 +154,5 @@ void mainImage(out vec4 O, in vec2 I){
   // O.rgb += O.rgb*col_ref/5.;
   O.rgb *= col_ref;
 
-  O.rgb = tanh(O.rgb/1e2);
+  O.rgb = tanh(O.rgb/1e4);
 }
