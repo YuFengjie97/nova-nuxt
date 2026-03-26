@@ -133,13 +133,13 @@ void mainImage(out vec4 O, in vec2 I){
 
   vec3 n = getNormal(p);
 
-  // O.rgb *= max(dot(-normalize(rd),n),0.);
+  O.rgb += .5*max(dot(-normalize(rd),n),0.);
 
   vec3 p_ref;
   vec3 col_ref=vec3(0);
   z = 0.;
   col_glow = vec3(0); // 重置
-  p += n*.1;
+  p += n*.1; // 射线起点偏移，防止击中起始位置
 
   vec3 ref = reflect(rd, n);
   for(float i=0.;i<100.;i++){
