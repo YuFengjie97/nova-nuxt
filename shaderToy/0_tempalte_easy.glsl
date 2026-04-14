@@ -132,9 +132,11 @@ void mainImage(out vec4 O, in vec2 I){
 
 
     float d = sdBoxFrame(p, vec3(4.), .5);
-    d = abs(d)*.3 + .01;
+    // float d = length(p) - 4.;
+    // d = abs(d)*.3 + .01;
+    d = max(.01, abs(d)*.3);
 
-    if(d<EPSILON) break;
+    // if(d<EPSILON) break;
     
     col += s1(C+i*.1-T)/d;
     
