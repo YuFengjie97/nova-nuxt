@@ -138,7 +138,7 @@ void mainImage(out vec4 O, in vec2 I){
 
     // if(d<EPSILON) break;
     
-    col += s1(C+i*.1-T)/d;
+    col += s1(C+i*.1)/d;
     
     z += d;
   }

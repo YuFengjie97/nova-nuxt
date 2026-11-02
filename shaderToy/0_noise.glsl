@@ -86,6 +86,45 @@ vec2 voronoi(vec2 uv, out vec2 oA, out vec2 oB){
 }
 
 
+// 2D random numbers
+vec2 rand2(in vec2 p)
+{
+	return fract(vec2(sin(p.x * 591.32 + p.y * 154.077), cos(p.x * 391.32 + p.y * 49.077)));
+}
+
+// voronoi distance noise, based on iq's articles
+float voronoi(in vec2 x)
+{
+	vec2 p = floor(x);
+	vec2 f = fract(x);
+	
+	vec2 res = vec2(8.0);
+	for(int j = -1; j <= 1; j ++)
+	{
+		for(int i = -1; i <= 1; i ++)
+		{
+			vec2 b = vec2(i, j);
+			vec2 r = vec2(b) - f + rand2(p + b);
+			
+			// chebyshev distance, one of many ways to do this
+			float d = max(abs(r.x), abs(r.y));
+			
+			if(d < res.x)
+			{
+				res.y = res.x;
+				res.x = d;
+			}
+			else if(d < res.y)
+			{
+				res.y = d;
+			}
+		}
+	}
+	return res.y - res.x;
+}
+
+
+
 float hash(vec2 p){
   return fract(sin(dot(p, vec2(456.456,7897.7536)))*741.25639);
 }
@@ -170,4 +209,58 @@ float noise(vec3 p){
   float my2 = mix(mx3, mx4, u.y);
   float mz = mix(my1, my2, u.z);
   return mz;
+}
+
+
+// 沃洛诺伊
+
+// 2D random numbers
+vec2 rand22(in vec2 p)
+{
+	return fract(vec2(sin(p.x * 591.32 + p.y * 154.077), cos(p.x * 391.32 + p.y * 49.077)));
+}
+vec2 rand2(in vec2 p) {
+    p = vec2(dot(p, vec2(127.1, 311.7)),
+             dot(p, vec2(269.5, 183.3)));
+    return fract(sin(p) * 43758.5453);
+}
+
+// voronoi distance noise, based on iq's articles
+float voronoi(in vec2 x)
+{
+	vec2 p = floor(x);
+	vec2 f = fract(x);
+	
+	vec2 res = vec2(8.0);
+	for(int j = -1; j <= 1; j ++)
+	{
+		for(int i = -1; i <= 1; i ++)
+		{
+			vec2 b = vec2(i, j);
+			vec2 r = vec2(b) - f + rand2(p + b);
+			
+      
+      // float d = length(r);
+      // float d = dot(r, r);
+
+      // float d = abs(r.x) + abs(r.y);
+
+			float d = max(abs(r.x), abs(r.y));
+
+      // float p = 1.2;
+      // float d = pow(pow(abs(r.x),p)+pow(abs(r.y),p), 1.0/p);
+
+			
+			if(d < res.x)
+			{
+				res.y = res.x;
+				res.x = d;
+			}
+			else if(d < res.y)
+			{
+				res.y = d;
+			}
+		}
+	}
+	return res.y - res.x;
 }
