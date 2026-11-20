@@ -19,8 +19,9 @@ void mainImage(out vec4 O, in vec2 I){
       float life = particle.z;
       float seed = particle.w;
 
-      float d1 = length(uv-pos);
+      float d1 = length(uv-pos) ;
       d1 = smoothstep(3.*pix,0.,d1)*smoothstep(0.,.1,life)*smoothstep(1.,.9,life);
+
 
       vec3 col = sin(vec3(3,2,1)+seed*10.)*.5+.5;
       O.rgb += col*d1;

@@ -50,7 +50,7 @@ void mainImage(out vec4 O, in vec2 I){
     vec2 pos = particle.xy;
     float life = particle.z;
     float seed = particle.w;
-    pos += .001*texture(iChannel1, pos).xy;
+    pos += .001*texture(iChannel1, pos/vec2(R.x/R.y, 1.)).xy;
     life += .003;
 
     // 越界&死亡 重置
